@@ -7,33 +7,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  # Check if we should build docs based on commit message
-  check-commit:
-    runs-on: ubuntu-latest
-    outputs:
-      should_build: ${{ steps.check.outputs.should_build }}
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      
-      - name: Check commit message
-        id: check
-        run: |
-          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-            echo "should_build=true" >> $GITHUB_OUTPUT
-            echo "Building docs for manual trigger"
-          elif [[ "${{ github.event.head_commit.message }}" == *"[docs]"* ]]; then
-            echo "should_build=true" >> $GITHUB_OUTPUT
-            echo "Building docs - [docs] found in commit message"
-          else
-            echo "should_build=false" >> $GITHUB_OUTPUT
-            echo "Skipping docs build - no [docs] in commit message"
-          fi
-
   build-and-deploy:
-    needs: check-commit
-    if: needs.check-commit.outputs.should_build == 'true'
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[docs]'))
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -42,25 +17,23 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      
+
       - name: Setup pixi
         uses: prefix-dev/setup-pixi@v0.8.1
         with:
           pixi-version: latest
           environments: dev
-      
+
       - name: Build API documentation
         run: |
           pixi run -e dev sphinx-apidoc -d 2 -Mef -o docs/source/api kbws
-      
+
       - name: Build HTML documentation
         run: |
           pixi run -e dev build-docs
-      
+
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
-        # Only deploy on push to main (not on PRs)
-        # if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./docs/build/html
