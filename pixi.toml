@@ -1,0 +1,45 @@
+[workspace]
+authors = ["Jonathan MacCarthy <jkmacc@lanl.gov>"]
+channels = ["conda-forge"]
+name = "kbws"
+platforms = ["osx-arm64", "linux-64"]
+version = "0.1.0"
+
+[tasks]
+
+[dependencies]
+oracledb = ">=4.0.2,<5"
+obspy = ">=1.5.1rc1,<2"
+python = ">=3.14.7,<3.15"
+fastapi = ">=0.141.1,<0.142"
+pydantic-settings = ">=2.15.0,<3"
+pyyaml = ">=6.0.3,<7"
+uvicorn = ">=0.52.4,<0.53"
+python-dotenv = ">=1.2.3,<2"
+python-multipart = ">=0.0.32,<0.0.33"
+e1 = ">=0.2.1,<0.3"
+
+[target.linux-64.dependencies]
+libaio = "*"
+
+[pypi-dependencies]
+pisces = ">=0.4.5.3, <0.5"
+
+
+[environments.dev.dependencies]
+pytest = ">=9.1.1,<10"
+httpx2 = ">=2.12.0,<3"
+# Documentation dependencies
+sphinx = ">=7.0.0,<9"
+sphinx-book-theme = ">=1.1.0,<2"
+myst-parser = ">=4.0.0,<5"
+sphinx-autobuild = ">=2024.0.0,<2025"
+markdown-it-py = ">=3.0.0,<4"
+
+[environments.dev.pypi-dependencies] 
+kbws = { path = ".", editable = true }
+
+[environments.dev.tasks]
+build-docs = "sphinx-build -M html docs/source docs/build"
+serve-docs = "sphinx-autobuild docs/source docs/build --open-browser"
+

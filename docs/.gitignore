@@ -1,0 +1,7 @@
+# Sphinx build outputs
+build/
+_build/
+
+# Auto-generated API docs
+source/api/kbws*.rst
+!source/api/modules.rst

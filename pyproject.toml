@@ -1,0 +1,55 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "kbws"
+version = "0.1.0"
+description = "FDSN Web Services for CSS-like SQL Database"
+readme = "README.md"
+authors = [
+    {name = "Jonathan MacCarthy", email = "jkmacc@lanl.gov"}
+]
+keywords = ["seismology", "geophysics", "database"]
+license = {text = "MIT"}
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+requires-python = ">=3.10"
+dependencies = [
+    "obspy>=1.0",
+    "pisces>=0.4.5",
+    "fastapi",
+    "python-dotenv",
+    "sqlalchemy",
+    "pydantic",
+    "pydantic-settings",
+    "pyyaml",
+    "uvicorn",
+    "python-multipart",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "httpx2",
+]
+oracle = [
+    "oracledb",
+]
+
+[project.urls]
+Homepage = "https://github.com/LANL-Seismoacoustics/kbws"
+Repository = "https://github.com/LANL-Seismoacoustics/kbws"
+
+[tool.setuptools]
+packages = ["kbws"]
+
+[tool.setuptools.package-data]
+kbws = ["py.typed"]
