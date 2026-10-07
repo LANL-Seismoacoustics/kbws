@@ -1,0 +1,822 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Deployment &#8212; KBWS 0.1.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=4418a689" />
+    <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=3dc028c9" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="_static/scripts/fontawesome.js?digest=90905a2f556bf617f1a9"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
+
+    <script src="_static/documentation_options.js?v=a1637f0b"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'deployment';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="icon" href="_static/LANL Logo Ultramarine globe.png"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Development" href="development.html" />
+    <link rel="prev" title="Installation" href="installation.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="_static/searchtools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/LANL Logo Ultramarine.png" class="logo__image only-light" alt="KBWS 0.1.0 documentation - Home"/>
+    <img src="_static/LANL Logo White.png" class="logo__image only-dark pst-js-only" alt="KBWS 0.1.0 documentation - Home"/>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="index.html">
+                    KBWS
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="development.html">Development</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="about/changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="about/license.html">License</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="api/modules.html">API Documentation</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="api/kbws.html">kbws package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="api/kbws.models.html">kbws.models package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/kbws.models.availability.html">kbws.models.availability module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/kbws.models.common.html">kbws.models.common module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/kbws.models.dataselect.html">kbws.models.dataselect module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/kbws.models.event.html">kbws.models.event module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/kbws.models.station.html">kbws.models.station module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="api/kbws.routes.html">kbws.routes package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/kbws.routes.availability.html">kbws.routes.availability module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/kbws.routes.dataselect.html">kbws.routes.dataselect module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/kbws.routes.event.html">kbws.routes.event module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/kbws.routes.station.html">kbws.routes.station module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="api/kbws.auth.html">kbws.auth module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/kbws.config.html">kbws.config module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/kbws.database.html">kbws.database module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/kbws.formats.html">kbws.formats module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/kbws.logging.html">kbws.logging module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/kbws.main.html">kbws.main module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/kbws.responses.html">kbws.responses module</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/LANL-seismoacoustics/kbws" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/deployment.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Deployment</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#native-deployment">Native Deployment</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#running-kbws">Running KBWS</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#running-as-a-systemd-service">Running as a systemd Service</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#container-deployment-under-construction">Container Deployment (under construction)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#docker">Docker</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#podman-rootless">Podman (Rootless)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#development-with-hot-reload">Development with Hot Reload</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kbws-configuration-requirements">KBWS Configuration Requirements</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#environment-file-mandatory">Environment File (Mandatory)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#waveform-directory-paths-critical-for-dataselect">Waveform Directory Paths (Critical for dataselect)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ssh-port-forwarding-for-remote-access">SSH Port Forwarding for Remote Access</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#monitoring-kbws">Monitoring KBWS</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#service-health-checks">Service Health Checks</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#container-health-check">Container Health Check</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#container-resource-limits">Container Resource Limits</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#logging">Logging</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#log-configuration">Log Configuration</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#security-notes">Security Notes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#troubleshooting">Troubleshooting</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#container-cannot-access-database">Container cannot access database</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#waveform-files-not-found">Waveform files not found</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#service-won-t-start">Service won’t start</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="deployment">
+<h1>Deployment<a class="headerlink" href="#deployment" title="Link to this heading">#</a></h1>
+<p>This guide covers KBWS-specific deployment configurations, including native service setup and container deployments.</p>
+<section id="native-deployment">
+<h2>Native Deployment<a class="headerlink" href="#native-deployment" title="Link to this heading">#</a></h2>
+<section id="running-kbws">
+<h3>Running KBWS<a class="headerlink" href="#running-kbws" title="Link to this heading">#</a></h3>
+<p>Start KBWS using uvicorn:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Development mode with auto-reload</span>
+python<span class="w"> </span>-m<span class="w"> </span>kbws
+
+<span class="c1"># Production mode with multiple workers</span>
+uvicorn<span class="w"> </span>kbws.main:app<span class="w"> </span>--host<span class="w"> </span><span class="m">0</span>.0.0.0<span class="w"> </span>--port<span class="w"> </span><span class="m">8000</span><span class="w"> </span>--workers<span class="w"> </span><span class="m">4</span>
+</pre></div>
+</div>
+<p>The number of workers should generally be <code class="docutils literal notranslate"><span class="pre">(2</span> <span class="pre">x</span> <span class="pre">num_cores)</span> <span class="pre">+</span> <span class="pre">1</span></code>.</p>
+</section>
+<section id="running-as-a-systemd-service">
+<h3>Running as a systemd Service<a class="headerlink" href="#running-as-a-systemd-service" title="Link to this heading">#</a></h3>
+<p>Example systemd service file <code class="docutils literal notranslate"><span class="pre">/etc/systemd/system/kbws.service</span></code>:</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[Unit]</span>
+<span class="na">Description</span><span class="o">=</span><span class="s">KBWS FDSN Web Service</span>
+<span class="na">After</span><span class="o">=</span><span class="s">network.target</span>
+
+<span class="k">[Service]</span>
+<span class="na">Type</span><span class="o">=</span><span class="s">simple</span>
+<span class="na">User</span><span class="o">=</span><span class="s">kbws</span>
+<span class="na">WorkingDirectory</span><span class="o">=</span><span class="s">/opt/kbws</span>
+<span class="na">Environment</span><span class="o">=</span><span class="s">"PATH=/opt/conda/envs/kbws/bin"</span>
+<span class="na">ExecStart</span><span class="o">=</span><span class="s">/opt/conda/envs/kbws/bin/uvicorn kbws.main:app --host 0.0.0.0 --port 8000 --workers 4</span>
+<span class="na">Restart</span><span class="o">=</span><span class="s">on-failure</span>
+
+<span class="k">[Install]</span>
+<span class="na">WantedBy</span><span class="o">=</span><span class="s">multi-user.target</span>
+</pre></div>
+</div>
+<p>Enable and start:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>kbws
+sudo<span class="w"> </span>systemctl<span class="w"> </span>start<span class="w"> </span>kbws
+sudo<span class="w"> </span>systemctl<span class="w"> </span>status<span class="w"> </span>kbws
+</pre></div>
+</div>
+</section>
+</section>
+<section id="container-deployment-under-construction">
+<h2>Container Deployment (under construction)<a class="headerlink" href="#container-deployment-under-construction" title="Link to this heading">#</a></h2>
+<section id="docker">
+<h3>Docker<a class="headerlink" href="#docker" title="Link to this heading">#</a></h3>
+<p><strong>Basic deployment:</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--name<span class="w"> </span>kbws<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-v<span class="w"> </span>/path/to/.env:/tmp/.env:ro<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-v<span class="w"> </span>/path/to/waveforms:/path/to/waveforms:ro<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-p<span class="w"> </span><span class="m">8000</span>:8000<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-p<span class="w"> </span><span class="m">1523</span>:1523<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>ghcr.io/lanl-seismoacoustics/kbws:latest
+</pre></div>
+</div>
+<p><strong>With docker-compose:</strong></p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">'3.8'</span>
+
+<span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">kbws</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ghcr.io/lanl-seismoacoustics/kbws:latest</span>
+<span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kbws</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"8000:8000"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"1523:1523"</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./env:/tmp/.env:ro</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/sa:/sa:ro</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/g:/g:ro</span>
+<span class="w">    </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unless-stopped</span>
+<span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LOG_LEVEL=INFO</span>
+</pre></div>
+</div>
+<p>Start the service:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker-compose<span class="w"> </span>up<span class="w"> </span>-d
+</pre></div>
+</div>
+</section>
+<section id="podman-rootless">
+<h3>Podman (Rootless)<a class="headerlink" href="#podman-rootless" title="Link to this heading">#</a></h3>
+<p>Rootless Podman requires the <code class="docutils literal notranslate"><span class="pre">--group-add=keep-groups</span></code> flag to retain read access to mounted directories:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>podman<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--name<span class="w"> </span>kbws<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--group-add<span class="o">=</span>keep-groups<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-v<span class="w"> </span>/path/to/.env:/tmp/.env:ro<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-v<span class="w"> </span>/path/to/waveforms:/path/to/waveforms:ro<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-p<span class="w"> </span><span class="m">8000</span>:8000<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-p<span class="w"> </span><span class="m">1523</span>:1523<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>ghcr.io/lanl-seismoacoustics/kbws:latest
+</pre></div>
+</div>
+</section>
+<section id="development-with-hot-reload">
+<h3>Development with Hot Reload<a class="headerlink" href="#development-with-hot-reload" title="Link to this heading">#</a></h3>
+<p>For development with live code reloading:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">'3.8'</span>
+
+<span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">kbws-dev</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">build</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.</span>
+<span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kbws-dev</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"8000:8000"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"1523:1523"</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.:/tmp</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/sa:/sa:ro</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/g:/g:ro</span>
+<span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">uvicorn kbws.main:app --host 0.0.0.0 --port 8000 --reload</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="kbws-configuration-requirements">
+<h2>KBWS Configuration Requirements<a class="headerlink" href="#kbws-configuration-requirements" title="Link to this heading">#</a></h2>
+<section id="environment-file-mandatory">
+<h3>Environment File (Mandatory)<a class="headerlink" href="#environment-file-mandatory" title="Link to this heading">#</a></h3>
+<p>KBWS requires a <code class="docutils literal notranslate"><span class="pre">.env</span></code> file in its working directory. The service will not start without it. See the <a class="reference internal" href="installation.html"><span class="std std-doc">Installation</span></a> guide for a complete example.</p>
+</section>
+<section id="waveform-directory-paths-critical-for-dataselect">
+<h3>Waveform Directory Paths (Critical for dataselect)<a class="headerlink" href="#waveform-directory-paths-critical-for-dataselect" title="Link to this heading">#</a></h3>
+<p>For the <code class="docutils literal notranslate"><span class="pre">dataselect</span></code> service to retrieve waveforms:</p>
+<ol class="arabic simple">
+<li><p>Waveform directories must be accessible at <strong>identical paths</strong> as stored in the database</p></li>
+<li><p>Container mounts must exactly match <code class="docutils literal notranslate"><span class="pre">wfdisc.dir</span></code> paths</p></li>
+<li><p>All symlinked directories must also be mounted with matching paths</p></li>
+</ol>
+<p><strong>Example:</strong> If <code class="docutils literal notranslate"><span class="pre">wfdisc.dir</span></code> contains <code class="docutils literal notranslate"><span class="pre">/sa/archive/2012/001/</span></code>, you must mount:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>-v<span class="w"> </span>/sa:/sa:ro
+</pre></div>
+</div>
+<p><strong>Not</strong> <code class="docutils literal notranslate"><span class="pre">-v</span> <span class="pre">/sa:/data</span></code> or any other path mapping, since KBWS reads paths directly from the database.</p>
+</section>
+</section>
+<section id="ssh-port-forwarding-for-remote-access">
+<h2>SSH Port Forwarding for Remote Access<a class="headerlink" href="#ssh-port-forwarding-for-remote-access" title="Link to this heading">#</a></h2>
+<p>If your KBWS server is not publicly accessible, use SSH port forwarding:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Forward remote port 8000 to local port 8000</span>
+ssh<span class="w"> </span>-L<span class="w"> </span><span class="m">8000</span>:localhost:8000<span class="w"> </span>user@server.example.com
+</pre></div>
+</div>
+<p>Then access KBWS from your local machine:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">obspy.clients.fdsn</span><span class="w"> </span><span class="kn">import</span> <span class="n">Client</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span><span class="s1">'http://localhost:8000'</span><span class="p">,</span> <span class="n">_discover_services</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Note:</strong> The <code class="docutils literal notranslate"><span class="pre">_discover_services=False</span></code> flag is required if KBWS doesn’t serve a complete <code class="docutils literal notranslate"><span class="pre">application.wadl</span></code> file.</p>
+</section>
+<section id="monitoring-kbws">
+<h2>Monitoring KBWS<a class="headerlink" href="#monitoring-kbws" title="Link to this heading">#</a></h2>
+<section id="service-health-checks">
+<h3>Service Health Checks<a class="headerlink" href="#service-health-checks" title="Link to this heading">#</a></h3>
+<p>KBWS exposes version endpoints for monitoring:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">/fdsnws/event/1/version</span></code> - Event service version</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">/fdsnws/station/1/version</span></code> - Station service version</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">/fdsnws/dataselect/1/version</span></code> - Dataselect service version</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">/docs</span></code> - Interactive API documentation (Swagger UI)</p></li>
+</ul>
+</section>
+<section id="container-health-check">
+<h3>Container Health Check<a class="headerlink" href="#container-health-check" title="Link to this heading">#</a></h3>
+<p>Example docker-compose health check:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">healthcheck</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">test</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"CMD"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"curl"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"-f"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"http://localhost:8000/fdsnws/event/1/version"</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30s</span>
+<span class="w">  </span><span class="nt">timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10s</span>
+<span class="w">  </span><span class="nt">retries</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
+<span class="w">  </span><span class="nt">start_period</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">40s</span>
+</pre></div>
+</div>
+</section>
+<section id="container-resource-limits">
+<h3>Container Resource Limits<a class="headerlink" href="#container-resource-limits" title="Link to this heading">#</a></h3>
+<p>Limit container resources:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--name<span class="w"> </span>kbws<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--memory<span class="o">=</span><span class="s2">"2g"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--cpus<span class="o">=</span><span class="s2">"2.0"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="c1"># ... other options</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="logging">
+<h2>Logging<a class="headerlink" href="#logging" title="Link to this heading">#</a></h2>
+<section id="log-configuration">
+<h3>Log Configuration<a class="headerlink" href="#log-configuration" title="Link to this heading">#</a></h3>
+<p>Set log level in <code class="docutils literal notranslate"><span class="pre">.env</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">log_level</span><span class="o">=</span>INFO<span class="w">  </span><span class="c1"># DEBUG, INFO, WARNING, ERROR, CRITICAL</span>
+</pre></div>
+</div>
+<p>Logs are written to <code class="docutils literal notranslate"><span class="pre">/tmp/logs</span></code> inside the container. Mount this directory to persist logs:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>-v<span class="w"> </span>/var/log/kbws:/tmp/logs
+</pre></div>
+</div>
+</section>
+</section>
+<section id="security-notes">
+<h2>Security Notes<a class="headerlink" href="#security-notes" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p><strong>Database Credentials</strong>: Never commit <code class="docutils literal notranslate"><span class="pre">.env</span></code> files to version control</p></li>
+<li><p><strong>Read-Only Mounts</strong>: Mount waveform directories as read-only (<code class="docutils literal notranslate"><span class="pre">:ro</span></code>) when possible</p></li>
+<li><p><strong>Container User</strong>: KBWS container runs as non-root user in <code class="docutils literal notranslate"><span class="pre">/tmp</span></code></p></li>
+</ol>
+</section>
+<section id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Link to this heading">#</a></h2>
+<section id="container-cannot-access-database">
+<h3>Container cannot access database<a class="headerlink" href="#container-cannot-access-database" title="Link to this heading">#</a></h3>
+<p><strong>Problem:</strong> Connection refused or timeout errors</p>
+<p><strong>Solution:</strong></p>
+<ul class="simple">
+<li><p>Ensure database port (e.g., 1523) is exposed/accessible from container</p></li>
+<li><p>Verify database credentials in <code class="docutils literal notranslate"><span class="pre">.env</span></code></p></li>
+<li><p>For Docker: try <code class="docutils literal notranslate"><span class="pre">--network=host</span></code> if network isolation is causing issues</p></li>
+</ul>
+</section>
+<section id="waveform-files-not-found">
+<h3>Waveform files not found<a class="headerlink" href="#waveform-files-not-found" title="Link to this heading">#</a></h3>
+<p><strong>Problem:</strong> Service returns 204 No Content for valid waveform queries</p>
+<p><strong>Solution:</strong></p>
+<ul class="simple">
+<li><p>Verify waveform directories are mounted with <strong>exact</strong> paths from <code class="docutils literal notranslate"><span class="pre">wfdisc</span></code> table</p></li>
+<li><p>Check file permissions - container user must have read access</p></li>
+<li><p>For Podman: ensure <code class="docutils literal notranslate"><span class="pre">--group-add=keep-groups</span></code> is set</p></li>
+<li><p>Test file access: <code class="docutils literal notranslate"><span class="pre">podman</span> <span class="pre">exec</span> <span class="pre">kbws</span> <span class="pre">ls</span> <span class="pre">/path/to/waveforms</span></code></p></li>
+</ul>
+</section>
+<section id="service-won-t-start">
+<h3>Service won’t start<a class="headerlink" href="#service-won-t-start" title="Link to this heading">#</a></h3>
+<p><strong>Problem:</strong> Container exits immediately or service fails to start</p>
+<p><strong>Solution:</strong></p>
+<ul class="simple">
+<li><p>Verify <code class="docutils literal notranslate"><span class="pre">.env</span></code> file is mounted at <code class="docutils literal notranslate"><span class="pre">/tmp/.env</span></code></p></li>
+<li><p>Check <code class="docutils literal notranslate"><span class="pre">.env</span></code> contains all required variables (see <a class="reference internal" href="installation.html"><span class="std std-doc">Installation</span></a>)</p></li>
+<li><p>Review logs: <code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">logs</span> <span class="pre">kbws</span></code> or <code class="docutils literal notranslate"><span class="pre">podman</span> <span class="pre">logs</span> <span class="pre">kbws</span></code></p></li>
+</ul>
+</section>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="installation.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Installation</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="development.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Development</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#native-deployment">Native Deployment</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#running-kbws">Running KBWS</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#running-as-a-systemd-service">Running as a systemd Service</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#container-deployment-under-construction">Container Deployment (under construction)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#docker">Docker</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#podman-rootless">Podman (Rootless)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#development-with-hot-reload">Development with Hot Reload</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kbws-configuration-requirements">KBWS Configuration Requirements</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#environment-file-mandatory">Environment File (Mandatory)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#waveform-directory-paths-critical-for-dataselect">Waveform Directory Paths (Critical for dataselect)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ssh-port-forwarding-for-remote-access">SSH Port Forwarding for Remote Access</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#monitoring-kbws">Monitoring KBWS</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#service-health-checks">Service Health Checks</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#container-health-check">Container Health Check</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#container-resource-limits">Container Resource Limits</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#logging">Logging</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#log-configuration">Log Configuration</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#security-notes">Security Notes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#troubleshooting">Troubleshooting</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#container-cannot-access-database">Container cannot access database</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#waveform-files-not-found">Waveform files not found</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#service-won-t-start">Service won’t start</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Jonathan MacCarthy
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025, Jonathan MacCarthy.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

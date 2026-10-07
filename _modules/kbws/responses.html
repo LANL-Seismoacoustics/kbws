@@ -1,0 +1,717 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>kbws.responses &#8212; KBWS 0.1.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=4418a689" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=3dc028c9" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../_static/scripts/fontawesome.js?digest=90905a2f556bf617f1a9"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
+
+    <script src="../../_static/documentation_options.js?v=a1637f0b"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/kbws/responses';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="icon" href="../../_static/LANL Logo Ultramarine globe.png"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../../_static/searchtools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/LANL Logo Ultramarine.png" class="logo__image only-light" alt="KBWS 0.1.0 documentation - Home"/>
+    <img src="../../_static/LANL Logo White.png" class="logo__image only-dark pst-js-only" alt="KBWS 0.1.0 documentation - Home"/>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../index.html">
+                    KBWS
+                </a>
+            </li>
+        </ul>
+        <ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../deployment.html">Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development.html">Development</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../about/changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../about/license.html">License</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../api/modules.html">API Documentation</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/kbws.html">kbws package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../api/kbws.models.html">kbws.models package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api/kbws.models.availability.html">kbws.models.availability module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/kbws.models.common.html">kbws.models.common module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/kbws.models.dataselect.html">kbws.models.dataselect module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/kbws.models.event.html">kbws.models.event module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/kbws.models.station.html">kbws.models.station module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../api/kbws.routes.html">kbws.routes package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api/kbws.routes.availability.html">kbws.routes.availability module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/kbws.routes.dataselect.html">kbws.routes.dataselect module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/kbws.routes.event.html">kbws.routes.event module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/kbws.routes.station.html">kbws.routes.station module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/kbws.auth.html">kbws.auth module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/kbws.config.html">kbws.config module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/kbws.database.html">kbws.database module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/kbws.formats.html">kbws.formats module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/kbws.logging.html">kbws.logging module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/kbws.main.html">kbws.main module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/kbws.responses.html">kbws.responses module</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/LANL-seismoacoustics/kbws" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1></h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for kbws.responses</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">asdict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">textwrap</span><span class="w"> </span><span class="kn">import</span> <span class="n">dedent</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">obspy</span><span class="w"> </span><span class="kn">import</span> <span class="n">UTCDateTime</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">fastapi.responses</span><span class="w"> </span><span class="kn">import</span> <span class="n">PlainTextResponse</span>
+
+
+<div class="viewcode-block" id="ResponseCode">
+<a class="viewcode-back" href="../../api/kbws.responses.html#kbws.responses.ResponseCode">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ResponseCode</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">""" FDSN-WS standard response codes and messages.</span>
+
+<span class="sd">    Usage:</span>
+<span class="sd">    """</span>
+    <span class="n">code</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">message</span><span class="p">:</span> <span class="nb">str</span></div>
+
+
+<span class="n">SUCCESS</span> <span class="o">=</span> <span class="n">ResponseCode</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="s1">'Successful request.'</span><span class="p">)</span>
+<span class="n">NO_DATA</span> <span class="o">=</span> <span class="n">ResponseCode</span><span class="p">(</span><span class="mi">204</span><span class="p">,</span> <span class="s1">'No data matches the selection.'</span><span class="p">)</span>
+<span class="n">BAD_REQUEST</span> <span class="o">=</span> <span class="n">ResponseCode</span><span class="p">(</span><span class="mi">400</span><span class="p">,</span> <span class="s1">'Badly formed request.'</span><span class="p">)</span>
+<span class="n">UNAUTHORIZED</span> <span class="o">=</span> <span class="n">ResponseCode</span><span class="p">(</span><span class="mi">401</span><span class="p">,</span> <span class="s1">'Unauthorized, authentication required.'</span><span class="p">)</span>
+<span class="n">AUTH_FAILED</span> <span class="o">=</span> <span class="n">ResponseCode</span><span class="p">(</span><span class="mi">403</span><span class="p">,</span> <span class="s1">'Authentication failed or access blocked to restricted data.'</span><span class="p">)</span>
+<span class="n">NO_DATA_ALT</span> <span class="o">=</span> <span class="n">ResponseCode</span><span class="p">(</span><span class="mi">404</span><span class="p">,</span> <span class="n">NO_DATA</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
+<span class="n">REQUEST_TOO_LARGE</span> <span class="o">=</span> <span class="n">ResponseCode</span><span class="p">(</span><span class="mi">413</span><span class="p">,</span> <span class="s1">'Request or response too large.'</span><span class="p">)</span>
+<span class="n">URL_TOO_LONG</span> <span class="o">=</span> <span class="n">ResponseCode</span><span class="p">(</span><span class="mi">414</span><span class="p">,</span> <span class="s1">'Request URI is too long.'</span><span class="p">)</span>
+<span class="n">INTERNAL_ERROR</span> <span class="o">=</span> <span class="n">ResponseCode</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="s1">'Internal server error.'</span><span class="p">)</span>
+<span class="n">TEMP_UNAVAILABLE</span> <span class="o">=</span> <span class="n">ResponseCode</span><span class="p">(</span><span class="mi">503</span><span class="p">,</span> <span class="s1">'Service temporarily unavailable.'</span><span class="p">)</span>
+
+<div class="viewcode-block" id="FDSNErrorText">
+<a class="viewcode-back" href="../../api/kbws.responses.html#kbws.responses.FDSNErrorText">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">FDSNErrorText</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">""" Formattable error response text template</span>
+
+<span class="sd">    Use like this:</span>
+<span class="sd">    e = FDSNErrorText(</span>
+<span class="sd">        error_code=REQUEST_TOO_LARGE.code,</span>
+<span class="sd">        simple_descr=REQUEST_TOO_LARGE.message,</span>
+<span class="sd">        ...</span>
+<span class="sd">    )</span>
+<span class="sd">    return PlainTextResponse(str(e), status_code=e.error_code)</span>
+<span class="sd">    """</span>
+    <span class="n">error_code</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">simple_descr</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">detail</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">service_docs_uri</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">submitted_url</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">utc_date_time</span><span class="p">:</span> <span class="n">UTCDateTime</span>
+    <span class="n">service_version</span><span class="p">:</span> <span class="nb">str</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">txt</span> <span class="o">=</span> <span class="n">dedent</span><span class="p">(</span>
+<span class="w">            </span><span class="sd">"""\</span>
+<span class="sd">            ----------------------------------------------------</span>
+<span class="sd">            Error {error_code}: {simple_descr}</span>
+
+<span class="sd">            {detail}</span>
+
+<span class="sd">            Usage details are available from {service_docs_uri}</span>
+
+<span class="sd">            Request:</span>
+<span class="sd">            {submitted_url}</span>
+
+<span class="sd">            Request Submitted:</span>
+<span class="sd">            {utc_date_time}</span>
+
+<span class="sd">            Service version:</span>
+<span class="sd">            {service_version}</span>
+<span class="sd">            ----------------------------------------------------</span>
+<span class="sd">            """</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="n">asdict</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">txt</span></div>
+
+
+<span class="c1"># TODO: override some FastAPI exceptions with our own.</span>
+<span class="c1"># https://fastapi.tiangolo.com/tutorial/handling-errors/#override-request-validation-exceptions</span>
+<span class="c1"># https://medium.com/@geetansh2k1/the-best-way-to-handle-exceptions-in-a-fastapi-application-37596995355c</span>
+<span class="c1"># these follow: https://github.com/Kludex/starlette/blob/main/starlette/responses.py#L192</span>
+<div class="viewcode-block" id="FDSNErrorResponse">
+<a class="viewcode-back" href="../../api/kbws.responses.html#kbws.responses.FDSNErrorResponse">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">FDSNErrorResponse</span><span class="p">(</span><span class="n">PlainTextResponse</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Usage</span>
+<span class="sd">    -----</span>
+<span class="sd">    &gt;&gt;&gt; from kbws.responses import BAD_REQUEST, FDSNResponse</span>
+<span class="sd">    &gt;&gt;&gt; # inside endpoint function</span>
+<span class="sd">    &gt;&gt;&gt; try:</span>
+<span class="sd">    ...     # do something</span>
+<span class="sd">    ... except (whatever exception you're expecting) as e:</span>
+<span class="sd">    ...     r = FDSNResponse(</span>
+<span class="sd">    ...             str(e),</span>
+<span class="sd">    ...             BAD_REQUEST.status_code,</span>
+<span class="sd">    ...             BAD_REQUEST.simple_descr,</span>
+<span class="sd">    ...             service_docs_uri=request.base_url,</span>
+<span class="sd">    ...             submitted_url=request['path'],</span>
+<span class="sd">    ...             utc_date_time=UTCDateTime(),</span>
+<span class="sd">    ...             service_version=VERSION,</span>
+<span class="sd">    ...     )</span>
+<span class="sd">    ...     return r</span>
+<span class="sd">    """</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+        <span class="n">content</span><span class="p">,</span>
+        <span class="n">status_code</span><span class="p">,</span>
+        <span class="n">simple_descr</span><span class="p">,</span>
+        <span class="n">service_docs_url</span><span class="p">,</span>
+        <span class="n">submitted_url</span><span class="p">,</span>
+        <span class="n">service_version</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">simple_descr</span> <span class="o">=</span> <span class="n">simple_descr</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">service_docs_url</span> <span class="o">=</span> <span class="n">service_docs_url</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">submitted_url</span> <span class="o">=</span> <span class="n">submitted_url</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">service_version</span> <span class="o">=</span> <span class="n">service_version</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">utc_date_time</span> <span class="o">=</span> <span class="n">UTCDateTime</span><span class="p">()</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="n">status_code</span><span class="p">)</span>
+
+<div class="viewcode-block" id="FDSNErrorResponse.render">
+<a class="viewcode-back" href="../../api/kbws.responses.html#kbws.responses.FDSNErrorResponse.render">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">content</span><span class="p">):</span>
+        <span class="n">template</span> <span class="o">=</span> <span class="n">dedent</span><span class="p">(</span>
+<span class="w">            </span><span class="sd">"""\</span>
+<span class="sd">            ----------------------------------------------------</span>
+<span class="sd">            Error {resp.status_code}: {resp.simple_descr}</span>
+
+<span class="sd">            {content}</span>
+
+<span class="sd">            Usage details are available from {resp.service_docs_url}</span>
+
+<span class="sd">            Request:</span>
+<span class="sd">            {resp.submitted_url}</span>
+
+<span class="sd">            Request Submitted:</span>
+<span class="sd">            {resp.utc_date_time}</span>
+
+<span class="sd">            Service version:</span>
+<span class="sd">            {resp.service_version}</span>
+<span class="sd">            ----------------------------------------------------</span>
+<span class="sd">            """</span>
+        <span class="p">)</span>
+        <span class="n">body</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">resp</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+            <span class="n">content</span><span class="o">=</span><span class="n">content</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">body</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">'utf-8'</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="BadRequestResponse">
+<a class="viewcode-back" href="../../api/kbws.responses.html#kbws.responses.BadRequestResponse">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">BadRequestResponse</span><span class="p">(</span><span class="n">FDSNErrorResponse</span><span class="p">):</span>
+    <span class="c1"># accept params needed from the call site</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+        <span class="n">content</span><span class="p">,</span>
+        <span class="n">service_docs_url</span><span class="p">,</span>
+        <span class="n">submitted_url</span><span class="p">,</span>
+        <span class="n">service_version</span>
+    <span class="p">):</span>
+        <span class="c1"># Pass those and BadRequestResponse-specific params to more parent/FDSNErrorResponse</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">content</span><span class="p">,</span>
+            <span class="mi">400</span><span class="p">,</span>
+            <span class="s2">"Badly formed request."</span><span class="p">,</span>
+            <span class="n">service_docs_url</span><span class="p">,</span>
+            <span class="n">submitted_url</span><span class="p">,</span>
+            <span class="n">service_version</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="UnauthorizedResponse">
+<a class="viewcode-back" href="../../api/kbws.responses.html#kbws.responses.UnauthorizedResponse">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">UnauthorizedResponse</span><span class="p">(</span><span class="n">FDSNErrorResponse</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+        <span class="n">content</span><span class="p">,</span>
+        <span class="n">service_docs_url</span><span class="p">,</span>
+        <span class="n">submitted_url</span><span class="p">,</span>
+        <span class="n">service_version</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">content</span><span class="p">,</span>
+            <span class="mi">401</span><span class="p">,</span>
+            <span class="s1">'Unauthorized, authentication required.'</span><span class="p">,</span>
+            <span class="n">service_docs_url</span><span class="p">,</span>
+            <span class="n">submitted_url</span><span class="p">,</span>
+            <span class="n">service_version</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="AuthFailedResponse">
+<a class="viewcode-back" href="../../api/kbws.responses.html#kbws.responses.AuthFailedResponse">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">AuthFailedResponse</span><span class="p">(</span><span class="n">FDSNErrorResponse</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+        <span class="n">content</span><span class="p">,</span>
+        <span class="n">service_docs_url</span><span class="p">,</span>
+        <span class="n">submitted_url</span><span class="p">,</span>
+        <span class="n">service_version</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">content</span><span class="p">,</span>
+            <span class="mi">403</span><span class="p">,</span>
+            <span class="s1">'Authentication failed or access blocked to restricted data.'</span><span class="p">,</span>
+            <span class="n">service_docs_url</span><span class="p">,</span>
+            <span class="n">submitted_url</span><span class="p">,</span>
+            <span class="n">service_version</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="NoDataAltResponse">
+<a class="viewcode-back" href="../../api/kbws.responses.html#kbws.responses.NoDataAltResponse">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">NoDataAltResponse</span><span class="p">(</span><span class="n">FDSNErrorResponse</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+        <span class="n">content</span><span class="p">,</span>
+        <span class="n">service_docs_url</span><span class="p">,</span>
+        <span class="n">submitted_url</span><span class="p">,</span>
+        <span class="n">service_version</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">content</span><span class="p">,</span>
+            <span class="mi">404</span><span class="p">,</span>
+            <span class="s1">'No data matches the selection.'</span><span class="p">,</span>
+            <span class="n">service_docs_url</span><span class="p">,</span>
+            <span class="n">submitted_url</span><span class="p">,</span>
+            <span class="n">service_version</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="RequestTooLargeResponse">
+<a class="viewcode-back" href="../../api/kbws.responses.html#kbws.responses.RequestTooLargeResponse">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">RequestTooLargeResponse</span><span class="p">(</span><span class="n">FDSNErrorResponse</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+        <span class="n">content</span><span class="p">,</span>
+        <span class="n">service_docs_url</span><span class="p">,</span>
+        <span class="n">submitted_url</span><span class="p">,</span>
+        <span class="n">service_version</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">content</span><span class="p">,</span>
+            <span class="mi">413</span><span class="p">,</span>
+            <span class="s1">'Request or response too large.'</span><span class="p">,</span>
+            <span class="n">service_docs_url</span><span class="p">,</span>
+            <span class="n">submitted_url</span><span class="p">,</span>
+            <span class="n">service_version</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="URLTooLongResponse">
+<a class="viewcode-back" href="../../api/kbws.responses.html#kbws.responses.URLTooLongResponse">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">URLTooLongResponse</span><span class="p">(</span><span class="n">FDSNErrorResponse</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+        <span class="n">content</span><span class="p">,</span>
+        <span class="n">service_docs_url</span><span class="p">,</span>
+        <span class="n">submitted_url</span><span class="p">,</span>
+        <span class="n">service_version</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">content</span><span class="p">,</span>
+            <span class="mi">414</span><span class="p">,</span>
+            <span class="s1">'Request URI is too long.'</span><span class="p">,</span>
+            <span class="n">service_docs_url</span><span class="p">,</span>
+            <span class="n">submitted_url</span><span class="p">,</span>
+            <span class="n">service_version</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="InternalErrorResponse">
+<a class="viewcode-back" href="../../api/kbws.responses.html#kbws.responses.InternalErrorResponse">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">InternalErrorResponse</span><span class="p">(</span><span class="n">FDSNErrorResponse</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+        <span class="n">content</span><span class="p">,</span>
+        <span class="n">service_docs_url</span><span class="p">,</span>
+        <span class="n">submitted_url</span><span class="p">,</span>
+        <span class="n">service_version</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">content</span><span class="p">,</span>
+            <span class="mi">500</span><span class="p">,</span>
+            <span class="s1">'Internal server error.'</span><span class="p">,</span>
+            <span class="n">service_docs_url</span><span class="p">,</span>
+            <span class="n">submitted_url</span><span class="p">,</span>
+            <span class="n">service_version</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TemporarilyUnavailableResponse">
+<a class="viewcode-back" href="../../api/kbws.responses.html#kbws.responses.TemporarilyUnavailableResponse">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">TemporarilyUnavailableResponse</span><span class="p">(</span><span class="n">FDSNErrorResponse</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+        <span class="n">content</span><span class="p">,</span>
+        <span class="n">service_docs_url</span><span class="p">,</span>
+        <span class="n">submitted_url</span><span class="p">,</span>
+        <span class="n">service_version</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">content</span><span class="p">,</span>
+            <span class="mi">503</span><span class="p">,</span>
+            <span class="s1">'Service temporarily unavailable.'</span><span class="p">,</span>
+            <span class="n">service_docs_url</span><span class="p">,</span>
+            <span class="n">submitted_url</span><span class="p">,</span>
+            <span class="n">service_version</span>
+        <span class="p">)</span></div>
+
+</pre></div>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Jonathan MacCarthy
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025, Jonathan MacCarthy.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
