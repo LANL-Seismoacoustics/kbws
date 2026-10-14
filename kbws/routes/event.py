@@ -72,9 +72,16 @@ def event_query(
         maxlatitude=params.maxlatitude,
         mindepth=params.mindepth,
         maxdepth=params.maxdepth,
+        minmagnitude=params.minmagnitude,
+        maxmagnitude=params.maxmagnitude,
+        magnitudetype=params.magnitudetype,
+        eventtype=params.eventtype,
         includeallorigins=params.includeallorigins,
+        includeallmagnitudes=params.includeallmagnitudes,
+        preferred_magnitude=tuple(params.preferredmagnitude.split(",")) if params.preferredmagnitude else ("mb", "mw", "ms"),
         includearrivals=params.includearrivals,
         eventid=params.eventid,
+        contributor=params.contributor,
         asquery=params.format in ("sql", "css"),
     )
 

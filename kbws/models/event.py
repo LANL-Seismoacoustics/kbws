@@ -170,12 +170,32 @@ class EventQuery(BaseModel):
             description="Specify if all origins for the event should be included, default is data center dependent but is suggested to be the preferred origin only.",
         ),
     ] = False
-    # includeallmagnitudes: Annotated[
-    #     bool,
-    #     Query(
-    #         description="Specify if all magnitudes for the event should be included, default is data center dependent but is suggested to be the preferred magnitude only.",
-    #     ),
-    # ] = False
+    includeallmagnitudes: Annotated[
+        bool,
+        Field(
+            description="Specify if all magnitudes for the event should be included, default is data center dependent but is suggested to be the preferred magnitude only.",
+        ),
+    ] = False
+    preferredmagnitude: Annotated[
+        Optional[str],
+        Field(
+            description=(
+                "Comma-separated magnitude types in preferred order, used to select the preferred "
+                "network magnitude when includeallmagnitudes is false. Defaults to 'mb,mw,ms'. "
+                "CSS-like databases have no concept of a preferred magnitude (type) for when "
+                "`includeallmagnitudes=False` and a single 'preferred' magnitude is returned. "
+                "Default is the Pisces default."
+            ),
+            examples="mb,mw,ms",
+        ),
+    ] = None
+    contributor: Annotated[
+        Optional[str],
+        Field(
+            description="Limit to events contributed by a specified contributor (matches Origin.auth).",
+            examples="ISC",
+        ),
+    ] = None
     includearrivals: Annotated[
         bool,
         Field(
