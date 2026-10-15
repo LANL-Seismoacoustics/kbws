@@ -8,15 +8,14 @@ from typing import Annotated
 from functools import reduce
 
 from fastapi import APIRouter, Response, Depends, Request
-from fastapi.responses import PlainTextResponse, RedirectResponse
-import starlette.status as status
+from fastapi.responses import PlainTextResponse
 from sqlalchemy.orm import Session
 from obspy import Inventory, UTCDateTime
 from pisces import request
 from pydantic import ValidationError
 
 from .. import database as db
-from ..responses import FDSNErrorText, BAD_REQUEST
+from ..responses import fdsn_error_response, BAD_REQUEST
 from ..models import StationQuery
 from ..formats import post_parse
 
@@ -95,7 +94,6 @@ def station_query(
             # r = Response(content=content, media_type='application/xml')
         else:
             # no data
-            # TODO: add errors.FDSNErrorText usage here.
             r = Response(status_code=int(params.nodata))
 
     return r
@@ -147,16 +145,12 @@ async def station_query_post(
     # TODO: make sure params aren't repeated.
     excluded = ('startbefore', 'endbefore', 'startafter', 'endafter')
     if any(key in params for key in excluded):
-        e = FDSNErrorText(
-            error_code=BAD_REQUEST.code,
-            simple_descr=BAD_REQUEST.message,
+        return fdsn_error_response(
+            request,
+            BAD_REQUEST,
             detail=f"POST parameters cannot contain any of the following: {excluded}",
-            service_docs_uri=request.base_url,
-            submitted_url=body,
-            utc_date_time=UTCDateTime(),
             service_version=VERSION,
         )
-        return  PlainTextResponse(content=str(e), status_code=e.error_code)
 
     if bulk:
         queries = [
@@ -183,16 +177,12 @@ async def station_query_post(
     try:
         station_queries = [StationQuery(**query) for query in queries]
     except ValidationError as e:
-        msg = FDSNErrorText(
-            error_code=BAD_REQUEST.code,
-            simple_descr=BAD_REQUEST.message,
+        return fdsn_error_response(
+            request,
+            BAD_REQUEST,
             detail=str(e),
-            service_docs_uri=request.base_url,
-            submitted_url=request['path'],
-            utc_date_time=UTCDateTime(),
             service_version=VERSION,
         )
-        return PlainTextResponse(content=msg, status_code=BAD_REQUEST.code)
 
     # list of lists (results), excluding empty
     out = [
@@ -201,7 +191,7 @@ async def station_query_post(
            ]
 
     # flatten and remove empty result lists
-    out = reduce(lambda a, b : a + b, out)
+    out = reduce(lambda a, b : a + b, out, [])
 
     # how to remove duplicates?  sets don't work b/c SQLA results are unhashable
     # out = _dedupe(out)

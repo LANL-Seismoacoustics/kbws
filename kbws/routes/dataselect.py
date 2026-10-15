@@ -18,9 +18,8 @@ from typing import Annotated
 from pydantic import ValidationError
 from fastapi import APIRouter, Response, Depends, Query, Request, Body
 from fastapi.responses import PlainTextResponse
-from fastapi.exceptions import RequestValidationError
 from sqlalchemy.orm import Session
-from obspy import UTCDateTime
+from obspy import Stream, UTCDateTime
 
 # from pisces import request
 from pisces.fdsn import Client
@@ -28,7 +27,7 @@ from pisces.util import _get_entities
 
 from ..logging import get_logger
 from .. import database as db
-from ..responses import FDSNErrorText, BAD_REQUEST, NO_DATA, BadRequestResponse
+from ..responses import fdsn_error_response, BAD_REQUEST, NO_DATA
 from ..models import DataselectQuery
 from ..formats import WAVEFORM_FORMATS, post_parse
 
@@ -207,12 +206,13 @@ async def dataselect_query_post(
     try:
         params, bulk = post_parse(body.strip().split('\n'))
     except ValueError as e:
-        # TODO: intercept ValueError to send our FDSN Error Response stuff
-        msg = f'Unable to parse POST body: {e}'
-        # raise ValueError(msg)
-        raise RequestValidationError(msg)
+        return fdsn_error_response(
+            request,
+            BAD_REQUEST,
+            detail=f'Unable to parse POST body: {e}',
+            service_version=VERSION,
+        )
 
-    # TODO: put these into the exception handlers.
     logger.debug(f'{request.headers=}')
     logger.debug(f'{body=}')
     if bulk:
@@ -241,25 +241,12 @@ async def dataselect_query_post(
         # we have to do it ourselves by unpacking parameters in the DataselectQuery model.
         dataselect_queries = [DataselectQuery(**query) for query in queries]
     except ValidationError as e:
-        # Also, The FDSNWS spec is pretty specific about errors:
+        # The FDSNWS spec is pretty specific about errors:
         # http://www.fdsn.org/webservices/FDSN-WS-Specification-Commonalities-1.2.pdf
-        # msg = FDSNErrorText(
-        #     error_code=BAD_REQUEST.code,
-        #     simple_descr=BAD_REQUEST.message,
-        #     detail=str(e),
-        #     service_docs_url=request.base_url,
-        #     submitted_url=request['path'],
-        #     utc_date_time=UTCDateTime(),
-        #     service_version=VERSION,
-        # )
-        # return PlainTextResponse(
-        #     content=str(msg),
-        #     status_code=msg.error_code
-        # )
-        return BadRequestResponse(
-            content=str(e),
-            service_docs_url=request.base_url,
-            submitted_url=request['path'],
+        return fdsn_error_response(
+            request,
+            BAD_REQUEST,
+            detail=str(e),
             service_version=VERSION,
         )
 
@@ -283,7 +270,7 @@ async def dataselect_query_post(
 
     # flatten and remove empty Streams
     # out is a single (possibly empty) Stream
-    out = reduce(lambda a, b : a + b, out)
+    out = reduce(lambda a, b : a + b, out, Stream())
     logger.debug(f'{str(out)}')
 
 
@@ -302,7 +289,6 @@ async def dataselect_query_post(
             headers=headers,
         )
     else:
-        # TODO: replace with our custom FDSNErrorText stuff?
         r = Response(NO_DATA.message, status_code=int(params.get('nodata', NO_DATA.code)))
 
     return r
