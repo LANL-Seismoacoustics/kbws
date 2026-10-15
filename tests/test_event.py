@@ -10,6 +10,7 @@ from pisces.util import literal_sql
 import pytest
 
 from kbws.main import app
+from kbws.responses import _TEMPLATE
 
 ENDPOINT = "/fdsnws/event/1/query?"
 
@@ -180,6 +181,21 @@ def test_event_query_defaults(capture_get_events_kwargs):
     assert kwargs['includearrivals'] is False
     assert kwargs['eventid'] is None
     assert kwargs['contributor'] is None
+
+
+def test_event_pisces_value_error_returns_fdsn_400(monkeypatch):
+    """Pisces query validation errors return the standard FDSN 400 response."""
+    def raise_value_error(*args, **kwargs):
+        raise ValueError("eventtype 'not-an-event' not recognized")
+
+    monkeypatch.setattr(Client, 'get_events', raise_value_error)
+
+    response = client.get(f"{ENDPOINT}eventtype=not-an-event")
+    assert response.status_code == 400
+    body = response.content.decode("utf-8")
+    assert body.startswith(_TEMPLATE.split("{")[0])
+    assert "Error 400: Badly formed request." in body
+    assert "eventtype 'not-an-event' not recognized" in body
 
 
 def test_event_nodata_204_default(monkeypatch):

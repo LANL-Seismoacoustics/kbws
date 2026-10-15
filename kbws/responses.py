@@ -36,6 +36,11 @@ URL_TOO_LONG = ResponseCode(414, 'Request URI is too long.')
 INTERNAL_ERROR = ResponseCode(500, 'Internal server error.')
 TEMP_UNAVAILABLE = ResponseCode(503, 'Service temporarily unavailable.')
 
+# shortcut: ValueError also covers missing Pisces tables today; split this mapping when Pisces documents distinct native exceptions.
+PISCES_GET_EVENTS_ERRORS = {
+    BAD_REQUEST: (ValueError,),
+}
+
 _TEMPLATE = dedent(
     """\
     ----------------------------------------------------

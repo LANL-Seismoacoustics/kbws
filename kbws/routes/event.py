@@ -5,7 +5,7 @@ database queries, and return text or ObsPy Catalog objects.
 """
 from typing import Annotated
 
-from fastapi import APIRouter, Response, Depends, Query
+from fastapi import APIRouter, Response, Depends, Query, Request
 from fastapi.responses import PlainTextResponse
 from sqlalchemy.orm import Session
 from obspy import UTCDateTime
@@ -15,6 +15,7 @@ from pisces.util import _get_entities
 from .. import database as db
 from ..models import EventQuery
 from ..formats import catalog_xml, catalog_json
+from ..responses import fdsn_error_response, BAD_REQUEST, PISCES_GET_EVENTS_ERRORS
 
 VERSION = "1.2.0"
 MAJOR_VERSION = VERSION.split(".")[0]
@@ -42,6 +43,7 @@ def event_version():
 
 @router.get("/query")
 def event_query(
+    request: Request,
     params: Annotated[EventQuery, Query()],
     session: Session = Depends(db.get_db)
 ):
@@ -61,29 +63,37 @@ def event_query(
         assoc=db.Assoc,
     )
 
-    # this endpoint is easy, as all parameters map directly to the pisces FDSN Client.get_events
-    out = client.get_events(
-        starttime=UTCDateTime(params.starttime) if params.starttime else None,
-        endtime=UTCDateTime(params.endtime) if params.endtime else None,
-        updatedafter=UTCDateTime(params.updatedafter) if params.updatedafter else None,
-        minlongitude=params.minlongitude,
-        maxlongitude=params.maxlongitude,
-        minlatitude=params.minlatitude,
-        maxlatitude=params.maxlatitude,
-        mindepth=params.mindepth,
-        maxdepth=params.maxdepth,
-        minmagnitude=params.minmagnitude,
-        maxmagnitude=params.maxmagnitude,
-        magnitudetype=params.magnitudetype,
-        eventtype=params.eventtype,
-        includeallorigins=params.includeallorigins,
-        includeallmagnitudes=params.includeallmagnitudes,
-        preferred_magnitude=tuple(params.preferredmagnitude.split(",")) if params.preferredmagnitude else ("mb", "mw", "ms"),
-        includearrivals=params.includearrivals,
-        eventid=params.eventid,
-        contributor=params.contributor,
-        asquery=params.format in ("sql", "css"),
-    )
+    # This endpoint is easy, as all parameters map directly to Pisces Client.get_events.
+    try:
+        out = client.get_events(
+            starttime=UTCDateTime(params.starttime) if params.starttime else None,
+            endtime=UTCDateTime(params.endtime) if params.endtime else None,
+            updatedafter=UTCDateTime(params.updatedafter) if params.updatedafter else None,
+            minlongitude=params.minlongitude,
+            maxlongitude=params.maxlongitude,
+            minlatitude=params.minlatitude,
+            maxlatitude=params.maxlatitude,
+            mindepth=params.mindepth,
+            maxdepth=params.maxdepth,
+            minmagnitude=params.minmagnitude,
+            maxmagnitude=params.maxmagnitude,
+            magnitudetype=params.magnitudetype,
+            eventtype=params.eventtype,
+            includeallorigins=params.includeallorigins,
+            includeallmagnitudes=params.includeallmagnitudes,
+            preferred_magnitude=tuple(params.preferredmagnitude.split(",")) if params.preferredmagnitude else ("mb", "mw", "ms"),
+            includearrivals=params.includearrivals,
+            eventid=params.eventid,
+            contributor=params.contributor,
+            asquery=params.format in ("sql", "css"),
+        )
+    except PISCES_GET_EVENTS_ERRORS[BAD_REQUEST] as exc:
+        return fdsn_error_response(
+            request,
+            BAD_REQUEST,
+            detail=str(exc),
+            service_version=VERSION,
+        )
 
     if out:
         match params.format:
