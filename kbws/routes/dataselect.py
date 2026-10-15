@@ -61,42 +61,6 @@ def dataselect_wadl(wadl: str = Depends(get_wadl)):
 def dataselect_version():
     return VERSION
 
-# Testing HTTP Digest from https://fastapi.tiangolo.com/reference/security/#fastapi.security.HTTPDigest--example
-from fastapi.security import HTTPAuthorizationCredentials, HTTPDigest
-security = HTTPDigest()
-@router.get("/queryauth1", summary="Experimental HTTP Digest Auth endpoint, test 1.")
-def dataselect_queryauth1(
-    credentials: Annotated[HTTPAuthorizationCredentials, Depends(security)]
-):
-    """ works with: curl -L  "http://0.0.0.0:8000/fdsnws/dataselect/1/queryauth/"  -H 'Authorization: Digest myt0ken' """
-    logger.warning(credentials.scheme, credentials.credentials)
-    return {"scheme": credentials.scheme, "credentials": credentials.credentials}
-
-# HTTP digest attempt 2, from https://stackoverflow.com/a/70268255/745557
-from fastapi import Security
-http_digest = HTTPDigest()
-def authorize_digest(credentials: HTTPAuthorizationCredentials = Security(http_digest)):
-    print(credentials.scheme, credentials.credentials)
-    # TODO: make this depend on db.get_db?
-
-
-@router.get("/queryauth2", dependencies=[Depends(authorize_digest)], summary="Experimental HTTP Digest Auth endpoint test 2.")
-def dataselect_queryauth2():
-    return {"success": "true"}
-
-# attempt to make an actual /queryauth
-# think of a way to chain dependencies on authorize_digest, db.get_db Session, etc...
-# https://fastapi.tiangolo.com/advanced/advanced-dependencies/#use-cases-with-early-exit-code
-@router.get("/queryauth", dependencies=[Depends(authorize_digest)], summary="HTTP Digest Authenticated query endpoint")
-def dataselect_queryauth(
-    params: Annotated[DataselectQuery, Query()],
-    session: Session = Depends(db.get_db)
-):
-    print(params.model_dump())
-
-    return "looks good!"
-
-
 @router.get("/query", summary="Download data using URL query parameters")
 def dataselect_query(
     params: Annotated[DataselectQuery, Query()],
