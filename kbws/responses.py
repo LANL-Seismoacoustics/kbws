@@ -83,6 +83,10 @@ def fdsn_error_response(
         The version of the FDSN service that raised the error.
 
     """
+    request_id = getattr(request.state, "request_id", None)
+    if request_id:
+        detail = f"{detail}\n\nRequest ID: {request_id}"
+
     body = _TEMPLATE.format(
         code=response_code.code,
         simple_descr=response_code.message,
@@ -92,4 +96,7 @@ def fdsn_error_response(
         utc_date_time=UTCDateTime(),
         service_version=service_version,
     )
-    return PlainTextResponse(content=body, status_code=response_code.code)
+    response = PlainTextResponse(content=body, status_code=response_code.code)
+    if request_id:
+        response.headers["X-Request-ID"] = request_id
+    return response

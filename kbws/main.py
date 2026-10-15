@@ -35,6 +35,7 @@ The `_discover_services` keyword allows you to bypass the need for a properly-fo
 import functools
 import io
 import logging
+from uuid import uuid4
 
 from fastapi import FastAPI, Response, Request
 from fastapi.routing import APIRoute
@@ -86,10 +87,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# intercept each request to attach the service version to it, so it can be used below
-# in validation exceptions (which must be declared globally, not per service)
+# Attach request metadata used by the response and error handlers below.
 @app.middleware("http")
-async def add_service_version_header(request: Request, call_next):
+async def add_request_metadata(request: Request, call_next):
+    request.state.request_id = str(uuid4())
     if 'station' in request.url.path:
         service = 'station'
     elif 'dataselect' in request.url.path:
@@ -100,9 +101,16 @@ async def add_service_version_header(request: Request, call_next):
         service = 'noservice'
 
     request.state.service_version = SERVICE_VERSIONS.get(service, app.version)
-    request = await call_next(request)
-
-    return request
+    response = await call_next(request)
+    response.headers["X-Request-ID"] = request.state.request_id
+    logger.info(
+        "request_complete request_id=%s method=%s path=%s status=%s",
+        request.state.request_id,
+        request.method,
+        request.url.path,
+        response.status_code,
+    )
+    return response
 
 # catch FastAPI's/Starlette's default query parameter validation, and return FDSN-like ones instead.
 # XXX: this needs to be specific to the route (...why?) not supported by FastAPI without creating and
@@ -121,11 +129,15 @@ async def validation_exception_handler(request: Request, exc):
 
 @app.exception_handler(Exception)
 async def internal_error_handler(request: Request, exc):
-    logger.exception("Unhandled exception")
+    request_id = getattr(request.state, 'request_id', 'unavailable')
+    logger.exception("Unhandled exception request_id=%s", request_id)
     return fdsn_error_response(
         request,
         INTERNAL_ERROR,
-        detail=str(exc),
+        detail=(
+            "An internal server error occurred.\n\n"
+            "Include this ID when contacting the service operator."
+        ),
         service_version=getattr(request.state, 'service_version', app.version),
     )
 
