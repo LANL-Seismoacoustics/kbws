@@ -17,13 +17,19 @@ KBWS uses [FastAPI](https://fastapi.tiangolo.com/), [Pisces](https://github.com/
 Run KBWS natively with Conda/pip, or deploy it in containers using Docker or Podman. Configure multiple database schemas, waveform directories, and table mappings through simple environment files.
 
 
+## Service support
+
+KBWS currently provides usable FDSN-style services for:
+
+* **fdsnws-event**: query and retrieve event catalogs in QuakeML, JSON, SQL debug output, or CSS origin rows.
+* **fdsnws-dataselect**: retrieve waveform data in MiniSEED or SAC ZIP, plus SQL debug output or CSS Wfdisc rows.
+
+**Station** and **Availability** parameter models and routes are present for API development, but their query implementations are deferred pending Pisces support. They are not yet operational FDSN services.
+
+See [Access Control](authentication.md) for the deployment-scoped security model.
+
 ## Features
 
-* Complete implementation of FDSN web service standards:
-  * **fdsnws-event**: Query and retrieve event catalogs in QuakeML, JSON, or CSV formats
-  * **fdsnws-station**: Query station metadata with full channel-level detail
-  * **fdsnws-dataselect**: Retrieve waveform data in MiniSEED or SAC formats
-  * **fdsnws-availability**: Query waveform data availability
 * Direct integration with [ObsPy](http://www.obspy.org) FDSN client
 * Support for Oracle databases via cx_Oracle or oracledb drivers
 * Flexible schema mapping - configure any table names via environment variables
@@ -80,6 +86,7 @@ curl "http://localhost:8000/fdsnws/dataselect/1/query?net=IU&sta=ANMO&loc=00&cha
 
 installation.md
 deployment.md
+authentication.md
 development.md
 ```
 
