@@ -38,16 +38,14 @@ import logging
 
 from fastapi import FastAPI, Response, Request
 from fastapi.routing import APIRoute
-from fastapi.responses import PlainTextResponse
 from fastapi.exceptions import RequestValidationError
-from fastapi import status
 from fastapi.middleware.cors import CORSMiddleware
 import yaml
 
 from . import __version__
 from .logging import get_logger
 from .routes import availability, dataselect, event, station
-from .responses import BadRequestResponse, InternalErrorResponse
+from .responses import fdsn_error_response, BAD_REQUEST, INTERNAL_ERROR
 
 
 SERVICE_VERSIONS = {
@@ -113,27 +111,23 @@ async def add_service_version_header(request: Request, call_next):
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request: Request, exc):
     logger.info("In RequestValidationError handler")
-    r = BadRequestResponse(
-        content=str(exc),
-        service_docs_url=request.base_url,
-        submitted_url=str(request.url) + str(request.query_params),
+    return fdsn_error_response(
+        request,
+        BAD_REQUEST,
+        detail=str(exc),
         service_version=getattr(request.state, 'service_version', app.version),
     )
-    return r
 
 
-# @app.exception_handler(ValueError)
-@app.exception_handler(status.HTTP_500_INTERNAL_SERVER_ERROR)
+@app.exception_handler(Exception)
 async def internal_error_handler(request: Request, exc):
-    logger.error("oops!")
-    # r = InternalErrorResponse(
-    #     content=str(exc),
-    #     service_docs_url=request.base_url,
-    #     submitted_url=str(request.url) + str(request.query_params),
-    #     service_version=getattr(request.state, 'service_version', app.version),
-    # )
-    # return r
-    return PlainTextResponse("oops response", status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    logger.exception("Unhandled exception")
+    return fdsn_error_response(
+        request,
+        INTERNAL_ERROR,
+        detail=str(exc),
+        service_version=getattr(request.state, 'service_version', app.version),
+    )
 
 
 # yaml version of spec, in addition to openapi.json endpoint
