@@ -17,7 +17,9 @@ def test_validation_error_response_is_fdsn_formatted():
     """A bad query param (handled by RequestValidationError) returns the FDSN error template."""
     response = client.get(f"{ENDPOINT}maxlatitude=not-a-number")
     assert response.status_code == 400
+    request_id = response.headers["X-Request-ID"]
     body = response.content.decode("utf-8")
+    assert f"Request ID: {request_id}" in body
     assert body.startswith(_TEMPLATE.split("{")[0])
     assert "Error 400: Badly formed request." in body
 
@@ -36,10 +38,13 @@ def test_unhandled_exception_returns_fdsn_formatted_500(monkeypatch):
         )
     )
     assert response.status_code == 500
+    request_id = response.headers["X-Request-ID"]
     body = response.content.decode("utf-8")
     assert body.startswith(_TEMPLATE.split("{")[0])
     assert "Error 500: Internal server error." in body
-    assert "boom" in body
+    assert f"Request ID: {request_id}" in body
+    assert "Include this ID when contacting the service operator." in body
+    assert "boom" not in body
 
 
 def test_fdsn_error_response_format():
