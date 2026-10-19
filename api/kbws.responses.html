@@ -391,33 +391,13 @@
             </div>
             <nav aria-label="Page">
                 <ul class="pst-show_toc_level nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kbws.responses.AuthFailedResponse"><code class="docutils literal notranslate"><span class="pre">AuthFailedResponse</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kbws.responses.BadRequestResponse"><code class="docutils literal notranslate"><span class="pre">BadRequestResponse</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kbws.responses.FDSNErrorResponse"><code class="docutils literal notranslate"><span class="pre">FDSNErrorResponse</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kbws.responses.FDSNErrorResponse.render"><code class="docutils literal notranslate"><span class="pre">FDSNErrorResponse.render()</span></code></a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kbws.responses.FDSNErrorText"><code class="docutils literal notranslate"><span class="pre">FDSNErrorText</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kbws.responses.FDSNErrorText.detail"><code class="docutils literal notranslate"><span class="pre">FDSNErrorText.detail</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kbws.responses.FDSNErrorText.error_code"><code class="docutils literal notranslate"><span class="pre">FDSNErrorText.error_code</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kbws.responses.FDSNErrorText.service_docs_uri"><code class="docutils literal notranslate"><span class="pre">FDSNErrorText.service_docs_uri</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kbws.responses.FDSNErrorText.service_version"><code class="docutils literal notranslate"><span class="pre">FDSNErrorText.service_version</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kbws.responses.FDSNErrorText.simple_descr"><code class="docutils literal notranslate"><span class="pre">FDSNErrorText.simple_descr</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kbws.responses.FDSNErrorText.submitted_url"><code class="docutils literal notranslate"><span class="pre">FDSNErrorText.submitted_url</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kbws.responses.FDSNErrorText.utc_date_time"><code class="docutils literal notranslate"><span class="pre">FDSNErrorText.utc_date_time</span></code></a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kbws.responses.InternalErrorResponse"><code class="docutils literal notranslate"><span class="pre">InternalErrorResponse</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kbws.responses.NoDataAltResponse"><code class="docutils literal notranslate"><span class="pre">NoDataAltResponse</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kbws.responses.RequestTooLargeResponse"><code class="docutils literal notranslate"><span class="pre">RequestTooLargeResponse</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kbws.responses.ResponseCode"><code class="docutils literal notranslate"><span class="pre">ResponseCode</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kbws.responses.ResponseCode.code"><code class="docutils literal notranslate"><span class="pre">ResponseCode.code</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kbws.responses.ResponseCode.message"><code class="docutils literal notranslate"><span class="pre">ResponseCode.message</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kbws.responses.TemporarilyUnavailableResponse"><code class="docutils literal notranslate"><span class="pre">TemporarilyUnavailableResponse</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kbws.responses.URLTooLongResponse"><code class="docutils literal notranslate"><span class="pre">URLTooLongResponse</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kbws.responses.UnauthorizedResponse"><code class="docutils literal notranslate"><span class="pre">UnauthorizedResponse</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kbws.responses.fdsn_error_response"><code class="docutils literal notranslate"><span class="pre">fdsn_error_response()</span></code></a></li>
 </ul>
             </nav>
         </div>
@@ -431,124 +411,22 @@
                   
   <section id="module-kbws.responses">
 <span id="kbws-responses-module"></span><h1>kbws.responses module<a class="headerlink" href="#module-kbws.responses" title="Link to this heading">#</a></h1>
-<dl class="py class">
-<dt class="sig sig-object py" id="kbws.responses.AuthFailedResponse">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">kbws.responses.</span></span><span class="sig-name descname"><span class="pre">AuthFailedResponse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">content</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">service_docs_url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">submitted_url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">service_version</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kbws/responses.html#AuthFailedResponse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kbws.responses.AuthFailedResponse" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#kbws.responses.FDSNErrorResponse" title="kbws.responses.FDSNErrorResponse"><code class="xref py py-class docutils literal notranslate"><span class="pre">FDSNErrorResponse</span></code></a></p>
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="kbws.responses.BadRequestResponse">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">kbws.responses.</span></span><span class="sig-name descname"><span class="pre">BadRequestResponse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">content</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">service_docs_url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">submitted_url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">service_version</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kbws/responses.html#BadRequestResponse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kbws.responses.BadRequestResponse" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#kbws.responses.FDSNErrorResponse" title="kbws.responses.FDSNErrorResponse"><code class="xref py py-class docutils literal notranslate"><span class="pre">FDSNErrorResponse</span></code></a></p>
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="kbws.responses.FDSNErrorResponse">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">kbws.responses.</span></span><span class="sig-name descname"><span class="pre">FDSNErrorResponse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">content</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">status_code</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">simple_descr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">service_docs_url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">submitted_url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">service_version</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kbws/responses.html#FDSNErrorResponse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kbws.responses.FDSNErrorResponse" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">PlainTextResponse</span></code></p>
+<p>FDSN-WS standard error responses.</p>
+<p>All FDSN error responses share one plain-text template (see the FDSN
+Web Services Specification, “Error Handling”). Build one with
+<cite>fdsn_error_response</cite>, passing the request and a <cite>ResponseCode</cite>.</p>
 <section id="usage">
 <h2>Usage<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">kbws.responses</span><span class="w"> </span><span class="kn">import</span> <span class="n">BAD_REQUEST</span><span class="p">,</span> <span class="n">FDSNResponse</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># inside endpoint function</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">try</span><span class="p">:</span>
-<span class="gp">... </span>    <span class="c1"># do something</span>
-<span class="gp">... </span><span class="k">except</span> <span class="p">(</span><span class="n">whatever</span> <span class="n">exception</span> <span class="n">you</span><span class="s1">'re expecting) as e:</span>
-<span class="gp">... </span>    <span class="n">r</span> <span class="o">=</span> <span class="n">FDSNResponse</span><span class="p">(</span>
-<span class="gp">... </span>            <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span>
-<span class="gp">... </span>            <span class="n">BAD_REQUEST</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span>
-<span class="gp">... </span>            <span class="n">BAD_REQUEST</span><span class="o">.</span><span class="n">simple_descr</span><span class="p">,</span>
-<span class="gp">... </span>            <span class="n">service_docs_uri</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">base_url</span><span class="p">,</span>
-<span class="gp">... </span>            <span class="n">submitted_url</span><span class="o">=</span><span class="n">request</span><span class="p">[</span><span class="s1">'path'</span><span class="p">],</span>
-<span class="gp">... </span>            <span class="n">utc_date_time</span><span class="o">=</span><span class="n">UTCDateTime</span><span class="p">(),</span>
-<span class="gp">... </span>            <span class="n">service_version</span><span class="o">=</span><span class="n">VERSION</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="p">)</span>
-<span class="gp">... </span>    <span class="k">return</span> <span class="n">r</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">kbws.responses</span><span class="w"> </span><span class="kn">import</span> <span class="n">fdsn_error_response</span><span class="p">,</span> <span class="n">BAD_REQUEST</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">return</span> <span class="n">fdsn_error_response</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">BAD_REQUEST</span><span class="p">,</span> <span class="n">detail</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">exc</span><span class="p">),</span> <span class="n">service_version</span><span class="o">=</span><span class="n">VERSION</span><span class="p">)</span>
 </pre></div>
 </div>
-<dl class="py method">
-<dt class="sig sig-object py" id="kbws.responses.FDSNErrorResponse.render">
-<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">content</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kbws/responses.html#FDSNErrorResponse.render"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kbws.responses.FDSNErrorResponse.render" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
 </section>
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="kbws.responses.FDSNErrorText">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">kbws.responses.</span></span><span class="sig-name descname"><span class="pre">FDSNErrorText</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">error_code</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">simple_descr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">detail</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">service_docs_uri</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">submitted_url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">utc_date_time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">UTCDateTime</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">service_version</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kbws/responses.html#FDSNErrorText"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kbws.responses.FDSNErrorText" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Formattable error response text template</p>
-<p>Use like this:
-e = FDSNErrorText(</p>
-<blockquote>
-<div><p>error_code=REQUEST_TOO_LARGE.code,
-simple_descr=REQUEST_TOO_LARGE.message,
-…</p>
-</div></blockquote>
-<p>)
-return PlainTextResponse(str(e), status_code=e.error_code)</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="kbws.responses.FDSNErrorText.detail">
-<span class="sig-name descname"><span class="pre">detail</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#kbws.responses.FDSNErrorText.detail" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="kbws.responses.FDSNErrorText.error_code">
-<span class="sig-name descname"><span class="pre">error_code</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#kbws.responses.FDSNErrorText.error_code" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="kbws.responses.FDSNErrorText.service_docs_uri">
-<span class="sig-name descname"><span class="pre">service_docs_uri</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#kbws.responses.FDSNErrorText.service_docs_uri" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="kbws.responses.FDSNErrorText.service_version">
-<span class="sig-name descname"><span class="pre">service_version</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#kbws.responses.FDSNErrorText.service_version" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="kbws.responses.FDSNErrorText.simple_descr">
-<span class="sig-name descname"><span class="pre">simple_descr</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#kbws.responses.FDSNErrorText.simple_descr" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="kbws.responses.FDSNErrorText.submitted_url">
-<span class="sig-name descname"><span class="pre">submitted_url</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#kbws.responses.FDSNErrorText.submitted_url" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="kbws.responses.FDSNErrorText.utc_date_time">
-<span class="sig-name descname"><span class="pre">utc_date_time</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">UTCDateTime</span></em><a class="headerlink" href="#kbws.responses.FDSNErrorText.utc_date_time" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="kbws.responses.InternalErrorResponse">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">kbws.responses.</span></span><span class="sig-name descname"><span class="pre">InternalErrorResponse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">content</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">service_docs_url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">submitted_url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">service_version</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kbws/responses.html#InternalErrorResponse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kbws.responses.InternalErrorResponse" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#kbws.responses.FDSNErrorResponse" title="kbws.responses.FDSNErrorResponse"><code class="xref py py-class docutils literal notranslate"><span class="pre">FDSNErrorResponse</span></code></a></p>
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="kbws.responses.NoDataAltResponse">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">kbws.responses.</span></span><span class="sig-name descname"><span class="pre">NoDataAltResponse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">content</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">service_docs_url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">submitted_url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">service_version</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kbws/responses.html#NoDataAltResponse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kbws.responses.NoDataAltResponse" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#kbws.responses.FDSNErrorResponse" title="kbws.responses.FDSNErrorResponse"><code class="xref py py-class docutils literal notranslate"><span class="pre">FDSNErrorResponse</span></code></a></p>
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="kbws.responses.RequestTooLargeResponse">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">kbws.responses.</span></span><span class="sig-name descname"><span class="pre">RequestTooLargeResponse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">content</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">service_docs_url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">submitted_url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">service_version</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kbws/responses.html#RequestTooLargeResponse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kbws.responses.RequestTooLargeResponse" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#kbws.responses.FDSNErrorResponse" title="kbws.responses.FDSNErrorResponse"><code class="xref py py-class docutils literal notranslate"><span class="pre">FDSNErrorResponse</span></code></a></p>
-</dd></dl>
-
 <dl class="py class">
 <dt class="sig sig-object py" id="kbws.responses.ResponseCode">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">kbws.responses.</span></span><span class="sig-name descname"><span class="pre">ResponseCode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">code</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kbws/responses.html#ResponseCode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kbws.responses.ResponseCode" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>FDSN-WS standard response codes and messages.</p>
-<p>Usage:</p>
+<p>FDSN-WS standard response code and message.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="kbws.responses.ResponseCode.code">
 <span class="sig-name descname"><span class="pre">code</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#kbws.responses.ResponseCode.code" title="Link to this definition">#</a></dt>
@@ -561,22 +439,20 @@ return PlainTextResponse(str(e), status_code=e.error_code)</p>
 
 </dd></dl>
 
-<dl class="py class">
-<dt class="sig sig-object py" id="kbws.responses.TemporarilyUnavailableResponse">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">kbws.responses.</span></span><span class="sig-name descname"><span class="pre">TemporarilyUnavailableResponse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">content</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">service_docs_url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">submitted_url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">service_version</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kbws/responses.html#TemporarilyUnavailableResponse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kbws.responses.TemporarilyUnavailableResponse" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#kbws.responses.FDSNErrorResponse" title="kbws.responses.FDSNErrorResponse"><code class="xref py py-class docutils literal notranslate"><span class="pre">FDSNErrorResponse</span></code></a></p>
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="kbws.responses.URLTooLongResponse">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">kbws.responses.</span></span><span class="sig-name descname"><span class="pre">URLTooLongResponse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">content</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">service_docs_url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">submitted_url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">service_version</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kbws/responses.html#URLTooLongResponse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kbws.responses.URLTooLongResponse" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#kbws.responses.FDSNErrorResponse" title="kbws.responses.FDSNErrorResponse"><code class="xref py py-class docutils literal notranslate"><span class="pre">FDSNErrorResponse</span></code></a></p>
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="kbws.responses.UnauthorizedResponse">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">kbws.responses.</span></span><span class="sig-name descname"><span class="pre">UnauthorizedResponse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">content</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">service_docs_url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">submitted_url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">service_version</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kbws/responses.html#UnauthorizedResponse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kbws.responses.UnauthorizedResponse" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#kbws.responses.FDSNErrorResponse" title="kbws.responses.FDSNErrorResponse"><code class="xref py py-class docutils literal notranslate"><span class="pre">FDSNErrorResponse</span></code></a></p>
+<dl class="py function">
+<dt class="sig sig-object py" id="kbws.responses.fdsn_error_response">
+<span class="sig-prename descclassname"><span class="pre">kbws.responses.</span></span><span class="sig-name descname"><span class="pre">fdsn_error_response</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">response_code</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#kbws.responses.ResponseCode" title="kbws.responses.ResponseCode"><span class="pre">ResponseCode</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">detail</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">service_version</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">PlainTextResponse</span></span></span><a class="reference internal" href="../_modules/kbws/responses.html#fdsn_error_response"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kbws.responses.fdsn_error_response" title="Link to this definition">#</a></dt>
+<dd><p>Build the standard FDSN plain-text error response for <cite>response_code</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>request</strong> (<em>fastapi.Request</em>) – Used to fill in the usage-docs URI and the submitted URL/query.</p></li>
+<li><p><strong>response_code</strong> (<a class="reference internal" href="#kbws.responses.ResponseCode" title="kbws.responses.ResponseCode"><em>ResponseCode</em></a>) – One of the module-level constants, e.g. <cite>BAD_REQUEST</cite>, <cite>NO_DATA_ALT</cite>.</p></li>
+<li><p><strong>detail</strong> (<em>str</em>) – Specific, request-dependent error detail (e.g. a validation message).</p></li>
+<li><p><strong>service_version</strong> (<em>str</em>) – The version of the FDSN service that raised the error.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 </section>
@@ -619,33 +495,13 @@ return PlainTextResponse(str(e), status_code=e.error_code)</p>
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kbws.responses.AuthFailedResponse"><code class="docutils literal notranslate"><span class="pre">AuthFailedResponse</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kbws.responses.BadRequestResponse"><code class="docutils literal notranslate"><span class="pre">BadRequestResponse</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kbws.responses.FDSNErrorResponse"><code class="docutils literal notranslate"><span class="pre">FDSNErrorResponse</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kbws.responses.FDSNErrorResponse.render"><code class="docutils literal notranslate"><span class="pre">FDSNErrorResponse.render()</span></code></a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kbws.responses.FDSNErrorText"><code class="docutils literal notranslate"><span class="pre">FDSNErrorText</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kbws.responses.FDSNErrorText.detail"><code class="docutils literal notranslate"><span class="pre">FDSNErrorText.detail</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kbws.responses.FDSNErrorText.error_code"><code class="docutils literal notranslate"><span class="pre">FDSNErrorText.error_code</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kbws.responses.FDSNErrorText.service_docs_uri"><code class="docutils literal notranslate"><span class="pre">FDSNErrorText.service_docs_uri</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kbws.responses.FDSNErrorText.service_version"><code class="docutils literal notranslate"><span class="pre">FDSNErrorText.service_version</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kbws.responses.FDSNErrorText.simple_descr"><code class="docutils literal notranslate"><span class="pre">FDSNErrorText.simple_descr</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kbws.responses.FDSNErrorText.submitted_url"><code class="docutils literal notranslate"><span class="pre">FDSNErrorText.submitted_url</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kbws.responses.FDSNErrorText.utc_date_time"><code class="docutils literal notranslate"><span class="pre">FDSNErrorText.utc_date_time</span></code></a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kbws.responses.InternalErrorResponse"><code class="docutils literal notranslate"><span class="pre">InternalErrorResponse</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kbws.responses.NoDataAltResponse"><code class="docutils literal notranslate"><span class="pre">NoDataAltResponse</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kbws.responses.RequestTooLargeResponse"><code class="docutils literal notranslate"><span class="pre">RequestTooLargeResponse</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kbws.responses.ResponseCode"><code class="docutils literal notranslate"><span class="pre">ResponseCode</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kbws.responses.ResponseCode.code"><code class="docutils literal notranslate"><span class="pre">ResponseCode.code</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kbws.responses.ResponseCode.message"><code class="docutils literal notranslate"><span class="pre">ResponseCode.message</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kbws.responses.TemporarilyUnavailableResponse"><code class="docutils literal notranslate"><span class="pre">TemporarilyUnavailableResponse</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kbws.responses.URLTooLongResponse"><code class="docutils literal notranslate"><span class="pre">URLTooLongResponse</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kbws.responses.UnauthorizedResponse"><code class="docutils literal notranslate"><span class="pre">UnauthorizedResponse</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kbws.responses.fdsn_error_response"><code class="docutils literal notranslate"><span class="pre">fdsn_error_response()</span></code></a></li>
 </ul>
   </nav></div>
 

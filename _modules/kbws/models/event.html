@@ -519,12 +519,32 @@
             <span class="n">description</span><span class="o">=</span><span class="s2">"Specify if all origins for the event should be included, default is data center dependent but is suggested to be the preferred origin only."</span><span class="p">,</span>
         <span class="p">),</span>
     <span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
-    <span class="c1"># includeallmagnitudes: Annotated[</span>
-    <span class="c1">#     bool,</span>
-    <span class="c1">#     Query(</span>
-    <span class="c1">#         description="Specify if all magnitudes for the event should be included, default is data center dependent but is suggested to be the preferred magnitude only.",</span>
-    <span class="c1">#     ),</span>
-    <span class="c1"># ] = False</span>
+    <span class="n">includeallmagnitudes</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span>
+        <span class="nb">bool</span><span class="p">,</span>
+        <span class="n">Field</span><span class="p">(</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">"Specify if all magnitudes for the event should be included, default is data center dependent but is suggested to be the preferred magnitude only."</span><span class="p">,</span>
+        <span class="p">),</span>
+    <span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">preferredmagnitude</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span>
+        <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+        <span class="n">Field</span><span class="p">(</span>
+            <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+                <span class="s2">"Comma-separated magnitude types in preferred order, used to select the preferred "</span>
+                <span class="s2">"network magnitude when includeallmagnitudes is false. Defaults to 'mb,mw,ms'. "</span>
+                <span class="s2">"CSS-like databases have no concept of a preferred magnitude (type) for when "</span>
+                <span class="s2">"`includeallmagnitudes=False` and a single 'preferred' magnitude is returned. "</span>
+                <span class="s2">"Default is the Pisces default."</span>
+            <span class="p">),</span>
+            <span class="n">examples</span><span class="o">=</span><span class="s2">"mb,mw,ms"</span><span class="p">,</span>
+        <span class="p">),</span>
+    <span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">contributor</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span>
+        <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+        <span class="n">Field</span><span class="p">(</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">"Limit to events contributed by a specified contributor (matches Origin.auth)."</span><span class="p">,</span>
+            <span class="n">examples</span><span class="o">=</span><span class="s2">"ISC"</span><span class="p">,</span>
+        <span class="p">),</span>
+    <span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">includearrivals</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span>
         <span class="nb">bool</span><span class="p">,</span>
         <span class="n">Field</span><span class="p">(</span>

@@ -342,24 +342,34 @@
                 <article class="bd-article">
                   
   <h1>Source code for kbws.responses</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">asdict</span>
+<span></span><span class="sd">"""FDSN-WS standard error responses.</span>
+
+<span class="sd">All FDSN error responses share one plain-text template (see the FDSN</span>
+<span class="sd">Web Services Specification, "Error Handling"). Build one with</span>
+<span class="sd">`fdsn_error_response`, passing the request and a `ResponseCode`.</span>
+
+<span class="sd">Usage</span>
+<span class="sd">-----</span>
+<span class="sd">&gt;&gt;&gt; from kbws.responses import fdsn_error_response, BAD_REQUEST</span>
+<span class="sd">&gt;&gt;&gt; return fdsn_error_response(request, BAD_REQUEST, detail=str(exc), service_version=VERSION)</span>
+
+<span class="sd">"""</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">textwrap</span><span class="w"> </span><span class="kn">import</span> <span class="n">dedent</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">obspy</span><span class="w"> </span><span class="kn">import</span> <span class="n">UTCDateTime</span>
-
+<span class="kn">from</span><span class="w"> </span><span class="nn">fastapi</span><span class="w"> </span><span class="kn">import</span> <span class="n">Request</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">fastapi.responses</span><span class="w"> </span><span class="kn">import</span> <span class="n">PlainTextResponse</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">obspy</span><span class="w"> </span><span class="kn">import</span> <span class="n">UTCDateTime</span>
 
 
 <div class="viewcode-block" id="ResponseCode">
 <a class="viewcode-back" href="../../api/kbws.responses.html#kbws.responses.ResponseCode">[docs]</a>
-<span class="nd">@dataclass</span>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">ResponseCode</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">""" FDSN-WS standard response codes and messages.</span>
-
-<span class="sd">    Usage:</span>
-<span class="sd">    """</span>
+<span class="w">    </span><span class="sd">"""FDSN-WS standard response code and message."""</span>
     <span class="n">code</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">message</span><span class="p">:</span> <span class="nb">str</span></div>
+
 
 
 <span class="n">SUCCESS</span> <span class="o">=</span> <span class="n">ResponseCode</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="s1">'Successful request.'</span><span class="p">)</span>
@@ -373,278 +383,60 @@
 <span class="n">INTERNAL_ERROR</span> <span class="o">=</span> <span class="n">ResponseCode</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="s1">'Internal server error.'</span><span class="p">)</span>
 <span class="n">TEMP_UNAVAILABLE</span> <span class="o">=</span> <span class="n">ResponseCode</span><span class="p">(</span><span class="mi">503</span><span class="p">,</span> <span class="s1">'Service temporarily unavailable.'</span><span class="p">)</span>
 
-<div class="viewcode-block" id="FDSNErrorText">
-<a class="viewcode-back" href="../../api/kbws.responses.html#kbws.responses.FDSNErrorText">[docs]</a>
-<span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">FDSNErrorText</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">""" Formattable error response text template</span>
+<span class="n">_TEMPLATE</span> <span class="o">=</span> <span class="n">dedent</span><span class="p">(</span>
+<span class="w">    </span><span class="sd">"""\</span>
+<span class="sd">    ----------------------------------------------------</span>
+<span class="sd">    Error {code}: {simple_descr}</span>
 
-<span class="sd">    Use like this:</span>
-<span class="sd">    e = FDSNErrorText(</span>
-<span class="sd">        error_code=REQUEST_TOO_LARGE.code,</span>
-<span class="sd">        simple_descr=REQUEST_TOO_LARGE.message,</span>
-<span class="sd">        ...</span>
-<span class="sd">    )</span>
-<span class="sd">    return PlainTextResponse(str(e), status_code=e.error_code)</span>
+<span class="sd">    {detail}</span>
+
+<span class="sd">    Usage details are available from {service_docs_uri}</span>
+
+<span class="sd">    Request:</span>
+<span class="sd">    {submitted_url}</span>
+
+<span class="sd">    Request Submitted:</span>
+<span class="sd">    {utc_date_time}</span>
+
+<span class="sd">    Service version:</span>
+<span class="sd">    {service_version}</span>
+<span class="sd">    ----------------------------------------------------</span>
 <span class="sd">    """</span>
-    <span class="n">error_code</span><span class="p">:</span> <span class="nb">int</span>
-    <span class="n">simple_descr</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">detail</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">service_docs_uri</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">submitted_url</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">utc_date_time</span><span class="p">:</span> <span class="n">UTCDateTime</span>
-    <span class="n">service_version</span><span class="p">:</span> <span class="nb">str</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">txt</span> <span class="o">=</span> <span class="n">dedent</span><span class="p">(</span>
-<span class="w">            </span><span class="sd">"""\</span>
-<span class="sd">            ----------------------------------------------------</span>
-<span class="sd">            Error {error_code}: {simple_descr}</span>
-
-<span class="sd">            {detail}</span>
-
-<span class="sd">            Usage details are available from {service_docs_uri}</span>
-
-<span class="sd">            Request:</span>
-<span class="sd">            {submitted_url}</span>
-
-<span class="sd">            Request Submitted:</span>
-<span class="sd">            {utc_date_time}</span>
-
-<span class="sd">            Service version:</span>
-<span class="sd">            {service_version}</span>
-<span class="sd">            ----------------------------------------------------</span>
-<span class="sd">            """</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="n">asdict</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">txt</span></div>
+<span class="p">)</span>
 
 
-<span class="c1"># TODO: override some FastAPI exceptions with our own.</span>
-<span class="c1"># https://fastapi.tiangolo.com/tutorial/handling-errors/#override-request-validation-exceptions</span>
-<span class="c1"># https://medium.com/@geetansh2k1/the-best-way-to-handle-exceptions-in-a-fastapi-application-37596995355c</span>
-<span class="c1"># these follow: https://github.com/Kludex/starlette/blob/main/starlette/responses.py#L192</span>
-<div class="viewcode-block" id="FDSNErrorResponse">
-<a class="viewcode-back" href="../../api/kbws.responses.html#kbws.responses.FDSNErrorResponse">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">FDSNErrorResponse</span><span class="p">(</span><span class="n">PlainTextResponse</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    Usage</span>
-<span class="sd">    -----</span>
-<span class="sd">    &gt;&gt;&gt; from kbws.responses import BAD_REQUEST, FDSNResponse</span>
-<span class="sd">    &gt;&gt;&gt; # inside endpoint function</span>
-<span class="sd">    &gt;&gt;&gt; try:</span>
-<span class="sd">    ...     # do something</span>
-<span class="sd">    ... except (whatever exception you're expecting) as e:</span>
-<span class="sd">    ...     r = FDSNResponse(</span>
-<span class="sd">    ...             str(e),</span>
-<span class="sd">    ...             BAD_REQUEST.status_code,</span>
-<span class="sd">    ...             BAD_REQUEST.simple_descr,</span>
-<span class="sd">    ...             service_docs_uri=request.base_url,</span>
-<span class="sd">    ...             submitted_url=request['path'],</span>
-<span class="sd">    ...             utc_date_time=UTCDateTime(),</span>
-<span class="sd">    ...             service_version=VERSION,</span>
-<span class="sd">    ...     )</span>
-<span class="sd">    ...     return r</span>
+<div class="viewcode-block" id="fdsn_error_response">
+<a class="viewcode-back" href="../../api/kbws.responses.html#kbws.responses.fdsn_error_response">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">fdsn_error_response</span><span class="p">(</span>
+    <span class="n">request</span><span class="p">:</span> <span class="n">Request</span><span class="p">,</span>
+    <span class="n">response_code</span><span class="p">:</span> <span class="n">ResponseCode</span><span class="p">,</span>
+    <span class="n">detail</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">service_version</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PlainTextResponse</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Build the standard FDSN plain-text error response for `response_code`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    request : fastapi.Request</span>
+<span class="sd">        Used to fill in the usage-docs URI and the submitted URL/query.</span>
+<span class="sd">    response_code : ResponseCode</span>
+<span class="sd">        One of the module-level constants, e.g. `BAD_REQUEST`, `NO_DATA_ALT`.</span>
+<span class="sd">    detail : str</span>
+<span class="sd">        Specific, request-dependent error detail (e.g. a validation message).</span>
+<span class="sd">    service_version : str</span>
+<span class="sd">        The version of the FDSN service that raised the error.</span>
+
 <span class="sd">    """</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-        <span class="n">content</span><span class="p">,</span>
-        <span class="n">status_code</span><span class="p">,</span>
-        <span class="n">simple_descr</span><span class="p">,</span>
-        <span class="n">service_docs_url</span><span class="p">,</span>
-        <span class="n">submitted_url</span><span class="p">,</span>
-        <span class="n">service_version</span>
-    <span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">simple_descr</span> <span class="o">=</span> <span class="n">simple_descr</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">service_docs_url</span> <span class="o">=</span> <span class="n">service_docs_url</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">submitted_url</span> <span class="o">=</span> <span class="n">submitted_url</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">service_version</span> <span class="o">=</span> <span class="n">service_version</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">utc_date_time</span> <span class="o">=</span> <span class="n">UTCDateTime</span><span class="p">()</span>
-
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="n">status_code</span><span class="p">)</span>
-
-<div class="viewcode-block" id="FDSNErrorResponse.render">
-<a class="viewcode-back" href="../../api/kbws.responses.html#kbws.responses.FDSNErrorResponse.render">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">content</span><span class="p">):</span>
-        <span class="n">template</span> <span class="o">=</span> <span class="n">dedent</span><span class="p">(</span>
-<span class="w">            </span><span class="sd">"""\</span>
-<span class="sd">            ----------------------------------------------------</span>
-<span class="sd">            Error {resp.status_code}: {resp.simple_descr}</span>
-
-<span class="sd">            {content}</span>
-
-<span class="sd">            Usage details are available from {resp.service_docs_url}</span>
-
-<span class="sd">            Request:</span>
-<span class="sd">            {resp.submitted_url}</span>
-
-<span class="sd">            Request Submitted:</span>
-<span class="sd">            {resp.utc_date_time}</span>
-
-<span class="sd">            Service version:</span>
-<span class="sd">            {resp.service_version}</span>
-<span class="sd">            ----------------------------------------------------</span>
-<span class="sd">            """</span>
-        <span class="p">)</span>
-        <span class="n">body</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-            <span class="n">resp</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
-            <span class="n">content</span><span class="o">=</span><span class="n">content</span><span class="p">,</span>
-        <span class="p">)</span>
-        <span class="k">return</span> <span class="n">body</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">'utf-8'</span><span class="p">)</span></div>
-</div>
-
-
-
-<div class="viewcode-block" id="BadRequestResponse">
-<a class="viewcode-back" href="../../api/kbws.responses.html#kbws.responses.BadRequestResponse">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">BadRequestResponse</span><span class="p">(</span><span class="n">FDSNErrorResponse</span><span class="p">):</span>
-    <span class="c1"># accept params needed from the call site</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-        <span class="n">content</span><span class="p">,</span>
-        <span class="n">service_docs_url</span><span class="p">,</span>
-        <span class="n">submitted_url</span><span class="p">,</span>
-        <span class="n">service_version</span>
-    <span class="p">):</span>
-        <span class="c1"># Pass those and BadRequestResponse-specific params to more parent/FDSNErrorResponse</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
-            <span class="n">content</span><span class="p">,</span>
-            <span class="mi">400</span><span class="p">,</span>
-            <span class="s2">"Badly formed request."</span><span class="p">,</span>
-            <span class="n">service_docs_url</span><span class="p">,</span>
-            <span class="n">submitted_url</span><span class="p">,</span>
-            <span class="n">service_version</span>
-        <span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="UnauthorizedResponse">
-<a class="viewcode-back" href="../../api/kbws.responses.html#kbws.responses.UnauthorizedResponse">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">UnauthorizedResponse</span><span class="p">(</span><span class="n">FDSNErrorResponse</span><span class="p">):</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-        <span class="n">content</span><span class="p">,</span>
-        <span class="n">service_docs_url</span><span class="p">,</span>
-        <span class="n">submitted_url</span><span class="p">,</span>
-        <span class="n">service_version</span>
-    <span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
-            <span class="n">content</span><span class="p">,</span>
-            <span class="mi">401</span><span class="p">,</span>
-            <span class="s1">'Unauthorized, authentication required.'</span><span class="p">,</span>
-            <span class="n">service_docs_url</span><span class="p">,</span>
-            <span class="n">submitted_url</span><span class="p">,</span>
-            <span class="n">service_version</span>
-        <span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="AuthFailedResponse">
-<a class="viewcode-back" href="../../api/kbws.responses.html#kbws.responses.AuthFailedResponse">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">AuthFailedResponse</span><span class="p">(</span><span class="n">FDSNErrorResponse</span><span class="p">):</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-        <span class="n">content</span><span class="p">,</span>
-        <span class="n">service_docs_url</span><span class="p">,</span>
-        <span class="n">submitted_url</span><span class="p">,</span>
-        <span class="n">service_version</span>
-    <span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
-            <span class="n">content</span><span class="p">,</span>
-            <span class="mi">403</span><span class="p">,</span>
-            <span class="s1">'Authentication failed or access blocked to restricted data.'</span><span class="p">,</span>
-            <span class="n">service_docs_url</span><span class="p">,</span>
-            <span class="n">submitted_url</span><span class="p">,</span>
-            <span class="n">service_version</span>
-        <span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="NoDataAltResponse">
-<a class="viewcode-back" href="../../api/kbws.responses.html#kbws.responses.NoDataAltResponse">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">NoDataAltResponse</span><span class="p">(</span><span class="n">FDSNErrorResponse</span><span class="p">):</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-        <span class="n">content</span><span class="p">,</span>
-        <span class="n">service_docs_url</span><span class="p">,</span>
-        <span class="n">submitted_url</span><span class="p">,</span>
-        <span class="n">service_version</span>
-    <span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
-            <span class="n">content</span><span class="p">,</span>
-            <span class="mi">404</span><span class="p">,</span>
-            <span class="s1">'No data matches the selection.'</span><span class="p">,</span>
-            <span class="n">service_docs_url</span><span class="p">,</span>
-            <span class="n">submitted_url</span><span class="p">,</span>
-            <span class="n">service_version</span>
-        <span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="RequestTooLargeResponse">
-<a class="viewcode-back" href="../../api/kbws.responses.html#kbws.responses.RequestTooLargeResponse">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">RequestTooLargeResponse</span><span class="p">(</span><span class="n">FDSNErrorResponse</span><span class="p">):</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-        <span class="n">content</span><span class="p">,</span>
-        <span class="n">service_docs_url</span><span class="p">,</span>
-        <span class="n">submitted_url</span><span class="p">,</span>
-        <span class="n">service_version</span>
-    <span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
-            <span class="n">content</span><span class="p">,</span>
-            <span class="mi">413</span><span class="p">,</span>
-            <span class="s1">'Request or response too large.'</span><span class="p">,</span>
-            <span class="n">service_docs_url</span><span class="p">,</span>
-            <span class="n">submitted_url</span><span class="p">,</span>
-            <span class="n">service_version</span>
-        <span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="URLTooLongResponse">
-<a class="viewcode-back" href="../../api/kbws.responses.html#kbws.responses.URLTooLongResponse">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">URLTooLongResponse</span><span class="p">(</span><span class="n">FDSNErrorResponse</span><span class="p">):</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-        <span class="n">content</span><span class="p">,</span>
-        <span class="n">service_docs_url</span><span class="p">,</span>
-        <span class="n">submitted_url</span><span class="p">,</span>
-        <span class="n">service_version</span>
-    <span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
-            <span class="n">content</span><span class="p">,</span>
-            <span class="mi">414</span><span class="p">,</span>
-            <span class="s1">'Request URI is too long.'</span><span class="p">,</span>
-            <span class="n">service_docs_url</span><span class="p">,</span>
-            <span class="n">submitted_url</span><span class="p">,</span>
-            <span class="n">service_version</span>
-        <span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="InternalErrorResponse">
-<a class="viewcode-back" href="../../api/kbws.responses.html#kbws.responses.InternalErrorResponse">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">InternalErrorResponse</span><span class="p">(</span><span class="n">FDSNErrorResponse</span><span class="p">):</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-        <span class="n">content</span><span class="p">,</span>
-        <span class="n">service_docs_url</span><span class="p">,</span>
-        <span class="n">submitted_url</span><span class="p">,</span>
-        <span class="n">service_version</span>
-    <span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
-            <span class="n">content</span><span class="p">,</span>
-            <span class="mi">500</span><span class="p">,</span>
-            <span class="s1">'Internal server error.'</span><span class="p">,</span>
-            <span class="n">service_docs_url</span><span class="p">,</span>
-            <span class="n">submitted_url</span><span class="p">,</span>
-            <span class="n">service_version</span>
-        <span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="TemporarilyUnavailableResponse">
-<a class="viewcode-back" href="../../api/kbws.responses.html#kbws.responses.TemporarilyUnavailableResponse">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">TemporarilyUnavailableResponse</span><span class="p">(</span><span class="n">FDSNErrorResponse</span><span class="p">):</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-        <span class="n">content</span><span class="p">,</span>
-        <span class="n">service_docs_url</span><span class="p">,</span>
-        <span class="n">submitted_url</span><span class="p">,</span>
-        <span class="n">service_version</span>
-    <span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
-            <span class="n">content</span><span class="p">,</span>
-            <span class="mi">503</span><span class="p">,</span>
-            <span class="s1">'Service temporarily unavailable.'</span><span class="p">,</span>
-            <span class="n">service_docs_url</span><span class="p">,</span>
-            <span class="n">submitted_url</span><span class="p">,</span>
-            <span class="n">service_version</span>
-        <span class="p">)</span></div>
+    <span class="n">body</span> <span class="o">=</span> <span class="n">_TEMPLATE</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">code</span><span class="o">=</span><span class="n">response_code</span><span class="o">.</span><span class="n">code</span><span class="p">,</span>
+        <span class="n">simple_descr</span><span class="o">=</span><span class="n">response_code</span><span class="o">.</span><span class="n">message</span><span class="p">,</span>
+        <span class="n">detail</span><span class="o">=</span><span class="n">detail</span><span class="p">,</span>
+        <span class="n">service_docs_uri</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">base_url</span><span class="p">,</span>
+        <span class="n">submitted_url</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">url</span><span class="p">),</span>
+        <span class="n">utc_date_time</span><span class="o">=</span><span class="n">UTCDateTime</span><span class="p">(),</span>
+        <span class="n">service_version</span><span class="o">=</span><span class="n">service_version</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">PlainTextResponse</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">body</span><span class="p">,</span> <span class="n">status_code</span><span class="o">=</span><span class="n">response_code</span><span class="o">.</span><span class="n">code</span><span class="p">)</span></div>
 
 </pre></div>
 

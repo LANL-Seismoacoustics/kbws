@@ -343,22 +343,29 @@
                   
   <h1>Source code for kbws.models.station</h1><div class="highlight"><pre>
 <span></span><span class="sd">""" Models for the station API endpoint.</span>
+
+<span class="sd">NOTE: pisces station query support (`StationQuery.inventory()`/`request.get_stations`) is not yet</span>
+<span class="sd">implemented. These models declare the full FDSN station parameter set for API-contract purposes,</span>
+<span class="sd">but `routes/station.py` does not yet wire up all of them to a database query. Implementation is</span>
+<span class="sd">deferred; keep this model in sync with the FDSN spec regardless.</span>
+
 <span class="sd">"""</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Annotated</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Annotated</span><span class="p">,</span> <span class="n">Optional</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">date</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">ConfigDict</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">fastapi</span><span class="w"> </span><span class="kn">import</span> <span class="n">Query</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">ConfigDict</span><span class="p">,</span> <span class="n">Field</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">.common</span><span class="w"> </span><span class="kn">import</span> <span class="n">NoData</span>
+
 
 <div class="viewcode-block" id="StationFormat">
 <a class="viewcode-back" href="../../../api/kbws.models.station.html#kbws.models.station.StationFormat">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">StationFormat</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
     <span class="n">xml</span> <span class="o">=</span> <span class="s2">"xml"</span>
     <span class="n">css</span> <span class="o">=</span> <span class="s2">"css"</span>
-    <span class="n">test</span> <span class="o">=</span> <span class="s2">"text"</span></div>
+    <span class="n">text</span> <span class="o">=</span> <span class="s2">"text"</span></div>
+
 
 
 <div class="viewcode-block" id="StationLevel">
@@ -367,86 +374,93 @@
     <span class="n">network</span> <span class="o">=</span> <span class="s2">"network"</span>
     <span class="n">station</span> <span class="o">=</span> <span class="s2">"station"</span>
     <span class="n">channel</span> <span class="o">=</span> <span class="s2">"channel"</span>
-    <span class="n">respones</span> <span class="o">=</span> <span class="s2">"response"</span></div>
+    <span class="n">response</span> <span class="o">=</span> <span class="s2">"response"</span></div>
 
 
+
+<span class="c1"># the Pydantic query parameter model for the FastAPI station endpoint</span>
 <div class="viewcode-block" id="StationQuery">
 <a class="viewcode-back" href="../../../api/kbws.models.station.html#kbws.models.station.StationQuery">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">StationQuery</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="n">starttime</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span>
-        <span class="n">Union</span><span class="p">[</span><span class="n">datetime</span><span class="p">,</span> <span class="n">date</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">Query</span><span class="p">(</span>
-            <span class="n">default</span><span class="o">=...</span><span class="p">,</span>  <span class="c1"># '...' for the default value means that it's required</span>
-            <span class="n">description</span><span class="o">=</span><span class="s2">"Limit results to channels operating on or after the specified start time, using ISO8601 format jYYYY-MM-DDThh:mm:ss[.ssssss]"</span><span class="p">,</span>
+        <span class="n">Optional</span><span class="p">[</span><span class="n">datetime</span> <span class="o">|</span> <span class="n">date</span><span class="p">],</span>
+        <span class="n">Field</span><span class="p">(</span>
+            <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+                <span class="s2">"Limit results to channels operating on or after the specified start time, "</span>
+                <span class="s2">"using ISO8601 format YYYY-MM-DDThh:mm:ss[.ssssss]"</span>
+            <span class="p">),</span>
             <span class="n">examples</span><span class="o">=</span><span class="s2">"2012-11-01T00:00:00.000"</span><span class="p">,</span>
         <span class="p">),</span>
     <span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">endtime</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span>
-        <span class="n">Union</span><span class="p">[</span><span class="n">datetime</span><span class="p">,</span> <span class="n">date</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">Query</span><span class="p">(</span>
-            <span class="n">description</span><span class="o">=</span><span class="s2">"Limit results to channels operating on or before the specified end time, using ISO8601 format YYYY-MM-DDThh:mm:ss[.ssssss]"</span><span class="p">,</span>
+        <span class="n">Optional</span><span class="p">[</span><span class="n">datetime</span> <span class="o">|</span> <span class="n">date</span><span class="p">],</span>
+        <span class="n">Field</span><span class="p">(</span>
+            <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+                <span class="s2">"Limit results to channels operating on or before the specified end time, "</span>
+                <span class="s2">"using ISO8601 format YYYY-MM-DDThh:mm:ss[.ssssss]"</span>
+            <span class="p">),</span>
             <span class="n">examples</span><span class="o">=</span><span class="s2">"2012-11-03"</span><span class="p">,</span>
         <span class="p">),</span>
     <span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="c1"># startbefore: Annotated[</span>
-    <span class="c1">#     Union[datetime, date] | None,</span>
-    <span class="c1">#     Query(</span>
-    <span class="c1">#         description="Limit to metadata epochs starting before specified time. Applied to channel epochs, using ISO8601 format YYYY-MM-DDThh:mm:ss[.ssssss]",</span>
-    <span class="c1">#         examples="2012-11-03",</span>
-    <span class="c1">#     ),</span>
-    <span class="c1"># ] = None</span>
-    <span class="c1"># startafter: Annotated[</span>
-    <span class="c1">#     Union[datetime, date] | None,</span>
-    <span class="c1">#     Query(</span>
-    <span class="c1">#         description="Limit to metadata epochs starting after specified time. Applied to channel epochs, using ISO8601 format YYYY-MM-DDThh:mm:ss[.ssssss]",</span>
-    <span class="c1">#         examples="2012-11-03",</span>
-    <span class="c1">#     ),</span>
-    <span class="c1"># ] = None</span>
-    <span class="c1"># endbefore: Annotated[</span>
-    <span class="c1">#     Union[datetime, date] | None,</span>
-    <span class="c1">#     Query(</span>
-    <span class="c1">#         description="Limit to metadata epochs ending before specified time. Applied to channel epochs, using ISO8601 format YYYY-MM-DDThh:mm:ss[.ssssss]",</span>
-    <span class="c1">#         examples="2012-11-03",</span>
-    <span class="c1">#     ),</span>
-    <span class="c1"># ] = None</span>
-    <span class="c1"># endafter: Annotated[</span>
-    <span class="c1">#     Union[datetime, date] | None,</span>
-    <span class="c1">#     Query(</span>
-    <span class="c1">#         description="Limit to metadata epochs ending after specified time. Applied to channel epochs, using ISO8601 format YYYY-MM-DDThh:mm:ss[.ssssss]",</span>
-    <span class="c1">#         examples="2012-11-03",</span>
-    <span class="c1">#     ),</span>
-    <span class="c1"># ] = None</span>
+<span class="c1">#     startbefore: Annotated[</span>
+<span class="c1">#         Optional[datetime | date],</span>
+<span class="c1">#         Field(</span>
+<span class="c1">#             description="Limit to metadata epochs starting before specified time. Applied to channel epochs, using ISO8601 format YYYY-MM-DDThh:mm:ss[.ssssss]",</span>
+<span class="c1">#             examples="2012-11-03",</span>
+<span class="c1">#         ),</span>
+<span class="c1">#     ] = None</span>
+<span class="c1">#     startafter: Annotated[</span>
+<span class="c1">#         Optional[datetime | date],</span>
+<span class="c1">#         Field(</span>
+<span class="c1">#             description="Limit to metadata epochs starting after specified time. Applied to channel epochs, using ISO8601 format YYYY-MM-DDThh:mm:ss[.ssssss]",</span>
+<span class="c1">#             examples="2012-11-03",</span>
+<span class="c1">#         ),</span>
+<span class="c1">#     ] = None</span>
+<span class="c1">#     endbefore: Annotated[</span>
+<span class="c1">#         Optional[datetime | date],</span>
+<span class="c1">#         Field(</span>
+<span class="c1">#             description="Limit to metadata epochs ending before specified time. Applied to channel epochs, using ISO8601 format YYYY-MM-DDThh:mm:ss[.ssssss]",</span>
+<span class="c1">#             examples="2012-11-03",</span>
+<span class="c1">#         ),</span>
+<span class="c1">#     ] = None</span>
+<span class="c1">#     endafter: Annotated[</span>
+<span class="c1">#         Optional[datetime | date],</span>
+<span class="c1">#         Field(</span>
+<span class="c1">#             description="Limit to metadata epochs ending after specified time. Applied to channel epochs, using ISO8601 format YYYY-MM-DDThh:mm:ss[.ssssss]",</span>
+<span class="c1">#             examples="2012-11-03",</span>
+<span class="c1">#         ),</span>
+<span class="c1">#     ] = None</span>
     <span class="n">network</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span>
         <span class="nb">str</span><span class="p">,</span>
-        <span class="n">Query</span><span class="p">(</span>
+        <span class="n">Field</span><span class="p">(</span>
             <span class="n">description</span><span class="o">=</span><span class="s2">"Select one or more network codes. Can be SEED network codes or data center defined codes. Multiple codes are comma-separated"</span><span class="p">,</span>
             <span class="n">examples</span><span class="o">=</span><span class="s2">"IU"</span><span class="p">,</span>
         <span class="p">),</span>
     <span class="p">]</span> <span class="o">=</span> <span class="o">...</span>
     <span class="n">station</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span>
         <span class="nb">str</span><span class="p">,</span>
-        <span class="n">Query</span><span class="p">(</span>
+        <span class="n">Field</span><span class="p">(</span>
             <span class="n">description</span><span class="o">=</span><span class="s2">"Select one or more SEED station codes. Multiple codes are comma-separated"</span><span class="p">,</span>
             <span class="n">examples</span><span class="o">=</span><span class="s2">"ANMO"</span><span class="p">,</span>
         <span class="p">),</span>
     <span class="p">]</span> <span class="o">=</span> <span class="o">...</span>
 <span class="c1">#     location: Annotated[</span>
 <span class="c1">#         str,</span>
-<span class="c1">#         Query(</span>
-<span class="c1">#             description="Select one or more SEED location identifiers. Multiple identifiers are comma-separated. As a special case ‘--’ (two dashes) will be translated to a string of two space characters to match blank location IDs.",</span>
+<span class="c1">#         Field(</span>
+<span class="c1">#             description="Select one or more SEED location identifiers. Multiple identifiers are comma-separated. As a special case '--' (two dashes) will be translated to a string of two space characters to match blank location IDs.",</span>
 <span class="c1">#             examples="00",</span>
 <span class="c1">#         ),</span>
 <span class="c1">#     ] = ...</span>
     <span class="n">channel</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span>
         <span class="nb">str</span><span class="p">,</span>
-        <span class="n">Query</span><span class="p">(</span>
+        <span class="n">Field</span><span class="p">(</span>
             <span class="n">description</span><span class="o">=</span><span class="s2">"Select one or more SEED channel codes. Multiple codes are comma-separated."</span><span class="p">,</span>
             <span class="n">examples</span><span class="o">=</span><span class="s2">"BH1"</span><span class="p">,</span>
         <span class="p">),</span>
     <span class="p">]</span> <span class="o">=</span> <span class="o">...</span>
     <span class="n">minlatitude</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span>
-        <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">Query</span><span class="p">(</span>
+        <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
+        <span class="n">Field</span><span class="p">(</span>
             <span class="n">description</span><span class="o">=</span><span class="s2">"Limit to stations with a latitude larger than or equal to the specified minimum."</span><span class="p">,</span>
             <span class="n">ge</span><span class="o">=-</span><span class="mf">90.0</span><span class="p">,</span>
             <span class="n">le</span><span class="o">=</span><span class="mf">90.0</span><span class="p">,</span>
@@ -454,8 +468,8 @@
         <span class="p">),</span>
     <span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">maxlatitude</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span>
-        <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">Query</span><span class="p">(</span>
+        <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
+        <span class="n">Field</span><span class="p">(</span>
             <span class="n">description</span><span class="o">=</span><span class="s2">"Limit to stations with a latitude smaller than or equal to the specified maximum."</span><span class="p">,</span>
             <span class="n">ge</span><span class="o">=-</span><span class="mf">90.0</span><span class="p">,</span>
             <span class="n">le</span><span class="o">=</span><span class="mf">90.0</span><span class="p">,</span>
@@ -463,8 +477,8 @@
         <span class="p">),</span>
     <span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">minlongitude</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span>
-        <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">Query</span><span class="p">(</span>
+        <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
+        <span class="n">Field</span><span class="p">(</span>
             <span class="n">description</span><span class="o">=</span><span class="s2">"Limit to stations with a longitude larger than or equal to the specified minimum."</span><span class="p">,</span>
             <span class="n">ge</span><span class="o">=-</span><span class="mf">180.0</span><span class="p">,</span>
             <span class="n">le</span><span class="o">=</span><span class="mf">180.0</span><span class="p">,</span>
@@ -472,8 +486,8 @@
         <span class="p">),</span>
     <span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">maxlongitude</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span>
-        <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">Query</span><span class="p">(</span>
+        <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
+        <span class="n">Field</span><span class="p">(</span>
             <span class="n">description</span><span class="o">=</span><span class="s2">"Limit to stations with a longitude smaller than or equal to the specified maximum."</span><span class="p">,</span>
             <span class="n">ge</span><span class="o">=-</span><span class="mf">180.0</span><span class="p">,</span>
             <span class="n">le</span><span class="o">=</span><span class="mf">180.0</span><span class="p">,</span>
@@ -481,74 +495,77 @@
         <span class="p">),</span>
     <span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="c1">#     latitude: Annotated[</span>
-<span class="c1">#         float,</span>
-<span class="c1">#         Query(</span>
+<span class="c1">#         Optional[float],</span>
+<span class="c1">#         Field(</span>
 <span class="c1">#             description="Specify the latitude to be used for a radius search.",</span>
 <span class="c1">#             ge=-90.0,</span>
 <span class="c1">#             le=90.0,</span>
 <span class="c1">#             examples=46.9,</span>
 <span class="c1">#         ),</span>
-<span class="c1">#     ] = 0</span>
+<span class="c1">#     ] = None</span>
 <span class="c1">#     longitude: Annotated[</span>
-<span class="c1">#         float,</span>
-<span class="c1">#         Query(</span>
+<span class="c1">#         Optional[float],</span>
+<span class="c1">#         Field(</span>
 <span class="c1">#             description="Specify the longitude to be used for a radius search.",</span>
 <span class="c1">#             ge=-180.0,</span>
 <span class="c1">#             le=180.0,</span>
 <span class="c1">#             examples=5.3,</span>
 <span class="c1">#         ),</span>
-<span class="c1">#     ] = 0</span>
+<span class="c1">#     ] = None</span>
 <span class="c1">#     minradius: Annotated[</span>
-<span class="c1">#         float,</span>
-<span class="c1">#         Query(</span>
-<span class="c1">#             description="Limit to events within the specified minimum number of degrees from the geographic point defined by the latitude and longitude parameters.",</span>
+<span class="c1">#         Optional[float],</span>
+<span class="c1">#         Field(</span>
+<span class="c1">#             description="Limit to stations within the specified minimum number of degrees from the geographic point defined by the latitude and longitude parameters.",</span>
 <span class="c1">#             ge=0.0,</span>
 <span class="c1">#             le=180.0,</span>
 <span class="c1">#             examples=1.3,</span>
 <span class="c1">#         ),</span>
-<span class="c1">#     ] = 0</span>
+<span class="c1">#     ] = None</span>
 <span class="c1">#     maxradius: Annotated[</span>
-<span class="c1">#         float,</span>
-<span class="c1">#         Query(</span>
-<span class="c1">#             description="Limit to events within the specified maximum number of degrees from the geographic point defined by the latitude and longitude parameters.",</span>
+<span class="c1">#         Optional[float],</span>
+<span class="c1">#         Field(</span>
+<span class="c1">#             description="Limit to stations within the specified maximum number of degrees from the geographic point defined by the latitude and longitude parameters.",</span>
 <span class="c1">#             ge=0.0,</span>
 <span class="c1">#             le=180.0,</span>
-<span class="c1">#             example=5.1,</span>
+<span class="c1">#             examples=5.1,</span>
 <span class="c1">#         ),</span>
-<span class="c1">#     ] = 0</span>
+<span class="c1">#     ] = None</span>
     <span class="n">level</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span>
         <span class="n">StationLevel</span><span class="p">,</span>
-        <span class="n">Query</span><span class="p">(</span>
+        <span class="n">Field</span><span class="p">(</span>
             <span class="n">description</span><span class="o">=</span><span class="s2">"Specify the level of detail for the results"</span><span class="p">,</span>
         <span class="p">),</span>
     <span class="p">]</span> <span class="o">=</span> <span class="s2">"station"</span>
     <span class="n">includerestricted</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span>
         <span class="nb">bool</span><span class="p">,</span>
-        <span class="n">Query</span><span class="p">(</span>
-            <span class="n">description</span><span class="o">=</span><span class="s2">"Specify if results should include information for restricted stations."</span>
+        <span class="n">Field</span><span class="p">(</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">"Specify if results should include information for restricted stations."</span><span class="p">,</span>
         <span class="p">),</span>
     <span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="n">includeavailability</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span>
         <span class="nb">bool</span><span class="p">,</span>
-        <span class="n">Query</span><span class="p">(</span>
-            <span class="n">description</span><span class="o">=</span><span class="s2">"Specify if results should include information about time series data availability."</span>
+        <span class="n">Field</span><span class="p">(</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">"Specify if results should include information about time series data availability."</span><span class="p">,</span>
         <span class="p">),</span>
     <span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="n">nodata</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span>
         <span class="n">NoData</span><span class="p">,</span>
-        <span class="n">Query</span><span class="p">(</span>
+        <span class="n">Field</span><span class="p">(</span>
             <span class="n">description</span><span class="o">=</span><span class="s2">"Select status code for “no data”, either 204 (default) or 404"</span>
         <span class="p">),</span>
     <span class="p">]</span> <span class="o">=</span> <span class="s1">'204'</span>
     <span class="nb">format</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span>
-        <span class="nb">str</span><span class="p">,</span>
-        <span class="n">Query</span><span class="p">(</span>
-            <span class="n">description</span><span class="o">=</span><span class="s2">"Specify format of result, either xml (default, not yet implemented), text (defined below, not yet implemented), or css (flatfile Site table rows). If this parameter is not specified the service must return StationML."</span>
+        <span class="n">StationFormat</span><span class="p">,</span>
+        <span class="n">Field</span><span class="p">(</span>
+            <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+                <span class="s2">"Specify format of result, either xml (default, StationXML, not yet implemented), "</span>
+                <span class="s2">"text (defined in the FDSN specification, not yet implemented), or css (flatfile Site table rows)."</span>
+            <span class="p">)</span>
         <span class="p">),</span>
     <span class="p">]</span> <span class="o">=</span> <span class="s2">"xml"</span>
     <span class="n">asquery</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span>
         <span class="nb">bool</span><span class="p">,</span>
-        <span class="n">Query</span><span class="p">(</span>
+        <span class="n">Field</span><span class="p">(</span>
             <span class="n">description</span><span class="o">=</span><span class="s2">"Debug your inputs by returning the database query instead of the normal output."</span>
         <span class="p">),</span>
     <span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
