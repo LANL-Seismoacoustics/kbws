@@ -208,6 +208,7 @@
         <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="deployment.html">Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="authentication.html">Access Control</a></li>
 <li class="toctree-l1"><a class="reference internal" href="development.html">Development</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Reference</span></p>
@@ -393,6 +394,7 @@
             </div>
             <nav aria-label="Page">
                 <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#service-support">Service support</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#features">Features</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quick-start">Quick Start</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#start-the-server">Start the server</a></li>
@@ -425,17 +427,19 @@ Clients like the <a class="reference external" href="https://docs.obspy.org/pack
 KBWS uses <a class="reference external" href="https://fastapi.tiangolo.com/">FastAPI</a>, <a class="reference external" href="https://github.com/LANL-Seismoacoustics/pisces">Pisces</a>, <a class="reference external" href="http://www.sqlalchemy.org">SQLAlchemy</a>, and <a class="reference external" href="http://www.obspy.org">ObsPy</a> to provide a fast, standards-compliant web service layer over your existing database infrastructure.</p>
 <p><strong>Flexible deployment options</strong><br />
 Run KBWS natively with Conda/pip, or deploy it in containers using Docker or Podman. Configure multiple database schemas, waveform directories, and table mappings through simple environment files.</p>
+<section id="service-support">
+<h2>Service support<a class="headerlink" href="#service-support" title="Link to this heading">#</a></h2>
+<p>KBWS currently provides usable FDSN-style services for:</p>
+<ul class="simple">
+<li><p><strong>fdsnws-event</strong>: query and retrieve event catalogs in QuakeML, JSON, SQL debug output, or CSS origin rows.</p></li>
+<li><p><strong>fdsnws-dataselect</strong>: retrieve waveform data in MiniSEED or SAC ZIP, plus SQL debug output or CSS Wfdisc rows.</p></li>
+</ul>
+<p><strong>Station</strong> and <strong>Availability</strong> parameter models and routes are present for API development, but their query implementations are deferred pending Pisces support. They are not yet operational FDSN services.</p>
+<p>See <a class="reference internal" href="authentication.html"><span class="std std-doc">Access Control</span></a> for the deployment-scoped security model.</p>
+</section>
 <section id="features">
 <h2>Features<a class="headerlink" href="#features" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p>Complete implementation of FDSN web service standards:</p>
-<ul>
-<li><p><strong>fdsnws-event</strong>: Query and retrieve event catalogs in QuakeML, JSON, or CSV formats</p></li>
-<li><p><strong>fdsnws-station</strong>: Query station metadata with full channel-level detail</p></li>
-<li><p><strong>fdsnws-dataselect</strong>: Retrieve waveform data in MiniSEED or SAC formats</p></li>
-<li><p><strong>fdsnws-availability</strong>: Query waveform data availability</p></li>
-</ul>
-</li>
 <li><p>Direct integration with <a class="reference external" href="http://www.obspy.org">ObsPy</a> FDSN client</p></li>
 <li><p>Support for Oracle databases via cx_Oracle or oracledb drivers</p></li>
 <li><p>Flexible schema mapping - configure any table names via environment variables</p></li>
@@ -531,6 +535,7 @@ curl<span class="w"> </span><span class="s2">"http://localhost:8000/fdsnws/datas
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#service-support">Service support</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#features">Features</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quick-start">Quick Start</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#start-the-server">Start the server</a></li>

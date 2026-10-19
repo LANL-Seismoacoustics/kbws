@@ -49,7 +49,7 @@
     <link rel="icon" href="_static/LANL Logo Ultramarine globe.png"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Development" href="development.html" />
+    <link rel="next" title="Access Control" href="authentication.html" />
     <link rel="prev" title="Installation" href="installation.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -207,6 +207,7 @@
         <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="authentication.html">Access Control</a></li>
 <li class="toctree-l1"><a class="reference internal" href="development.html">Development</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Reference</span></p>
@@ -642,10 +643,12 @@ ssh<span class="w"> </span>-L<span class="w"> </span><span class="m">8000</span>
 </section>
 <section id="security-notes">
 <h2>Security Notes<a class="headerlink" href="#security-notes" title="Link to this heading">#</a></h2>
+<p>KBWS uses deployment-scoped access control and does not provide in-app JWT, OAuth, or <code class="docutils literal notranslate"><span class="pre">queryauth</span></code> authentication. See <a class="reference internal" href="authentication.html"><span class="std std-doc">Access Control</span></a> for the complete model.</p>
 <ol class="arabic simple">
-<li><p><strong>Database Credentials</strong>: Never commit <code class="docutils literal notranslate"><span class="pre">.env</span></code> files to version control</p></li>
-<li><p><strong>Read-Only Mounts</strong>: Mount waveform directories as read-only (<code class="docutils literal notranslate"><span class="pre">:ro</span></code>) when possible</p></li>
-<li><p><strong>Container User</strong>: KBWS container runs as non-root user in <code class="docutils literal notranslate"><span class="pre">/tmp</span></code></p></li>
+<li><p><strong>Database identity</strong>: Use a least-privileged, read-only Oracle service account. Oracle Wallet/external-secret authentication is optional; local deployments may use a normal configured <code class="docutils literal notranslate"><span class="pre">database_url</span></code>.</p></li>
+<li><p><strong>Database credentials</strong>: Never commit <code class="docutils literal notranslate"><span class="pre">.env</span></code> files to version control.</p></li>
+<li><p><strong>Read-only mounts</strong>: Mount waveform directories as read-only (<code class="docutils literal notranslate"><span class="pre">:ro</span></code>) when possible, and mount only paths the deployment is intended to serve.</p></li>
+<li><p><strong>Container user</strong>: KBWS container runs as a non-root user in <code class="docutils literal notranslate"><span class="pre">/tmp</span></code>.</p></li>
 </ol>
 </section>
 <section id="troubleshooting">
@@ -705,11 +708,11 @@ ssh<span class="w"> </span>-L<span class="w"> </span><span class="m">8000</span>
       </div>
     </a>
     <a class="right-next"
-       href="development.html"
+       href="authentication.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Development</p>
+        <p class="prev-next-title">Access Control</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

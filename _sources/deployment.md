@@ -221,9 +221,12 @@ Logs are written to `/tmp/logs` inside the container. Mount this directory to pe
 
 ## Security Notes
 
-1. **Database Credentials**: Never commit `.env` files to version control
-2. **Read-Only Mounts**: Mount waveform directories as read-only (`:ro`) when possible
-3. **Container User**: KBWS container runs as non-root user in `/tmp`
+KBWS uses deployment-scoped access control and does not provide in-app JWT, OAuth, or `queryauth` authentication. See [Access Control](authentication.md) for the complete model.
+
+1. **Database identity**: Use a least-privileged, read-only Oracle service account. Oracle Wallet/external-secret authentication is optional; local deployments may use a normal configured `database_url`.
+2. **Database credentials**: Never commit `.env` files to version control.
+3. **Read-only mounts**: Mount waveform directories as read-only (`:ro`) when possible, and mount only paths the deployment is intended to serve.
+4. **Container user**: KBWS container runs as a non-root user in `/tmp`.
 
 ## Troubleshooting
 

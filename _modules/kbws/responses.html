@@ -202,6 +202,7 @@
         <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../deployment.html">Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../authentication.html">Access Control</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../development.html">Development</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Reference</span></p>
@@ -383,6 +384,11 @@
 <span class="n">INTERNAL_ERROR</span> <span class="o">=</span> <span class="n">ResponseCode</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="s1">'Internal server error.'</span><span class="p">)</span>
 <span class="n">TEMP_UNAVAILABLE</span> <span class="o">=</span> <span class="n">ResponseCode</span><span class="p">(</span><span class="mi">503</span><span class="p">,</span> <span class="s1">'Service temporarily unavailable.'</span><span class="p">)</span>
 
+<span class="c1"># shortcut: ValueError also covers missing Pisces tables today; split this mapping when Pisces documents distinct native exceptions.</span>
+<span class="n">PISCES_GET_EVENTS_ERRORS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">BAD_REQUEST</span><span class="p">:</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,),</span>
+<span class="p">}</span>
+
 <span class="n">_TEMPLATE</span> <span class="o">=</span> <span class="n">dedent</span><span class="p">(</span>
 <span class="w">    </span><span class="sd">"""\</span>
 <span class="sd">    ----------------------------------------------------</span>
@@ -427,6 +433,10 @@
 <span class="sd">        The version of the FDSN service that raised the error.</span>
 
 <span class="sd">    """</span>
+    <span class="n">request_id</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="s2">"request_id"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">request_id</span><span class="p">:</span>
+        <span class="n">detail</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">detail</span><span class="si">}</span><span class="se">\n\n</span><span class="s2">Request ID: </span><span class="si">{</span><span class="n">request_id</span><span class="si">}</span><span class="s2">"</span>
+
     <span class="n">body</span> <span class="o">=</span> <span class="n">_TEMPLATE</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
         <span class="n">code</span><span class="o">=</span><span class="n">response_code</span><span class="o">.</span><span class="n">code</span><span class="p">,</span>
         <span class="n">simple_descr</span><span class="o">=</span><span class="n">response_code</span><span class="o">.</span><span class="n">message</span><span class="p">,</span>
@@ -436,7 +446,10 @@
         <span class="n">utc_date_time</span><span class="o">=</span><span class="n">UTCDateTime</span><span class="p">(),</span>
         <span class="n">service_version</span><span class="o">=</span><span class="n">service_version</span><span class="p">,</span>
     <span class="p">)</span>
-    <span class="k">return</span> <span class="n">PlainTextResponse</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">body</span><span class="p">,</span> <span class="n">status_code</span><span class="o">=</span><span class="n">response_code</span><span class="o">.</span><span class="n">code</span><span class="p">)</span></div>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">PlainTextResponse</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">body</span><span class="p">,</span> <span class="n">status_code</span><span class="o">=</span><span class="n">response_code</span><span class="o">.</span><span class="n">code</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">request_id</span><span class="p">:</span>
+        <span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s2">"X-Request-ID"</span><span class="p">]</span> <span class="o">=</span> <span class="n">request_id</span>
+    <span class="k">return</span> <span class="n">response</span></div>
 
 </pre></div>
 
