@@ -30,7 +30,7 @@ jobs:
 
       - name: Build HTML documentation
         run: |
-          pixi run -e dev build-docs
+          pixi run -e dev sphinx-build -M html docs/source docs/build
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4

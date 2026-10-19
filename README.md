@@ -3,6 +3,21 @@
 Have a CSS-like SQL database (CSS 3.0, KB Core), and wish it had an [FDSN Web Services](https://www.fdsn.org/webservices/) endpoint?
 This package uses [FastAPI](https://fastapi.tiangolo.com/) and [Pisces](https://github.com/LANL-Seismoacoustics/pisces) to provide a FDSN-WS on your CSS database.
 
+## Service support
+
+KBWS currently provides usable FDSN-style **Event** and **Dataselect** services.
+
+Station and Availability route/model declarations are present for API development,
+but their query implementations are deferred pending Pisces support. They are not
+yet operational FDSN services.
+
+KBWS uses deployment-scoped access control: it does not implement in-app user
+authentication or `queryauth`. Deploy each instance with appropriately restricted
+network visibility, a least-privileged read-only Oracle service identity, and
+waveform filesystem mounts matching the data it may serve. Oracle Wallets are an
+optional deployment choice; local users may use a normal configured `database_url`
+against their own tables.
+
 ## Why do this?
 
 With KBWS, you can use any FDSN-WS or rest API client (like ObsPy or [Restish](https://rest.sh)) as the interface with your database, instead of using SQL on a connected server or some other programmatic interface (like Pisces) directly.
@@ -129,11 +144,9 @@ restish kbws event-query --starttime 2012-11-01 --endtime 2012-11-03T01:00:00.00
     - This would allow mounting local database client configurations (e.g. `$ORACLE_HOME/network/admin`) into the container.
     - Follow the FastAPI containerization [docs](https://fastapi.tiangolo.com/deployment/docker/).
 - [x] Parameterize the container to allow different core table names
-- [ ] Add unified logging, possibly employing FastAPI background tasks so it doesn't add to response times.
 - [ ] Move all injected dependencies (e.g. `get_db`) to a `dependencies.py`, so FastAPI can properly cache them.
 - [ ] Implement HTTPS that can use containers and .env files, point to .pem/.key/.crt files on host machine.
 - [ ] Move `Enum` parameters to `Literal[...]` where they enums aren't reused.
-- [ ] Implement OAuth or JWT token authentication that checks for username in database, initialize db session
 - [ ] Move SwaggerUI to `/docs`
 - [ ] Serve a static protomaps/pmtiles map page at `/`
 - [ ] Plan ahead for versioning by moving endpoints to `api/v1/endpoints`?
