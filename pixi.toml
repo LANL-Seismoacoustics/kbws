@@ -40,6 +40,6 @@ markdown-it-py = ">=3.0.0,<4"
 kbws = { path = ".", editable = true }
 
 [environments.dev.tasks]
-build-docs = "sphinx-build -M html docs/source docs/build"
+build-docs = "sphinx-apidoc -d 2 -Mef -o docs/source/api kbws && sphinx-build -M html docs/source docs/build"
 serve-docs = "sphinx-autobuild docs/source docs/build --open-browser"
 
