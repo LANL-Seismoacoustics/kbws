@@ -63,6 +63,20 @@ _TEMPLATE = dedent(
 )
 
 
+def service_docs_uri(request: Request) -> str:
+    """Return a root-relative documentation URI for the requested FDSN service.
+
+    FDSN routes are rooted at ``/fdsnws/<service>/<major-version>``.  A
+    root-relative URI avoids depending on the deployment's public scheme,
+    hostname, port, or proxy headers, while retaining any path under which
+    the service is exposed.
+    """
+    parts = request.url.path.strip("/").split("/")
+    if len(parts) >= 3 and parts[0] == "fdsnws":
+        return "/" + "/".join(parts[:3]) + "/"
+    return "/"
+
+
 def fdsn_error_response(
     request: Request,
     response_code: ResponseCode,
@@ -91,7 +105,7 @@ def fdsn_error_response(
         code=response_code.code,
         simple_descr=response_code.message,
         detail=detail,
-        service_docs_uri=request.base_url,
+        service_docs_uri=service_docs_uri(request),
         submitted_url=str(request.url),
         utc_date_time=UTCDateTime(),
         service_version=service_version,
