@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<application xmlns="http://wadl.dev.java.net/2009/02"
+             xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <doc title="FDSN dataselect web service 1.1"/>
+  <grammars/>
+  <resources base="/fdsnws/dataselect/1/">
+    <resource path="query">
+      <method name="GET" id="query">
+        <request>
+          <param name="starttime" style="query" required="true" type="xs:dateTime"/>
+          <param name="endtime" style="query" required="true" type="xs:dateTime"/>
+          <param name="network" style="query" required="true" type="xs:string"/>
+          <param name="station" style="query" required="true" type="xs:string"/>
+          <param name="location" style="query" required="true" type="xs:string"/>
+          <param name="channel" style="query" required="true" type="xs:string"/>
+          <param name="format" style="query" type="xs:string" default="miniseed">
+            <option value="miniseed"/>
+            <option value="sac.zip"/>
+            <option value="sql"/>
+            <option value="css"/>
+          </param>
+          <param name="nodata" style="query" type="xs:integer" default="204">
+            <option value="204"/>
+            <option value="404"/>
+          </param>
+        </request>
+        <response>
+          <representation mediaType="application/vnd.fdsn.mseed"/>
+          <representation mediaType="application/zip"/>
+          <representation mediaType="text/plain"/>
+        </response>
+      </method>
+      <method name="POST" id="postQuery">
+        <request>
+          <representation mediaType="text/plain"/>
+        </request>
+        <response>
+          <representation mediaType="application/vnd.fdsn.mseed"/>
+          <representation mediaType="text/plain"/>
+        </response>
+      </method>
+    </resource>
+    <resource path="version">
+      <method name="GET" id="version">
+        <response>
+          <representation mediaType="text/plain"/>
+        </response>
+      </method>
+    </resource>
+    <resource path="application.wadl">
+      <method name="GET" id="application.wadl">
+        <response>
+          <representation mediaType="application/xml"/>
+        </response>
+      </method>
+    </resource>
+  </resources>
+</application>

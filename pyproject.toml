@@ -49,7 +49,8 @@ Homepage = "https://github.com/LANL-Seismoacoustics/kbws"
 Repository = "https://github.com/LANL-Seismoacoustics/kbws"
 
 [tool.setuptools]
-packages = ["kbws"]
+packages = ["kbws", "kbws.routes"]
 
 [tool.setuptools.package-data]
 kbws = ["py.typed"]
+"kbws.routes" = ["*.xml"]

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<application xmlns="http://wadl.dev.java.net/2009/02"
+             xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <doc title="FDSN event web service 1.2"/>
+  <grammars/>
+  <resources base="/fdsnws/event/1/">
+    <resource path="query">
+      <method name="GET" id="query">
+        <request>
+          <param name="starttime" style="query" type="xs:dateTime"/>
+          <param name="endtime" style="query" type="xs:dateTime"/>
+          <param name="updatedafter" style="query" type="xs:dateTime"/>
+          <param name="minlatitude" style="query" type="xs:double"/>
+          <param name="maxlatitude" style="query" type="xs:double"/>
+          <param name="minlongitude" style="query" type="xs:double"/>
+          <param name="maxlongitude" style="query" type="xs:double"/>
+          <param name="mindepth" style="query" type="xs:double"/>
+          <param name="maxdepth" style="query" type="xs:double"/>
+          <param name="minmagnitude" style="query" type="xs:double"/>
+          <param name="maxmagnitude" style="query" type="xs:double"/>
+          <param name="magnitudetype" style="query" type="xs:string"/>
+          <param name="eventtype" style="query" type="xs:string"/>
+          <param name="includeallorigins" style="query" type="xs:boolean" default="false"/>
+          <param name="includeallmagnitudes" style="query" type="xs:boolean" default="false"/>
+          <param name="preferredmagnitude" style="query" type="xs:string"/>
+          <param name="includearrivals" style="query" type="xs:boolean" default="false"/>
+          <param name="eventid" style="query" type="xs:string"/>
+          <param name="contributor" style="query" type="xs:string"/>
+          <param name="nodata" style="query" type="xs:integer" default="204">
+            <option value="204"/>
+            <option value="404"/>
+          </param>
+          <param name="format" style="query" type="xs:string" default="xml">
+            <option value="xml"/>
+            <option value="css"/>
+            <option value="text"/>
+            <option value="json"/>
+            <option value="sql"/>
+          </param>
+        </request>
+        <response>
+          <representation mediaType="application/xml"/>
+          <representation mediaType="application/json"/>
+          <representation mediaType="text/plain"/>
+        </response>
+      </method>
+    </resource>
+    <resource path="version">
+      <method name="GET" id="version">
+        <response>
+          <representation mediaType="text/plain"/>
+        </response>
+      </method>
+    </resource>
+    <resource path="application.wadl">
+      <method name="GET" id="application.wadl">
+        <response>
+          <representation mediaType="application/xml"/>
+        </response>
+      </method>
+    </resource>
+  </resources>
+</application>

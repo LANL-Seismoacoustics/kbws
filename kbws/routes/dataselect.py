@@ -13,6 +13,7 @@ appropriate descriptions.
 
 from datetime import datetime
 from functools import lru_cache, reduce
+from importlib.resources import files
 from typing import Annotated
 
 from pydantic import ValidationError
@@ -40,12 +41,9 @@ FILENAME_FMT = "fdsn-dataselect_{current_time}.{file_extension}"
 
 logger = get_logger(__name__)
 
-# TODO: add this to package data during installation
-#@lru_cache
 def get_wadl():
-    """Return the WADL text, but cache it, so subsequent calls don't hit the disk."""
-    with open("kbws-dataselect.xml", "r") as wadl_file:
-        return wadl_file.read()
+    """Return the packaged dataselect-service WADL document."""
+    return files("kbws.routes").joinpath("dataselect.xml").read_text(encoding="utf-8")
 
 
 # All subsequent routes originate at this path

@@ -3,6 +3,7 @@ Functions that translate parsed HTTP event request arguements from FastAPI to
 database queries, and return text or ObsPy Catalog objects.
 
 """
+from importlib.resources import files
 from typing import Annotated
 
 from fastapi import APIRouter, Response, Depends, Query, Request
@@ -20,11 +21,9 @@ from ..responses import fdsn_error_response, BAD_REQUEST, PISCES_GET_EVENTS_ERRO
 VERSION = "1.2.0"
 MAJOR_VERSION = VERSION.split(".")[0]
 
-# TODO: add this to package data during installation
 def get_wadl():
-    """Return the WADL text, but cache it, so subsequent calls don't hit the disk."""
-    with open("kbws-events.xml", "r") as wadl_file:
-        return wadl_file.read()
+    """Return the packaged event-service WADL document."""
+    return files("kbws.routes").joinpath("events.xml").read_text(encoding="utf-8")
 
 
 # All subsequent routes originate at this path
