@@ -1,7 +1,7 @@
 import io
-
 from fastapi.testclient import TestClient
 from obspy import read_events, UTCDateTime
+from obspy.clients.fdsn import Client as ObsPyClient
 
 from pisces.tables.kbcore import Event, Origin
 from pisces.fdsn import Client
