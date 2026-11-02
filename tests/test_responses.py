@@ -4,7 +4,7 @@ from fastapi.testclient import TestClient
 from pisces.fdsn import Client
 
 from kbws.main import app
-from kbws.responses import fdsn_error_response, _TEMPLATE, BAD_REQUEST, NO_DATA_ALT
+from kbws.responses import fdsn_error_response, service_docs_uri, _TEMPLATE, BAD_REQUEST, NO_DATA_ALT
 
 ENDPOINT = "/fdsnws/event/1/query?"
 
@@ -69,7 +69,7 @@ def test_fdsn_error_response_format():
         code=BAD_REQUEST.code,
         simple_descr=BAD_REQUEST.message,
         detail="bad input",
-        service_docs_uri=request.base_url,
+        service_docs_uri=service_docs_uri(request),
         submitted_url=str(request.url),
         utc_date_time=utc_now,
         service_version="1.2.0",
