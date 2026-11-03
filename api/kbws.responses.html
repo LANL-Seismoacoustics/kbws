@@ -399,6 +399,7 @@
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kbws.responses.fdsn_error_response"><code class="docutils literal notranslate"><span class="pre">fdsn_error_response()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kbws.responses.service_docs_uri"><code class="docutils literal notranslate"><span class="pre">service_docs_uri()</span></code></a></li>
 </ul>
             </nav>
         </div>
@@ -456,6 +457,16 @@ Web Services Specification, “Error Handling”). Build one with
 </dl>
 </dd></dl>
 
+<dl class="py function">
+<dt class="sig sig-object py" id="kbws.responses.service_docs_uri">
+<span class="sig-prename descclassname"><span class="pre">kbws.responses.</span></span><span class="sig-name descname"><span class="pre">service_docs_uri</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Request</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/kbws/responses.html#service_docs_uri"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kbws.responses.service_docs_uri" title="Link to this definition">#</a></dt>
+<dd><p>Return a root-relative documentation URI for the requested FDSN service.</p>
+<p>FDSN routes are rooted at <code class="docutils literal notranslate"><span class="pre">/fdsnws/&lt;service&gt;/&lt;major-version&gt;</span></code>.  A
+root-relative URI avoids depending on the deployment’s public scheme,
+hostname, port, or proxy headers, while retaining any path under which
+the service is exposed.</p>
+</dd></dl>
+
 </section>
 
 
@@ -503,6 +514,7 @@ Web Services Specification, “Error Handling”). Build one with
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kbws.responses.fdsn_error_response"><code class="docutils literal notranslate"><span class="pre">fdsn_error_response()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kbws.responses.service_docs_uri"><code class="docutils literal notranslate"><span class="pre">service_docs_uri()</span></code></a></li>
 </ul>
   </nav></div>
 

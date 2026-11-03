@@ -396,17 +396,7 @@
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites">Prerequisites</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#native-installation">Native Installation</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-pixi-recommended-for-development">Using pixi (Recommended for Development)</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-conda">Using Conda</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#production-environment">Production Environment</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#development-environment">Development Environment</a></li>
-</ul>
-</li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-pip">Using pip</a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#container-installation">Container Installation</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-docker">Using Docker</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-podman">Using Podman</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#configuration">Configuration</a><ul class="nav section-nav flex-column">
@@ -418,7 +408,6 @@
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#service-won-t-start">Service won’t start</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#oracle-client-not-found">Oracle client not found</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#import-errors-for-pisces">Import errors for Pisces</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#container-permission-issues">Container permission issues</a></li>
 </ul>
 </li>
 </ul>
@@ -434,7 +423,7 @@
                   
   <section id="installation">
 <h1>Installation<a class="headerlink" href="#installation" title="Link to this heading">#</a></h1>
-<p>KBWS can be installed natively using Conda/pip or run in containers using Docker or Podman.</p>
+<p>KBWS can be installed natively using Conda/pip. Podman deployment is documented separately in the <a class="reference internal" href="deployment.html"><span class="std std-doc">Deployment guide</span></a>.</p>
 <section id="prerequisites">
 <h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading">#</a></h2>
 <ul class="simple">
@@ -458,28 +447,6 @@ pixi<span class="w"> </span>shell
 </pre></div>
 </div>
 </section>
-<section id="using-conda">
-<h3>Using Conda<a class="headerlink" href="#using-conda" title="Link to this heading">#</a></h3>
-<section id="production-environment">
-<h4>Production Environment<a class="headerlink" href="#production-environment" title="Link to this heading">#</a></h4>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/LANL-seismoacoustics/kbws.git
-<span class="nb">cd</span><span class="w"> </span>kbws
-conda<span class="w"> </span>env<span class="w"> </span>create<span class="w"> </span>-f<span class="w"> </span>environment.yml
-conda<span class="w"> </span>activate<span class="w"> </span>kbws
-pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
-</pre></div>
-</div>
-</section>
-<section id="development-environment">
-<h4>Development Environment<a class="headerlink" href="#development-environment" title="Link to this heading">#</a></h4>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>env<span class="w"> </span>create<span class="w"> </span>-f<span class="w"> </span>environment-dev.yml
-conda<span class="w"> </span>activate<span class="w"> </span>kbws-dev
-pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
-</pre></div>
-</div>
-<p>The development environment includes additional packages for testing (<code class="docutils literal notranslate"><span class="pre">pytest</span></code>, <code class="docutils literal notranslate"><span class="pre">httpx</span></code>) and uses <code class="docutils literal notranslate"><span class="pre">oracledb</span></code> instead of <code class="docutils literal notranslate"><span class="pre">cx_oracle</span></code> for better MacOS compatibility.</p>
-</section>
-</section>
 <section id="using-pip">
 <h3>Using pip<a class="headerlink" href="#using-pip" title="Link to this heading">#</a></h3>
 <p>If you prefer to use pip directly:</p>
@@ -487,22 +454,6 @@ pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </s
 pip<span class="w"> </span>install<span class="w"> </span>oracledb<span class="w">  </span><span class="c1"># or cx_oracle for Linux</span>
 pip<span class="w"> </span>install<span class="w"> </span>git+https://github.com/LANL-Seismoacoustics/pisces.git
 pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
-</pre></div>
-</div>
-</section>
-</section>
-<section id="container-installation">
-<h2>Container Installation<a class="headerlink" href="#container-installation" title="Link to this heading">#</a></h2>
-<p>KBWS can be run from pre-built container images using Docker or Podman.</p>
-<section id="using-docker">
-<h3>Using Docker<a class="headerlink" href="#using-docker" title="Link to this heading">#</a></h3>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker<span class="w"> </span>pull<span class="w"> </span>ghcr.io/lanl-seismoacoustics/kbws:latest
-</pre></div>
-</div>
-</section>
-<section id="using-podman">
-<h3>Using Podman<a class="headerlink" href="#using-podman" title="Link to this heading">#</a></h3>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>podman<span class="w"> </span>pull<span class="w"> </span>ghcr.io/lanl-seismoacoustics/kbws:latest
 </pre></div>
 </div>
 </section>
@@ -545,17 +496,9 @@ pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </s
 </div>
 <section id="oracle-client-configuration">
 <h3>Oracle Client Configuration<a class="headerlink" href="#oracle-client-configuration" title="Link to this heading">#</a></h3>
-<p>KBWS supports both <code class="docutils literal notranslate"><span class="pre">oracledb</span></code> (recommended for development/MacOS) and <code class="docutils literal notranslate"><span class="pre">cx_oracle</span></code> (recommended for production/Linux):</p>
-<p><strong>Development (oracledb):</strong></p>
-<ul class="simple">
-<li><p>If Oracle Instant Client is not auto-detected, set <code class="docutils literal notranslate"><span class="pre">oracle_client_lib_dir</span></code> in <code class="docutils literal notranslate"><span class="pre">.env</span></code></p></li>
-<li><p>Download Oracle Instant Client from <a class="reference external" href="https://www.oracle.com/database/technologies/instant-client.html">Oracle’s website</a></p></li>
-</ul>
-<p><strong>Production (cx_oracle):</strong></p>
-<ul class="simple">
-<li><p>The Conda environment includes <code class="docutils literal notranslate"><span class="pre">oracle-instantclient</span></code> package</p></li>
-<li><p>No additional configuration typically needed</p></li>
-</ul>
+<p>The package uses <code class="docutils literal notranslate"><span class="pre">oracledb</span></code> for Oracle connections. If thick mode is required
+and the client is not auto-detected, set <code class="docutils literal notranslate"><span class="pre">oracle_client_lib_dir</span></code> in <code class="docutils literal notranslate"><span class="pre">.env</span></code>
+and install Oracle Instant Client from <a class="reference external" href="https://www.oracle.com/database/technologies/instant-client.html">Oracle’s website</a>.</p>
 </section>
 </section>
 <section id="verifying-installation">
@@ -602,16 +545,6 @@ curl<span class="w"> </span>http://localhost:8000/fdsnws/event/1/application.wad
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>git+https://github.com/LANL-Seismoacoustics/pisces.git
 </pre></div>
 </div>
-</section>
-<section id="container-permission-issues">
-<h3>Container permission issues<a class="headerlink" href="#container-permission-issues" title="Link to this heading">#</a></h3>
-<p><strong>Problem:</strong> Container cannot read waveform files or <code class="docutils literal notranslate"><span class="pre">.env</span></code> file</p>
-<p><strong>Solution:</strong></p>
-<ul class="simple">
-<li><p>For Podman: Use <code class="docutils literal notranslate"><span class="pre">--group-add=keep-groups</span></code> flag</p></li>
-<li><p>Ensure mounted paths match exactly what’s in the database <code class="docutils literal notranslate"><span class="pre">wfdisc</span></code> table</p></li>
-<li><p>Check file permissions on host system</p></li>
-</ul>
 </section>
 </section>
 </section>
@@ -666,17 +599,7 @@ curl<span class="w"> </span>http://localhost:8000/fdsnws/event/1/application.wad
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites">Prerequisites</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#native-installation">Native Installation</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-pixi-recommended-for-development">Using pixi (Recommended for Development)</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-conda">Using Conda</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#production-environment">Production Environment</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#development-environment">Development Environment</a></li>
-</ul>
-</li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-pip">Using pip</a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#container-installation">Container Installation</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-docker">Using Docker</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-podman">Using Podman</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#configuration">Configuration</a><ul class="nav section-nav flex-column">
@@ -688,7 +611,6 @@ curl<span class="w"> </span>http://localhost:8000/fdsnws/event/1/application.wad
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#service-won-t-start">Service won’t start</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#oracle-client-not-found">Oracle client not found</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#import-errors-for-pisces">Import errors for Pisces</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#container-permission-issues">Container permission issues</a></li>
 </ul>
 </li>
 </ul>

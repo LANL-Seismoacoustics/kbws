@@ -395,36 +395,27 @@
                 <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#native-deployment">Native Deployment</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#running-kbws">Running KBWS</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#running-as-a-systemd-service">Running as a systemd Service</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#running-as-a-user-systemd-service">Running as a user systemd Service</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#container-deployment-under-construction">Container Deployment (under construction)</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#docker">Docker</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#podman-rootless">Podman (Rootless)</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#development-with-hot-reload">Development with Hot Reload</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#podman-deployment">Podman Deployment</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites">Prerequisites</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#simple-deployment">Simple deployment</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#running-the-podman-service-with-user-systemd">Running the Podman service with user systemd</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#user-level-systemd-unit-using-podman-compose">User-level systemd unit using podman-compose</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#quadlet">Quadlet</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kbws-configuration-requirements">KBWS Configuration Requirements</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#environment-file-mandatory">Environment File (Mandatory)</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#waveform-directory-paths-critical-for-dataselect">Waveform Directory Paths (Critical for dataselect)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#multiple-data-trees-and-absolute-symlinks">Multiple data trees and absolute symlinks</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#podman-and-file-permissions">Podman and file permissions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#configuration-requirements">Configuration requirements</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#troubleshooting">Troubleshooting</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#container-cannot-read-waveform-files">Container cannot read waveform files</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#container-cannot-read-env">Container cannot read <code class="docutils literal notranslate"><span class="pre">.env</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#logs-are-missing-or-not-writable">Logs are missing or not writable</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#database-connection-failures">Database connection failures</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ssh-port-forwarding-for-remote-access">SSH Port Forwarding for Remote Access</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#monitoring-kbws">Monitoring KBWS</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#service-health-checks">Service Health Checks</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#container-health-check">Container Health Check</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#container-resource-limits">Container Resource Limits</a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#logging">Logging</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#log-configuration">Log Configuration</a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#security-notes">Security Notes</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#troubleshooting">Troubleshooting</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#container-cannot-access-database">Container cannot access database</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#waveform-files-not-found">Waveform files not found</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#service-won-t-start">Service won’t start</a></li>
 </ul>
 </li>
 </ul>
@@ -440,7 +431,9 @@
                   
   <section id="deployment">
 <h1>Deployment<a class="headerlink" href="#deployment" title="Link to this heading">#</a></h1>
-<p>This guide covers KBWS-specific deployment configurations, including native service setup and container deployments.</p>
+<p>This guide covers deployment of KBWS as a native service and as an optional
+rootless Podman service. The container workflow is intended for a Linux host
+with Podman configured for the account that runs the service.</p>
 <section id="native-deployment">
 <h2>Native Deployment<a class="headerlink" href="#native-deployment" title="Link to this heading">#</a></h2>
 <section id="running-kbws">
@@ -449,240 +442,333 @@
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Development mode with auto-reload</span>
 python<span class="w"> </span>-m<span class="w"> </span>kbws
 
-<span class="c1"># Production mode with multiple workers</span>
-uvicorn<span class="w"> </span>kbws.main:app<span class="w"> </span>--host<span class="w"> </span><span class="m">0</span>.0.0.0<span class="w"> </span>--port<span class="w"> </span><span class="m">8000</span><span class="w"> </span>--workers<span class="w"> </span><span class="m">4</span>
+<span class="c1"># Single-process service</span>
+uvicorn<span class="w"> </span>kbws.main:app<span class="w"> </span>--host<span class="w"> </span><span class="m">0</span>.0.0.0<span class="w"> </span>--port<span class="w"> </span><span class="m">8000</span>
 </pre></div>
 </div>
-<p>The number of workers should generally be <code class="docutils literal notranslate"><span class="pre">(2</span> <span class="pre">x</span> <span class="pre">num_cores)</span> <span class="pre">+</span> <span class="pre">1</span></code>.</p>
+<p>Scaling with multiple workers is intentionally outside the scope of this
+deployment guide. If it is needed later, measure database connection usage,
+latency, and memory before selecting a process or replica strategy.</p>
 </section>
-<section id="running-as-a-systemd-service">
-<h3>Running as a systemd Service<a class="headerlink" href="#running-as-a-systemd-service" title="Link to this heading">#</a></h3>
-<p>Example systemd service file <code class="docutils literal notranslate"><span class="pre">/etc/systemd/system/kbws.service</span></code>:</p>
+<section id="running-as-a-user-systemd-service">
+<h3>Running as a user systemd Service<a class="headerlink" href="#running-as-a-user-systemd-service" title="Link to this heading">#</a></h3>
+<p>A native installation can be managed by the invoking user’s systemd instance.
+Create <code class="docutils literal notranslate"><span class="pre">~/.config/systemd/user/kbws.service</span></code>:</p>
 <div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[Unit]</span>
 <span class="na">Description</span><span class="o">=</span><span class="s">KBWS FDSN Web Service</span>
-<span class="na">After</span><span class="o">=</span><span class="s">network.target</span>
+<span class="na">After</span><span class="o">=</span><span class="s">network-online.target</span>
+<span class="na">Wants</span><span class="o">=</span><span class="s">network-online.target</span>
 
 <span class="k">[Service]</span>
 <span class="na">Type</span><span class="o">=</span><span class="s">simple</span>
-<span class="na">User</span><span class="o">=</span><span class="s">kbws</span>
-<span class="na">WorkingDirectory</span><span class="o">=</span><span class="s">/opt/kbws</span>
-<span class="na">Environment</span><span class="o">=</span><span class="s">"PATH=/opt/conda/envs/kbws/bin"</span>
-<span class="na">ExecStart</span><span class="o">=</span><span class="s">/opt/conda/envs/kbws/bin/uvicorn kbws.main:app --host 0.0.0.0 --port 8000 --workers 4</span>
+<span class="na">WorkingDirectory</span><span class="o">=</span><span class="s">%h/kbws</span>
+<span class="na">Environment</span><span class="o">=</span><span class="s">PATH=%h/.venv/bin:/usr/local/bin:/usr/bin</span>
+<span class="na">Environment</span><span class="o">=</span><span class="s">PYTHONUNBUFFERED=1</span>
+<span class="na">ExecStart</span><span class="o">=</span><span class="s">%h/.venv/bin/uvicorn kbws.main:app --host 127.0.0.1 --port 8000</span>
 <span class="na">Restart</span><span class="o">=</span><span class="s">on-failure</span>
+<span class="na">RestartSec</span><span class="o">=</span><span class="s">5</span>
 
 <span class="k">[Install]</span>
-<span class="na">WantedBy</span><span class="o">=</span><span class="s">multi-user.target</span>
+<span class="na">WantedBy</span><span class="o">=</span><span class="s">default.target</span>
 </pre></div>
 </div>
-<p>Enable and start:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>kbws
-sudo<span class="w"> </span>systemctl<span class="w"> </span>start<span class="w"> </span>kbws
-sudo<span class="w"> </span>systemctl<span class="w"> </span>status<span class="w"> </span>kbws
+<p>Adjust <code class="docutils literal notranslate"><span class="pre">WorkingDirectory</span></code>, <code class="docutils literal notranslate"><span class="pre">PATH</span></code>, and <code class="docutils literal notranslate"><span class="pre">ExecStart</span></code> to match the native
+installation. The <code class="docutils literal notranslate"><span class="pre">EnvironmentFile</span></code> mechanism may be used if the service’s
+runtime environment file is stored separately and is readable by the user.
+Do not put credentials directly in the unit file.</p>
+<p>Enable and start the user service:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>systemctl<span class="w"> </span>--user<span class="w"> </span>daemon-reload
+systemctl<span class="w"> </span>--user<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>kbws.service
+systemctl<span class="w"> </span>--user<span class="w"> </span>status<span class="w"> </span>kbws.service
 </pre></div>
 </div>
-</section>
-</section>
-<section id="container-deployment-under-construction">
-<h2>Container Deployment (under construction)<a class="headerlink" href="#container-deployment-under-construction" title="Link to this heading">#</a></h2>
-<section id="docker">
-<h3>Docker<a class="headerlink" href="#docker" title="Link to this heading">#</a></h3>
-<p><strong>Basic deployment:</strong></p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--name<span class="w"> </span>kbws<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-v<span class="w"> </span>/path/to/.env:/tmp/.env:ro<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-v<span class="w"> </span>/path/to/waveforms:/path/to/waveforms:ro<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-p<span class="w"> </span><span class="m">8000</span>:8000<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-p<span class="w"> </span><span class="m">1523</span>:1523<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>ghcr.io/lanl-seismoacoustics/kbws:latest
-</pre></div>
-</div>
-<p><strong>With docker-compose:</strong></p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">'3.8'</span>
-
-<span class="nt">services</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">kbws</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ghcr.io/lanl-seismoacoustics/kbws:latest</span>
-<span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kbws</span>
-<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"8000:8000"</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"1523:1523"</span>
-<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./env:/tmp/.env:ro</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/sa:/sa:ro</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/g:/g:ro</span>
-<span class="w">    </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unless-stopped</span>
-<span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LOG_LEVEL=INFO</span>
-</pre></div>
-</div>
-<p>Start the service:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker-compose<span class="w"> </span>up<span class="w"> </span>-d
-</pre></div>
-</div>
-</section>
-<section id="podman-rootless">
-<h3>Podman (Rootless)<a class="headerlink" href="#podman-rootless" title="Link to this heading">#</a></h3>
-<p>Rootless Podman requires the <code class="docutils literal notranslate"><span class="pre">--group-add=keep-groups</span></code> flag to retain read access to mounted directories:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>podman<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--name<span class="w"> </span>kbws<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--group-add<span class="o">=</span>keep-groups<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-v<span class="w"> </span>/path/to/.env:/tmp/.env:ro<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-v<span class="w"> </span>/path/to/waveforms:/path/to/waveforms:ro<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-p<span class="w"> </span><span class="m">8000</span>:8000<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-p<span class="w"> </span><span class="m">1523</span>:1523<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>ghcr.io/lanl-seismoacoustics/kbws:latest
-</pre></div>
-</div>
-</section>
-<section id="development-with-hot-reload">
-<h3>Development with Hot Reload<a class="headerlink" href="#development-with-hot-reload" title="Link to this heading">#</a></h3>
-<p>For development with live code reloading:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">'3.8'</span>
-
-<span class="nt">services</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">kbws-dev</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">build</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.</span>
-<span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kbws-dev</span>
-<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"8000:8000"</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"1523:1523"</span>
-<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.:/tmp</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/sa:/sa:ro</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/g:/g:ro</span>
-<span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">uvicorn kbws.main:app --host 0.0.0.0 --port 8000 --reload</span>
+<p>To keep user services running after logout, enable lingering for the account
+if permitted by the host:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>loginctl<span class="w"> </span>enable-linger
 </pre></div>
 </div>
 </section>
 </section>
-<section id="kbws-configuration-requirements">
-<h2>KBWS Configuration Requirements<a class="headerlink" href="#kbws-configuration-requirements" title="Link to this heading">#</a></h2>
-<section id="environment-file-mandatory">
-<h3>Environment File (Mandatory)<a class="headerlink" href="#environment-file-mandatory" title="Link to this heading">#</a></h3>
-<p>KBWS requires a <code class="docutils literal notranslate"><span class="pre">.env</span></code> file in its working directory. The service will not start without it. See the <a class="reference internal" href="installation.html"><span class="std std-doc">Installation</span></a> guide for a complete example.</p>
-</section>
-<section id="waveform-directory-paths-critical-for-dataselect">
-<h3>Waveform Directory Paths (Critical for dataselect)<a class="headerlink" href="#waveform-directory-paths-critical-for-dataselect" title="Link to this heading">#</a></h3>
-<p>For the <code class="docutils literal notranslate"><span class="pre">dataselect</span></code> service to retrieve waveforms:</p>
-<ol class="arabic simple">
-<li><p>Waveform directories must be accessible at <strong>identical paths</strong> as stored in the database</p></li>
-<li><p>Container mounts must exactly match <code class="docutils literal notranslate"><span class="pre">wfdisc.dir</span></code> paths</p></li>
-<li><p>All symlinked directories must also be mounted with matching paths</p></li>
-</ol>
-<p><strong>Example:</strong> If <code class="docutils literal notranslate"><span class="pre">wfdisc.dir</span></code> contains <code class="docutils literal notranslate"><span class="pre">/sa/archive/2012/001/</span></code>, you must mount:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>-v<span class="w"> </span>/sa:/sa:ro
-</pre></div>
-</div>
-<p><strong>Not</strong> <code class="docutils literal notranslate"><span class="pre">-v</span> <span class="pre">/sa:/data</span></code> or any other path mapping, since KBWS reads paths directly from the database.</p>
-</section>
-</section>
-<section id="ssh-port-forwarding-for-remote-access">
-<h2>SSH Port Forwarding for Remote Access<a class="headerlink" href="#ssh-port-forwarding-for-remote-access" title="Link to this heading">#</a></h2>
-<p>If your KBWS server is not publicly accessible, use SSH port forwarding:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Forward remote port 8000 to local port 8000</span>
-ssh<span class="w"> </span>-L<span class="w"> </span><span class="m">8000</span>:localhost:8000<span class="w"> </span>user@server.example.com
-</pre></div>
-</div>
-<p>Then access KBWS from your local machine:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">obspy.clients.fdsn</span><span class="w"> </span><span class="kn">import</span> <span class="n">Client</span>
-
-<span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span><span class="s1">'http://localhost:8000'</span><span class="p">,</span> <span class="n">_discover_services</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-</pre></div>
-</div>
-<p><strong>Note:</strong> The <code class="docutils literal notranslate"><span class="pre">_discover_services=False</span></code> flag is required if KBWS doesn’t serve a complete <code class="docutils literal notranslate"><span class="pre">application.wadl</span></code> file.</p>
-</section>
-<section id="monitoring-kbws">
-<h2>Monitoring KBWS<a class="headerlink" href="#monitoring-kbws" title="Link to this heading">#</a></h2>
-<section id="service-health-checks">
-<h3>Service Health Checks<a class="headerlink" href="#service-health-checks" title="Link to this heading">#</a></h3>
-<p>KBWS exposes version endpoints for monitoring:</p>
+<section id="podman-deployment">
+<h2>Podman Deployment<a class="headerlink" href="#podman-deployment" title="Link to this heading">#</a></h2>
+<p>The repository includes <code class="docutils literal notranslate"><span class="pre">Containerfile</span></code> and
+<code class="docutils literal notranslate"><span class="pre">podman-compose.yml</span></code> for an optional Podman-based deployment. The image starts
+from Python 3.13, installs KBWS with pip, runs one Uvicorn process, and does
+not require Pixi at runtime. Pixi remains useful for development and testing.</p>
+<p>The compose file is deliberately deployment-neutral. It expects container
+launch settings to be supplied by the Compose project <code class="docutils literal notranslate"><span class="pre">.env</span></code> file or the
+invoking shell, while the application settings remain in a separate runtime
+environment file mounted at <code class="docutils literal notranslate"><span class="pre">/app/.env</span></code>. It does not publish a database port;
+KBWS makes outbound database connections.</p>
+<section id="prerequisites">
+<h3>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading">#</a></h3>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">/fdsnws/event/1/version</span></code> - Event service version</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">/fdsnws/station/1/version</span></code> - Station service version</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">/fdsnws/dataselect/1/version</span></code> - Dataselect service version</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">/docs</span></code> - Interactive API documentation (Swagger UI)</p></li>
+<li><p>A Linux host with rootless Podman and <code class="docutils literal notranslate"><span class="pre">podman-compose</span></code> configured.</p></li>
+<li><p>Access to the Python base image while building the image.</p></li>
+<li><p>A runtime <code class="docutils literal notranslate"><span class="pre">.env</span></code> file containing the required KBWS database and table
+settings. Keep this file outside version control.</p></li>
+<li><p>Read access to every data directory referenced by the database.</p></li>
+<li><p>A writable, persistent host directory for logs.</p></li>
 </ul>
+<p>The container uses the invoking user’s numeric UID and GID. This is important
+for rootless Podman and for NFS-backed data: the NFS server and host kernel
+check numeric ownership and supplementary groups. The compose file requests
+<code class="docutils literal notranslate"><span class="pre">userns_mode:</span> <span class="pre">keep-id</span></code> and <code class="docutils literal notranslate"><span class="pre">group_add:</span> <span class="pre">keep-groups</span></code>; the latter depends on the
+host’s rootless Podman configuration.</p>
 </section>
-<section id="container-health-check">
-<h3>Container Health Check<a class="headerlink" href="#container-health-check" title="Link to this heading">#</a></h3>
-<p>Example docker-compose health check:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">healthcheck</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">test</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"CMD"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"curl"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"-f"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"http://localhost:8000/fdsnws/event/1/version"</span><span class="p p-Indicator">]</span>
-<span class="w">  </span><span class="nt">interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30s</span>
-<span class="w">  </span><span class="nt">timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10s</span>
-<span class="w">  </span><span class="nt">retries</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
-<span class="w">  </span><span class="nt">start_period</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">40s</span>
+<section id="simple-deployment">
+<h3>Simple deployment<a class="headerlink" href="#simple-deployment" title="Link to this heading">#</a></h3>
+<p>For a single data tree, create a local, untracked Compose project <code class="docutils literal notranslate"><span class="pre">.env</span></code>
+next to <code class="docutils literal notranslate"><span class="pre">podman-compose.yml</span></code>:</p>
+<div class="highlight-dotenv notranslate"><div class="highlight"><pre><span></span>KBWS_UID=1000
+KBWS_GID=1000
+KBWS_ENV_FILE=/path/to/kbws.env
+KBWS_LOG_DIR=/path/to/persistent/kbws-logs
+KBWS_DATA_DIR=/path/to/data/tree
+KBWS_HTTP_PORT=8000
+</pre></div>
+</div>
+<p>The separate <code class="docutils literal notranslate"><span class="pre">/path/to/kbws.env</span></code> file contains only KBWS application settings
+and secrets. Prepare the persistent log directory, then start the service:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir<span class="w"> </span>-p<span class="w"> </span>/path/to/persistent/kbws-logs
+podman-compose<span class="w"> </span>-f<span class="w"> </span>podman-compose.yml<span class="w"> </span>up<span class="w"> </span>--build<span class="w"> </span>-d
+</pre></div>
+</div>
+<p>For a convenient local launch without editing the Compose <code class="docutils literal notranslate"><span class="pre">.env</span></code>, shell
+variables override its values:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">KBWS_UID</span><span class="o">=</span><span class="k">$(</span>id<span class="w"> </span>-u<span class="k">)</span><span class="w"> </span><span class="se">\\</span>
+<span class="nv">KBWS_GID</span><span class="o">=</span><span class="k">$(</span>id<span class="w"> </span>-g<span class="k">)</span><span class="w"> </span><span class="se">\\</span>
+<span class="nv">KBWS_LOG_DIR</span><span class="o">=</span><span class="s2">"</span><span class="nv">$PWD</span><span class="s2">/test-logs"</span><span class="w"> </span><span class="se">\\</span>
+<span class="nv">KBWS_DATA_DIR</span><span class="o">=</span><span class="s2">"</span><span class="nv">$PWD</span><span class="s2">/test-data"</span><span class="w"> </span><span class="se">\\</span>
+podman-compose<span class="w"> </span>-f<span class="w"> </span>podman-compose.yml<span class="w"> </span>up<span class="w"> </span>--build<span class="w"> </span>-d
+</pre></div>
+</div>
+<p>The important path rule is that <code class="docutils literal notranslate"><span class="pre">KBWS_DATA_DIR</span></code> is mounted at the <strong>same path
+inside the container</strong> as on the host. For example, a value of
+<code class="docutils literal notranslate"><span class="pre">/path/to/data/tree</span></code> produces this bind mount:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/path/to/data/tree:/path/to/data/tree:ro
+</pre></div>
+</div>
+<p>This is required because KBWS reads waveform <code class="docutils literal notranslate"><span class="pre">dir</span></code> and <code class="docutils literal notranslate"><span class="pre">dfile</span></code> values directly
+from the database. The compose file does not provide a data-path remapping
+option. The data tree is read-only; the log directory is writable and
+persistent.</p>
+<p>Useful compose settings include:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">KBWS_HTTP_PORT</span></code>: host port published to container port 8000; defaults to
+<code class="docutils literal notranslate"><span class="pre">8000</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">KBWS_ENV_FILE</span></code>: host path to the separate application settings file.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">KBWS_LOG_DIR</span></code>: host path for persistent logs; defaults to <code class="docutils literal notranslate"><span class="pre">./logs</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">KBWS_DATA_DIR</span></code>: required host data path, also used as the container path.
+The application <code class="docutils literal notranslate"><span class="pre">log_level</span></code> setting belongs in the separate application
+settings file; the compose file selects the server logging configuration.</p></li>
+</ul>
+<p>The compose health check requests
+<code class="docutils literal notranslate"><span class="pre">/fdsnws/event/1/version</span></code> from inside the container. Check status and logs with:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>podman-compose<span class="w"> </span>-f<span class="w"> </span>podman-compose.yml<span class="w"> </span>ps
+podman<span class="w"> </span>logs<span class="w"> </span>&lt;container-name&gt;
+curl<span class="w"> </span>http://127.0.0.1:8000/fdsnws/event/1/version
+</pre></div>
+</div>
+<p>Stop the service with:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>podman-compose<span class="w"> </span>-f<span class="w"> </span>podman-compose.yml<span class="w"> </span>down
 </pre></div>
 </div>
 </section>
-<section id="container-resource-limits">
-<h3>Container Resource Limits<a class="headerlink" href="#container-resource-limits" title="Link to this heading">#</a></h3>
-<p>Limit container resources:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--name<span class="w"> </span>kbws<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--memory<span class="o">=</span><span class="s2">"2g"</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--cpus<span class="o">=</span><span class="s2">"2.0"</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span><span class="c1"># ... other options</span>
+<section id="running-the-podman-service-with-user-systemd">
+<h3>Running the Podman service with user systemd<a class="headerlink" href="#running-the-podman-service-with-user-systemd" title="Link to this heading">#</a></h3>
+<p>The compose workflow is useful for building and checking the service. For
+long-running rootless Podman deployments, a user-level systemd unit or a
+Quadlet is usually preferable because systemd can start the service after
+login (or with lingering enabled), restart it, and collect its status.</p>
+<section id="user-level-systemd-unit-using-podman-compose">
+<h4>User-level systemd unit using podman-compose<a class="headerlink" href="#user-level-systemd-unit-using-podman-compose" title="Link to this heading">#</a></h4>
+<p>Create <code class="docutils literal notranslate"><span class="pre">~/.config/systemd/user/kbws-compose.service</span></code>:</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[Unit]</span>
+<span class="na">Description</span><span class="o">=</span><span class="s">KBWS Podman Compose service</span>
+<span class="na">After</span><span class="o">=</span><span class="s">network-online.target</span>
+<span class="na">Wants</span><span class="o">=</span><span class="s">network-online.target</span>
+
+<span class="k">[Service]</span>
+<span class="na">Type</span><span class="o">=</span><span class="s">oneshot</span>
+<span class="na">RemainAfterExit</span><span class="o">=</span><span class="s">yes</span>
+<span class="na">WorkingDirectory</span><span class="o">=</span><span class="s">%h/kbws</span>
+<span class="na">Environment</span><span class="o">=</span><span class="s">KBWS_UID=%U</span>
+<span class="na">Environment</span><span class="o">=</span><span class="s">KBWS_GID=%G</span>
+<span class="na">Environment</span><span class="o">=</span><span class="s">KBWS_ENV_FILE=%h/.config/kbws/kbws.env</span>
+<span class="na">Environment</span><span class="o">=</span><span class="s">KBWS_LOG_DIR=%h/.local/state/kbws/logs</span>
+<span class="na">Environment</span><span class="o">=</span><span class="s">KBWS_DATA_DIR=/path/to/data/tree</span>
+<span class="na">ExecStart</span><span class="o">=</span><span class="s">/usr/bin/podman-compose -f %h/kbws/podman-compose.yml up --build -d</span>
+<span class="na">ExecStop</span><span class="o">=</span><span class="s">/usr/bin/podman-compose -f %h/kbws/podman-compose.yml down</span>
+
+<span class="k">[Install]</span>
+<span class="na">WantedBy</span><span class="o">=</span><span class="s">default.target</span>
+</pre></div>
+</div>
+<p>The unit runs as the invoking user; it does not use <code class="docutils literal notranslate"><span class="pre">sudo</span></code> or a system-wide
+unit. Adjust only the generic repository and data paths for the local
+installation. Enable it with:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>systemctl<span class="w"> </span>--user<span class="w"> </span>daemon-reload
+systemctl<span class="w"> </span>--user<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>kbws-compose.service
+systemctl<span class="w"> </span>--user<span class="w"> </span>status<span class="w"> </span>kbws-compose.service
+</pre></div>
+</div>
+<p>Because the unit is <code class="docutils literal notranslate"><span class="pre">Type=oneshot</span></code> with <code class="docutils literal notranslate"><span class="pre">RemainAfterExit=yes</span></code>, systemd tracks
+the compose operation rather than the Uvicorn process directly. Podman and the
+compose tool remain responsible for the container lifecycle. A Quadlet gives
+systemd direct ownership of that lifecycle and is generally the better
+long-term option.</p>
+</section>
+<section id="quadlet">
+<h4>Quadlet<a class="headerlink" href="#quadlet" title="Link to this heading">#</a></h4>
+<p>Quadlet files are placed in <code class="docutils literal notranslate"><span class="pre">~/.config/containers/systemd/</span></code> for rootless
+Podman. A simple <code class="docutils literal notranslate"><span class="pre">kbws.container</span></code> can build the image using Podman’s normal
+build command and then run it:</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[Unit]</span>
+<span class="na">Description</span><span class="o">=</span><span class="s">KBWS Podman container</span>
+
+<span class="k">[Container]</span>
+<span class="na">Image</span><span class="o">=</span><span class="s">localhost/kbws:latest</span>
+<span class="na">PublishPort</span><span class="o">=</span><span class="s">8000:8000</span>
+<span class="na">Environment</span><span class="o">=</span><span class="s">LOG_LEVEL=INFO</span>
+<span class="na">Environment</span><span class="o">=</span><span class="s">LOGGING_CONFIG=logging.server.ini</span>
+<span class="na">User</span><span class="o">=</span><span class="s">%U:%G</span>
+<span class="na">UserNS</span><span class="o">=</span><span class="s">keep-id</span>
+<span class="na">GroupAdd</span><span class="o">=</span><span class="s">keep-groups</span>
+<span class="na">Volume</span><span class="o">=</span><span class="s">%h/.config/kbws/kbws.env:/app/.env:ro</span>
+<span class="na">Volume</span><span class="o">=</span><span class="s">%h/.local/state/kbws/logs:/var/log/kbws:rw</span>
+<span class="na">Volume</span><span class="o">=</span><span class="s">/path/to/data/tree:/path/to/data/tree:ro</span>
+<span class="na">Exec</span><span class="o">=</span><span class="s">sh -c "umask 0002 &amp;&amp; exec python -m uvicorn kbws.main:app --host 0.0.0.0 --port 8000"</span>
+
+<span class="k">[Service]</span>
+<span class="na">Restart</span><span class="o">=</span><span class="s">unless-stopped</span>
+
+<span class="k">[Install]</span>
+<span class="na">WantedBy</span><span class="o">=</span><span class="s">default.target</span>
+</pre></div>
+</div>
+<p>Build the image before enabling the Quadlet:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>podman<span class="w"> </span>build<span class="w"> </span>-f<span class="w"> </span>Containerfile<span class="w"> </span>-t<span class="w"> </span>localhost/kbws:latest<span class="w"> </span>.
+mkdir<span class="w"> </span>-p<span class="w"> </span>~/.local/state/kbws/logs
+systemctl<span class="w"> </span>--user<span class="w"> </span>daemon-reload
+systemctl<span class="w"> </span>--user<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>kbws.service
+systemctl<span class="w"> </span>--user<span class="w"> </span>status<span class="w"> </span>kbws.service
+</pre></div>
+</div>
+<p>The Quadlet example uses the same identity, read-only data, writable log,
+and single-process settings as <code class="docutils literal notranslate"><span class="pre">podman-compose.yml</span></code>. The data source and
+container target must be identical. If absolute symbolic links refer to other
+data trees, add one identical-path <code class="docutils literal notranslate"><span class="pre">Volume=</span></code> line for each target tree.
+Quadlet syntax and supported options depend on the installed Podman version;
+check <code class="docutils literal notranslate"><span class="pre">podman-systemd.unit(5)</span></code> if an option is rejected.</p>
+</section>
+</section>
+<section id="multiple-data-trees-and-absolute-symlinks">
+<h3>Multiple data trees and absolute symlinks<a class="headerlink" href="#multiple-data-trees-and-absolute-symlinks" title="Link to this heading">#</a></h3>
+<p>If the primary data tree contains absolute symbolic links whose targets are in
+other trees, every target tree must also be mounted read-only at its original
+absolute path. Relative links within a mounted tree normally continue to work
+without additional configuration.</p>
+<p>The base compose file handles one required data tree. Add further trees in a
+local, untracked compose override. For example, <code class="docutils literal notranslate"><span class="pre">data-mounts.override.yml</span></code>
+may contain:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">kbws</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bind</span>
+<span class="w">        </span><span class="nt">source</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/path/to/linked/tree/one</span>
+<span class="w">        </span><span class="nt">target</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/path/to/linked/tree/one</span>
+<span class="w">        </span><span class="nt">read_only</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bind</span>
+<span class="w">        </span><span class="nt">source</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/path/to/linked/tree/two</span>
+<span class="w">        </span><span class="nt">target</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/path/to/linked/tree/two</span>
+<span class="w">        </span><span class="nt">read_only</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</pre></div>
+</div>
+<p>The source and target of each mount must be identical. This preserves the
+absolute paths stored in database records and used by symbolic links. Keep the
+override file out of version control if it contains site-specific paths.</p>
+<p>Start with both compose files:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">KBWS_UID</span><span class="o">=</span><span class="k">$(</span>id<span class="w"> </span>-u<span class="k">)</span><span class="w"> </span><span class="se">\\</span>
+<span class="nv">KBWS_GID</span><span class="o">=</span><span class="k">$(</span>id<span class="w"> </span>-g<span class="k">)</span><span class="w"> </span><span class="se">\\</span>
+<span class="nv">KBWS_LOG_DIR</span><span class="o">=</span><span class="s2">"</span><span class="nv">$PWD</span><span class="s2">/test-logs"</span><span class="w"> </span><span class="se">\\</span>
+<span class="nv">KBWS_DATA_DIR</span><span class="o">=</span><span class="s2">"</span><span class="nv">$PWD</span><span class="s2">/test-data"</span><span class="w"> </span><span class="se">\\</span>
+podman-compose<span class="w"> </span><span class="se">\\</span>
+<span class="w">  </span>-f<span class="w"> </span>podman-compose.yml<span class="w"> </span><span class="se">\\</span>
+<span class="w">  </span>-f<span class="w"> </span>data-mounts.override.yml<span class="w"> </span><span class="se">\\</span>
+<span class="w">  </span>up<span class="w"> </span>--build<span class="w"> </span>-d
 </pre></div>
 </div>
 </section>
-</section>
-<section id="logging">
-<h2>Logging<a class="headerlink" href="#logging" title="Link to this heading">#</a></h2>
-<section id="log-configuration">
-<h3>Log Configuration<a class="headerlink" href="#log-configuration" title="Link to this heading">#</a></h3>
-<p>Set log level in <code class="docutils literal notranslate"><span class="pre">.env</span></code>:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">log_level</span><span class="o">=</span>INFO<span class="w">  </span><span class="c1"># DEBUG, INFO, WARNING, ERROR, CRITICAL</span>
+<section id="podman-and-file-permissions">
+<h3>Podman and file permissions<a class="headerlink" href="#podman-and-file-permissions" title="Link to this heading">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">--group-add=keep-groups</span></code> is represented by <code class="docutils literal notranslate"><span class="pre">group_add:</span> <span class="pre">keep-groups</span></code> in the
+compose file. It asks rootless Podman to retain the invoking user’s
+supplementary groups, which may be necessary for NFS and shared-group access.
+It is not a substitute for correct permissions on the host or at the NFS
+server.</p>
+<p>The compose command sets a <code class="docutils literal notranslate"><span class="pre">0002</span></code> umask so files created in the writable log
+mount are group-readable and group-writable when the directory permissions
+allow it. A setgid log directory can be used when log files should inherit a
+shared group:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>install<span class="w"> </span>-d<span class="w"> </span>-m<span class="w"> </span><span class="m">2775</span><span class="w"> </span>/path/to/persistent/kbws-logs
 </pre></div>
 </div>
-<p>Logs are written to <code class="docutils literal notranslate"><span class="pre">/tmp/logs</span></code> inside the container. Mount this directory to persist logs:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>-v<span class="w"> </span>/var/log/kbws:/tmp/logs
+<p>Verify the effective identity and mounts after startup:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>podman<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>&lt;container-name&gt;<span class="w"> </span>id
+podman<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>&lt;container-name&gt;<span class="w"> </span>findmnt
+ls<span class="w"> </span>-ln<span class="w"> </span>/path/to/persistent/kbws-logs
 </pre></div>
 </div>
+<p>Files written to bind mounts have numeric ownership determined by the
+container’s rootless identity mapping. Using <code class="docutils literal notranslate"><span class="pre">keep-id</span></code> and the invoking user’s
+UID/GID makes host-side ownership correspond to that user. The container does
+not persist HTTP response bodies as files; the persistent application artifact
+in this setup is the rotating log file.</p>
 </section>
-</section>
-<section id="security-notes">
-<h2>Security Notes<a class="headerlink" href="#security-notes" title="Link to this heading">#</a></h2>
-<p>KBWS uses deployment-scoped access control and does not provide in-app JWT, OAuth, or <code class="docutils literal notranslate"><span class="pre">queryauth</span></code> authentication. See <a class="reference internal" href="authentication.html"><span class="std std-doc">Access Control</span></a> for the complete model.</p>
-<ol class="arabic simple">
-<li><p><strong>Database identity</strong>: Use a least-privileged, read-only Oracle service account. Oracle Wallet/external-secret authentication is optional; local deployments may use a normal configured <code class="docutils literal notranslate"><span class="pre">database_url</span></code>.</p></li>
-<li><p><strong>Database credentials</strong>: Never commit <code class="docutils literal notranslate"><span class="pre">.env</span></code> files to version control.</p></li>
-<li><p><strong>Read-only mounts</strong>: Mount waveform directories as read-only (<code class="docutils literal notranslate"><span class="pre">:ro</span></code>) when possible, and mount only paths the deployment is intended to serve.</p></li>
-<li><p><strong>Container user</strong>: KBWS container runs as a non-root user in <code class="docutils literal notranslate"><span class="pre">/tmp</span></code>.</p></li>
-</ol>
+<section id="configuration-requirements">
+<h3>Configuration requirements<a class="headerlink" href="#configuration-requirements" title="Link to this heading">#</a></h3>
+<p>KBWS requires a separate application settings file in the container at
+<code class="docutils literal notranslate"><span class="pre">/app/.env</span></code>. Set <code class="docutils literal notranslate"><span class="pre">KBWS_ENV_FILE</span></code> in the Compose project <code class="docutils literal notranslate"><span class="pre">.env</span></code> (or the shell)
+to its host path; the compose file mounts that file read-only. Container launch
+settings such as <code class="docutils literal notranslate"><span class="pre">KBWS_UID</span></code>, <code class="docutils literal notranslate"><span class="pre">KBWS_GID</span></code>, <code class="docutils literal notranslate"><span class="pre">KBWS_LOG_DIR</span></code>, and <code class="docutils literal notranslate"><span class="pre">KBWS_DATA_DIR</span></code> do
+not belong in the application settings file. Do not bake credentials or other
+deployment secrets into the image.</p>
+<p>The image uses <code class="docutils literal notranslate"><span class="pre">logging.server.ini</span></code>, which writes rotating logs to
+<code class="docutils literal notranslate"><span class="pre">/var/log/kbws/kbws.log</span></code>. That directory is supplied by the writable host log
+mount.</p>
 </section>
 <section id="troubleshooting">
-<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Link to this heading">#</a></h2>
-<section id="container-cannot-access-database">
-<h3>Container cannot access database<a class="headerlink" href="#container-cannot-access-database" title="Link to this heading">#</a></h3>
-<p><strong>Problem:</strong> Connection refused or timeout errors</p>
-<p><strong>Solution:</strong></p>
+<h3>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Link to this heading">#</a></h3>
+<section id="container-cannot-read-waveform-files">
+<h4>Container cannot read waveform files<a class="headerlink" href="#container-cannot-read-waveform-files" title="Link to this heading">#</a></h4>
 <ul class="simple">
-<li><p>Ensure database port (e.g., 1523) is exposed/accessible from container</p></li>
-<li><p>Verify database credentials in <code class="docutils literal notranslate"><span class="pre">.env</span></code></p></li>
-<li><p>For Docker: try <code class="docutils literal notranslate"><span class="pre">--network=host</span></code> if network isolation is causing issues</p></li>
+<li><p>Confirm that every database <code class="docutils literal notranslate"><span class="pre">dir</span></code>/<code class="docutils literal notranslate"><span class="pre">dfile</span></code> path exists at the identical path
+inside the container.</p></li>
+<li><p>Mount absolute symbolic-link targets at their identical paths as well.</p></li>
+<li><p>Verify the invoking user’s UID and supplementary groups with <code class="docutils literal notranslate"><span class="pre">podman</span> <span class="pre">exec</span> <span class="pre">&lt;container-name&gt;</span> <span class="pre">id</span></code>.</p></li>
+<li><p>Confirm NFS server-side permissions and rootless Podman group retention.</p></li>
+<li><p>Confirm each data bind mount is read-only and present with <code class="docutils literal notranslate"><span class="pre">podman</span> <span class="pre">inspect</span></code>.</p></li>
 </ul>
 </section>
-<section id="waveform-files-not-found">
-<h3>Waveform files not found<a class="headerlink" href="#waveform-files-not-found" title="Link to this heading">#</a></h3>
-<p><strong>Problem:</strong> Service returns 204 No Content for valid waveform queries</p>
-<p><strong>Solution:</strong></p>
-<ul class="simple">
-<li><p>Verify waveform directories are mounted with <strong>exact</strong> paths from <code class="docutils literal notranslate"><span class="pre">wfdisc</span></code> table</p></li>
-<li><p>Check file permissions - container user must have read access</p></li>
-<li><p>For Podman: ensure <code class="docutils literal notranslate"><span class="pre">--group-add=keep-groups</span></code> is set</p></li>
-<li><p>Test file access: <code class="docutils literal notranslate"><span class="pre">podman</span> <span class="pre">exec</span> <span class="pre">kbws</span> <span class="pre">ls</span> <span class="pre">/path/to/waveforms</span></code></p></li>
-</ul>
+<section id="container-cannot-read-env">
+<h4>Container cannot read <code class="docutils literal notranslate"><span class="pre">.env</span></code><a class="headerlink" href="#container-cannot-read-env" title="Link to this heading">#</a></h4>
+<p>Ensure the host environment file is readable by the invoking user and that
+<code class="docutils literal notranslate"><span class="pre">KBWS_ENV_FILE</span></code> points to the correct file. It is mounted read-only at
+<code class="docutils literal notranslate"><span class="pre">/app/.env</span></code>.</p>
 </section>
-<section id="service-won-t-start">
-<h3>Service won’t start<a class="headerlink" href="#service-won-t-start" title="Link to this heading">#</a></h3>
-<p><strong>Problem:</strong> Container exits immediately or service fails to start</p>
-<p><strong>Solution:</strong></p>
-<ul class="simple">
-<li><p>Verify <code class="docutils literal notranslate"><span class="pre">.env</span></code> file is mounted at <code class="docutils literal notranslate"><span class="pre">/tmp/.env</span></code></p></li>
-<li><p>Check <code class="docutils literal notranslate"><span class="pre">.env</span></code> contains all required variables (see <a class="reference internal" href="installation.html"><span class="std std-doc">Installation</span></a>)</p></li>
-<li><p>Review logs: <code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">logs</span> <span class="pre">kbws</span></code> or <code class="docutils literal notranslate"><span class="pre">podman</span> <span class="pre">logs</span> <span class="pre">kbws</span></code></p></li>
-</ul>
+<section id="logs-are-missing-or-not-writable">
+<h4>Logs are missing or not writable<a class="headerlink" href="#logs-are-missing-or-not-writable" title="Link to this heading">#</a></h4>
+<p>Ensure <code class="docutils literal notranslate"><span class="pre">KBWS_LOG_DIR</span></code> exists and is writable by the invoking user. Inspect the
+container logs and the host directory permissions. The application log file is
+<code class="docutils literal notranslate"><span class="pre">/var/log/kbws/kbws.log</span></code> inside the container.</p>
+</section>
+<section id="database-connection-failures">
+<h4>Database connection failures<a class="headerlink" href="#database-connection-failures" title="Link to this heading">#</a></h4>
+<p>Check the database URL and table mappings in the runtime <code class="docutils literal notranslate"><span class="pre">.env</span></code>, confirm that
+the container host can reach the database, and review the application logs.
+No database listener needs to be published by the container.</p>
+</section>
 </section>
 </section>
 </section>
@@ -736,36 +822,27 @@ ssh<span class="w"> </span>-L<span class="w"> </span><span class="m">8000</span>
     <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#native-deployment">Native Deployment</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#running-kbws">Running KBWS</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#running-as-a-systemd-service">Running as a systemd Service</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#running-as-a-user-systemd-service">Running as a user systemd Service</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#container-deployment-under-construction">Container Deployment (under construction)</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#docker">Docker</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#podman-rootless">Podman (Rootless)</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#development-with-hot-reload">Development with Hot Reload</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#podman-deployment">Podman Deployment</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites">Prerequisites</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#simple-deployment">Simple deployment</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#running-the-podman-service-with-user-systemd">Running the Podman service with user systemd</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#user-level-systemd-unit-using-podman-compose">User-level systemd unit using podman-compose</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#quadlet">Quadlet</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kbws-configuration-requirements">KBWS Configuration Requirements</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#environment-file-mandatory">Environment File (Mandatory)</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#waveform-directory-paths-critical-for-dataselect">Waveform Directory Paths (Critical for dataselect)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#multiple-data-trees-and-absolute-symlinks">Multiple data trees and absolute symlinks</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#podman-and-file-permissions">Podman and file permissions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#configuration-requirements">Configuration requirements</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#troubleshooting">Troubleshooting</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#container-cannot-read-waveform-files">Container cannot read waveform files</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#container-cannot-read-env">Container cannot read <code class="docutils literal notranslate"><span class="pre">.env</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#logs-are-missing-or-not-writable">Logs are missing or not writable</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#database-connection-failures">Database connection failures</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ssh-port-forwarding-for-remote-access">SSH Port Forwarding for Remote Access</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#monitoring-kbws">Monitoring KBWS</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#service-health-checks">Service Health Checks</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#container-health-check">Container Health Check</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#container-resource-limits">Container Resource Limits</a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#logging">Logging</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#log-configuration">Log Configuration</a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#security-notes">Security Notes</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#troubleshooting">Troubleshooting</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#container-cannot-access-database">Container cannot access database</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#waveform-files-not-found">Waveform files not found</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#service-won-t-start">Service won’t start</a></li>
 </ul>
 </li>
 </ul>
