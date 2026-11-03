@@ -50,7 +50,7 @@ def event_query(
 
     ### Example
 
-    [http://0.0.0.0:8000/fdsnws/event/1/query?endtime=2012-11-03T01%3A00%3A00.00&maxdepth=100&maxlatitude=47&maxlongitude=5&mindepth=1.3&minlatitude=40&minlongitude=-10&starttime=2012-11-01](http://0.0.0.0:8000/fdsnws/event/1/query?endtime=2012-11-03T01%3A00%3A00.00&maxdepth=100&maxlatitude=47&maxlongitude=5&mindepth=1.3&minlatitude=40&minlongitude=-10&starttime=2012-11-01)
+    [/fdsnws/event/1/query?endtime=2012-11-03T01:00:00.00&maxdepth=100&maxlatitude=47&maxlongitude=5&mindepth=1.3&minlatitude=40&minlongitude=-10&starttime=2012-11-01](/fdsnws/event/1/query?endtime=2012-11-03T01:00:00.00&maxdepth=100&maxlatitude=47&maxlongitude=5&mindepth=1.3&minlatitude=40&minlongitude=-10&starttime=2012-11-01)
 
     """
     client = Client(session,

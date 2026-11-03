@@ -74,8 +74,11 @@ def station_query(
     params: Annotated[StationQuery, Depends()],
     session: Session = Depends(db.get_db)
 ):
-    """
-    Event query docstring.
+    """Station query URL builder.
+
+    ### Example
+
+    [/fdsnws/station/1/query?channel=BH?&endtime=2010-03-28&format=text&level=channel&location=--&network=TA&starttime=2010-03-25&station=A25A](/fdsnws/station/1/query?channel=BH?&endtime=2010-03-28&format=text&level=channel&location=--&network=TA&starttime=2010-03-25&station=A25A)
 
     """
     out = query_database(session, params, site=db.Site, sitechan=db.Sitechan, affiliation=db.Affiliation)

@@ -33,7 +33,7 @@ def availability_extent(
 
     ### Example
 
-    [http://0.0.0.0:8000/fdsnws/availability/1/extent?channel=BH?&endtime=2010-03-28&location=--&network=TA&starttime=2010-03-25&station=A25A](http://0.0.0.0:8000/fdsnws/dataselect/1/query?channel=BH?&endtime=2010-03-28&location=--&network=TA&starttime=2010-03-25&station=A25A)
+    [/fdsnws/availability/1/extent?channel=BH?&endtime=2010-03-28&location=--&network=TA&starttime=2010-03-25&station=A25A](/fdsnws/availability/1/extent?channel=BH?&endtime=2010-03-28&location=--&network=TA&starttime=2010-03-25&station=A25A)
 
     """
     # see: https://stackoverflow.com/a/8120432/745557
@@ -80,7 +80,7 @@ def availability_query(
 
     ### Example
 
-    [http://0.0.0.0:8000/fdsnws/availability/1/query?channel=BH?&endtime=2010-03-28&location=--&network=TA&starttime=2010-03-25&station=A25A](http://0.0.0.0:8000/fdsnws/dataselect/1/query?channel=BH?&endtime=2010-03-28&location=--&network=TA&starttime=2010-03-25&station=A25A)
+    [/fdsnws/availability/1/query?channel=BH?&endtime=2010-03-28&location=--&network=TA&starttime=2010-03-25&station=A25A](/fdsnws/availability/1/query?channel=BH?&endtime=2010-03-28&location=--&network=TA&starttime=2010-03-25&station=A25A)
 
     """
     pass

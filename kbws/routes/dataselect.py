@@ -68,7 +68,7 @@ def dataselect_query(
 
     ### Example
 
-    [http://0.0.0.0:8000/fdsnws/dataselect/1/query?channel=BH?&endtime=2010-03-28&format=miniseed&location=--&network=TA&starttime=2010-03-25&station=A25A](http://0.0.0.0:8000/fdsnws/dataselect/1/query?channel=BH?&endtime=2010-03-28&format=miniseed&location=--&network=TA&starttime=2010-03-25&station=A25A)
+    [/fdsnws/dataselect/1/query?channel=BH?&endtime=2010-03-28&format=miniseed&location=--&network=TA&starttime=2010-03-25&station=A25A](/fdsnws/dataselect/1/query?channel=BH?&endtime=2010-03-28&format=miniseed&location=--&network=TA&starttime=2010-03-25&station=A25A)
 
     """
 
