@@ -1,19 +1,15 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 import pisces.schema.kbcore as kb
+import oracledb
 
 from .config import Settings
 
 # automatically loads settings from .env file
 settings = Settings()
 
-# # XXX: this block is for oracledb on MacOS.  Linux and use cx_oracle and oracle-instant-client
-# import oracledb
-# oracledb.init_oracle_client(lib_dir='/opt/oracle/instantclient_23_3')
-# # XXX: kludge for sqlalchemy 1.4
-# import sys
-# oracledb.version = "8.3.0"
-# sys.modules["cx_Oracle"] = oracledb
+if settings.oracle_client_lib_dir:
+    oracledb.init_oracle_client(lib_dir=settings.oracle_client_lib_dir)
 
 engine = create_engine(settings.database_url)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

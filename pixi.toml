@@ -10,7 +10,7 @@ version = "0.1.0"
 [dependencies]
 oracledb = ">=4.0.2,<5"
 obspy = ">=1.5.1rc1,<2"
-python = ">=3.14.7,<3.15"
+python = ">=3.13,<3.14"
 fastapi = ">=0.141.1,<0.142"
 pydantic-settings = ">=2.15.0,<3"
 pyyaml = ">=6.0.3,<7"
@@ -21,6 +21,7 @@ e1 = ">=0.2.1,<0.3"
 
 [target.linux-64.dependencies]
 libaio = "*"
+oracle-instant-client = "23.7.0.25.01"
 
 [pypi-dependencies]
 pisces = ">=0.4.5.3, <0.5"
