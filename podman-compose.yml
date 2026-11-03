@@ -1,0 +1,50 @@
+# Generic Podman Compose definition for the repository's deployment image.
+# Supply deployment-specific values through the runtime .env file and
+# command-line/environment overrides; do not commit those values here.
+services:
+  kbws:
+    build:
+      context: .
+      dockerfile: Containerfile
+    # Compose settings are read from the project .env or the invoking shell.
+    # Application settings remain in the separate file mounted below.
+    environment:
+      LOGGING_CONFIG: logging.server.ini
+    # Rootless Podman writes bind-mounted files using the container process's
+    # numeric IDs. Set these to the invoking host user's IDs so ownership is
+    # retained outside the container.
+    # Keep the invoking user's rootless UID/GID mappings. This is important
+    # for reading bind-mounted NFS data, whose permissions are checked by the
+    # host kernel using numeric IDs.
+    userns_mode: keep-id
+    user: "${KBWS_UID:?Set KBWS_UID to the invoking user's UID}:${KBWS_GID:?Set KBWS_GID to the invoking user's primary GID}"
+    # Retain supplementary host groups when the rootless Podman setup allows
+    # it; those groups may be needed to read exported data directories.
+    group_add:
+      - keep-groups
+    command:
+      - sh
+      - -c
+      - umask 0002 && exec python -m uvicorn kbws.main:app --host 0.0.0.0 --port 8000
+    ports:
+      - "${KBWS_HTTP_PORT:-8000}:8000"
+    volumes:
+      - "${KBWS_ENV_FILE:?Set KBWS_ENV_FILE to the application settings file}:/app/.env:ro"
+      # This should be a user-local persistent directory writable by the
+      # invoking user. It does not need to be an NFS or shared data path.
+      - "${KBWS_LOG_DIR:-./logs}:/var/log/kbws:rw"
+      # Read-only data export. The source and destination must be identical:
+      # KBWS reads dir/dfile paths exactly as stored in the database.
+      - "${KBWS_DATA_DIR:?Set KBWS_DATA_DIR to the data directory path}:${KBWS_DATA_DIR}:ro"
+    restart: unless-stopped
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - >-
+          python -c
+          "import urllib.request;
+          urllib.request.urlopen('http://127.0.0.1:8000/fdsnws/event/1/version')"
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
