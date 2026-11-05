@@ -63,7 +63,8 @@ app = FastAPI(
     title="KB Core FDSNWS",
     description=__doc__,   # TODO: get this from a description.md in the repo
     version=__version__,
-    docs_url="/",
+    docs_url="/fdsnws/",
+    openapi_url="/fdsnws/openapi.json",
     redoc_url=None,  # don't also produce the ReDoc version of the API docs
     contact={
         "name": "Jonathan K MacCarthy",
@@ -103,9 +104,14 @@ async def add_request_metadata(request: Request, call_next):
     request.state.service_version = SERVICE_VERSIONS.get(service, app.version)
     response = await call_next(request)
     response.headers["X-Request-ID"] = request.state.request_id
+    # request.client is normalized by the ASGI server. Deployments using a
+    # trusted reverse proxy must configure that server's trusted proxy list;
+    # KBWS deliberately does not parse X-Forwarded-For itself.
+    client_ip = request.client.host if request.client else "unknown"
     logger.info(
-        "request_complete request_id=%s method=%s path=%s status=%s",
+        "request_complete request_id=%s client_ip=%s method=%s path=%s status=%s",
         request.state.request_id,
+        client_ip,
         request.method,
         request.url.path,
         response.status_code,
@@ -143,7 +149,7 @@ async def internal_error_handler(request: Request, exc):
 
 
 # yaml version of spec, in addition to openapi.json endpoint
-@app.get("/openapi.yaml", include_in_schema=False)
+@app.get("/fdsnws/openapi.yaml", include_in_schema=False)
 @functools.lru_cache()
 def read_openapi_yaml():
     openapi_json = app.openapi()
