@@ -132,7 +132,7 @@ def dataselect_query(
 # How to get the Swagger UI to offer a text box for the POST body:
 # https://github.com/fastapi/fastapi/issues/1982#issuecomment-1104499366
 @router.post("/query", summary="Download data using a properly-formatted request file")
-async def dataselect_query_post(
+def dataselect_query_post(
     request: Request,
     body: str = Body(..., media_type='text/plain'),
     session: Session = Depends(db.get_db)

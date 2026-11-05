@@ -7,7 +7,7 @@ import io
 from typing import Annotated
 from functools import reduce
 
-from fastapi import APIRouter, Response, Depends, Request
+from fastapi import APIRouter, Response, Depends, Request, Body
 from fastapi.responses import PlainTextResponse
 from sqlalchemy.orm import Session
 from obspy import Inventory, UTCDateTime
@@ -114,8 +114,9 @@ def station_query(
 
 # async def station_query_post(request: Request):
 @router.post("/query")
-async def station_query_post(
+def station_query_post(
     request: Request,
+    body: bytes = Body(..., media_type="text/plain"),
     session: Session = Depends(db.get_db)
 ):
     """
@@ -138,7 +139,6 @@ async def station_query_post(
 
     """
     # https://stackoverflow.com/a/70879659/745557
-    body = await request.body()
     body = body.decode('utf-8')
     params, bulk = post_parse(body.strip().split('\n'))
     # print(f'body:\n{body}')
