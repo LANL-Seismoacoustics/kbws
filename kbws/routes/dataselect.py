@@ -60,6 +60,11 @@ def dataselect_version():
     return VERSION
 
 @router.get("/query", summary="Download data using URL query parameters")
+@router.get(
+    "/queryauth",
+    summary="Compatibility alias for authenticated FDSN clients; not separately backed",
+    include_in_schema=False,
+)
 def dataselect_query(
     params: Annotated[DataselectQuery, Query()],
     session: Session = Depends(db.get_db)
@@ -132,6 +137,11 @@ def dataselect_query(
 # How to get the Swagger UI to offer a text box for the POST body:
 # https://github.com/fastapi/fastapi/issues/1982#issuecomment-1104499366
 @router.post("/query", summary="Download data using a properly-formatted request file")
+@router.post(
+    "/queryauth",
+    summary="Compatibility alias for authenticated FDSN clients; not separately backed",
+    include_in_schema=False,
+)
 def dataselect_query_post(
     request: Request,
     body: str = Body(..., media_type='text/plain'),

@@ -12,11 +12,14 @@ but their query implementations are deferred pending Pisces support. They are no
 yet operational FDSN services.
 
 KBWS uses deployment-scoped access control: it does not implement in-app user
-authentication or `queryauth`. Deploy each instance with appropriately restricted
-network visibility, a least-privileged read-only Oracle service identity, and
-waveform filesystem mounts matching the data it may serve. Oracle Wallets are an
-optional deployment choice; local users may use a normal configured `database_url`
-against their own tables.
+authentication or FDSN `queryauth` semantics. For general client compatibility,
+KBWS exposes `/fdsnws/dataselect/1/queryauth` as an alias of the existing `query`
+implementation; it is not separately backed and does not provide a second
+authorization system. Deploy each instance with appropriately restricted network
+visibility, a least-privileged read-only Oracle service identity, and waveform
+filesystem mounts matching the data it may serve. Oracle Wallets are an optional
+deployment choice; local users may use a normal configured `database_url` against
+their own tables.
 
 ## Why do this?
 

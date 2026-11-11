@@ -2,7 +2,10 @@
 
 KBWS currently uses **deployment-scoped access control**. It does not implement
 in-application user authentication, JWT validation, OAuth, or FDSN `queryauth`
-endpoints.
+semantics. For general compatibility with clients such as ObsPy, the
+`/fdsnws/dataselect/1/queryauth` route is an alias of the existing `query`
+implementation. It is not separately backed and does not provide a second
+authorization system.
 
 Deploy each KBWS instance only where its intended users can reach it: for example,
 behind an institutional network boundary, VPN, firewall rule, or reverse proxy.
