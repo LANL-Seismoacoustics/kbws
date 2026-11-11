@@ -63,7 +63,10 @@ app = FastAPI(
     title="KB Core FDSNWS",
     description=__doc__,   # TODO: get this from a description.md in the repo
     version=__version__,
-    docs_url="/fdsnws/",
+    # Use the no-slash mount as the canonical Swagger UI URL. Apache may
+    # internally normalize /fdsnws/ to /fdsnws if both spellings must avoid
+    # client-visible redirects.
+    docs_url="/fdsnws",
     openapi_url="/fdsnws/openapi.json",
     redoc_url=None,  # don't also produce the ReDoc version of the API docs
     contact={
