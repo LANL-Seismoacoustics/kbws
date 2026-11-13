@@ -13,6 +13,14 @@ Get *live data* using: [ObsPy's FDSN Client](https://docs.obspy.org/packages/obs
 
 ### Example: ObsPy FDSN Client
 
+If Python does not trust a deployment certificate trusted by the operating
+system (common on macOS), inject the system trust store before importing ObsPy:
+
+```python
+import truststore
+truststore.inject_into_ssl()
+```
+
 ```python
 from obspy import UTCDateTime
 from obspy.clients.fdsn import Client
