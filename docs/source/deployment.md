@@ -4,6 +4,19 @@ This guide covers deployment of KBWS as a native service and as an optional
 rootless Podman service. The container workflow is intended for a Linux host
 with Podman configured for the account that runs the service.
 
+## OpenAPI documentation customization
+
+Deployments can replace the default Markdown introduction shown in the FastAPI
+OpenAPI/Swagger documentation by setting `openapi_docs_header` in the runtime
+`.env` file to a Markdown file path:
+
+```dotenv
+openapi_docs_header=/path/to/deployment-openapi-header.md
+```
+
+The file is read when KBWS starts, and changes require an application restart.
+If the setting is omitted, the built-in project description is used.
+
 ## Native Deployment
 
 ### Running KBWS

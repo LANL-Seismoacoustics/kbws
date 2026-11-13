@@ -43,6 +43,7 @@ The `_discover_services` keyword allows you to bypass the need for a properly-fo
 import functools
 import io
 import logging
+from pathlib import Path
 from uuid import uuid4
 
 from fastapi import FastAPI, Response, Request
@@ -53,6 +54,7 @@ import yaml
 
 from . import __version__
 from .logging import get_logger
+from .config import settings
 from .routes import availability, dataselect, event, station
 from .responses import fdsn_error_response, BAD_REQUEST, INTERNAL_ERROR
 
@@ -67,9 +69,17 @@ SERVICE_VERSIONS = {
 
 logger = get_logger(__name__)
 
+
+def get_description() -> str:
+    """Return the default Markdown description or a deployment override."""
+    if settings.openapi_docs_header:
+        return Path(settings.openapi_docs_header).read_text(encoding="utf-8")
+    return __doc__ or ""
+
+
 app = FastAPI(
     title="KB Core FDSNWS",
-    description=__doc__,   # TODO: get this from a description.md in the repo
+    description=get_description(),
     version=__version__,
     # Use the no-slash mount as the canonical Swagger UI URL. Apache may
     # internally normalize /fdsnws/ to /fdsnws if both spellings must avoid

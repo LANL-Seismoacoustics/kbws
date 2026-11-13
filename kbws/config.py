@@ -6,6 +6,7 @@ class Settings(BaseSettings):
     database_url: str
     log_level: Annotated[str, Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]]
     logging_config: str = "logging.dev.ini"
+    openapi_docs_header: str | None = None
     oracle_client_lib_dir: str | None = None
     # logging_config: str = "logging.server.ini"
 
