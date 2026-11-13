@@ -2,12 +2,35 @@
 
 KBWS currently uses **deployment-scoped access control**. It does not implement
 in-application user authentication, JWT validation, OAuth, or FDSN `queryauth`
-endpoints.
+semantics. For general compatibility with clients such as ObsPy, the
+`/fdsnws/dataselect/1/queryauth` route is an alias of the existing `query`
+implementation. It is not separately backed and does not provide a second
+authorization system. The Swagger UI uses the application’s configured
+`docs_url`; deployment-specific URL normalization belongs to the deployment
+rather than to this project documentation.
 
 Deploy each KBWS instance only where its intended users can reach it: for example,
 behind an institutional network boundary, VPN, firewall rule, or reverse proxy.
 User identity and authentication, when required, are the responsibility of that
 deployment infrastructure.
+
+## ObsPy and local certificate stores
+
+When a deployment certificate is trusted by the operating system but not by
+Python's default CA bundle, ObsPy clients may need the `truststore` package.
+This can occur with macOS system keychains. Inject the system trust store before
+importing or using ObsPy:
+
+```python
+import truststore
+truststore.inject_into_ssl()
+
+from obspy.clients.fdsn import Client
+```
+
+Install `truststore` in the same environment as ObsPy. This is preferable to
+disabling TLS certificate verification. A deployment may instead provide its CA
+bundle through the normal Python/OpenSSL configuration.
 
 ## Oracle service identity
 

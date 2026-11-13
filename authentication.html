@@ -393,6 +393,7 @@
             </div>
             <nav aria-label="Page">
                 <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#obspy-and-local-certificate-stores">ObsPy and local certificate stores</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#oracle-service-identity">Oracle service identity</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#waveform-files">Waveform files</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#operational-correlation">Operational correlation</a></li>
@@ -411,11 +412,32 @@
 <h1>Access Control<a class="headerlink" href="#access-control" title="Link to this heading">#</a></h1>
 <p>KBWS currently uses <strong>deployment-scoped access control</strong>. It does not implement
 in-application user authentication, JWT validation, OAuth, or FDSN <code class="docutils literal notranslate"><span class="pre">queryauth</span></code>
-endpoints.</p>
+semantics. For general compatibility with clients such as ObsPy, the
+<code class="docutils literal notranslate"><span class="pre">/fdsnws/dataselect/1/queryauth</span></code> route is an alias of the existing <code class="docutils literal notranslate"><span class="pre">query</span></code>
+implementation. It is not separately backed and does not provide a second
+authorization system. The Swagger UI uses the application’s configured
+<code class="docutils literal notranslate"><span class="pre">docs_url</span></code>; deployment-specific URL normalization belongs to the deployment
+rather than to this project documentation.</p>
 <p>Deploy each KBWS instance only where its intended users can reach it: for example,
 behind an institutional network boundary, VPN, firewall rule, or reverse proxy.
 User identity and authentication, when required, are the responsibility of that
 deployment infrastructure.</p>
+<section id="obspy-and-local-certificate-stores">
+<h2>ObsPy and local certificate stores<a class="headerlink" href="#obspy-and-local-certificate-stores" title="Link to this heading">#</a></h2>
+<p>When a deployment certificate is trusted by the operating system but not by
+Python’s default CA bundle, ObsPy clients may need the <code class="docutils literal notranslate"><span class="pre">truststore</span></code> package.
+This can occur with macOS system keychains. Inject the system trust store before
+importing or using ObsPy:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">truststore</span>
+<span class="n">truststore</span><span class="o">.</span><span class="n">inject_into_ssl</span><span class="p">()</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">obspy.clients.fdsn</span><span class="w"> </span><span class="kn">import</span> <span class="n">Client</span>
+</pre></div>
+</div>
+<p>Install <code class="docutils literal notranslate"><span class="pre">truststore</span></code> in the same environment as ObsPy. This is preferable to
+disabling TLS certificate verification. A deployment may instead provide its CA
+bundle through the normal Python/OpenSSL configuration.</p>
+</section>
 <section id="oracle-service-identity">
 <h2>Oracle service identity<a class="headerlink" href="#oracle-service-identity" title="Link to this heading">#</a></h2>
 <p>Each KBWS deployment should use one least-privileged, read-only Oracle service
@@ -489,6 +511,7 @@ are not user authentication or audit identities.</p>
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#obspy-and-local-certificate-stores">ObsPy and local certificate stores</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#oracle-service-identity">Oracle service identity</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#waveform-files">Waveform files</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#operational-correlation">Operational correlation</a></li>

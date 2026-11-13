@@ -393,6 +393,7 @@
             </div>
             <nav aria-label="Page">
                 <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#openapi-documentation-customization">OpenAPI documentation customization</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#native-deployment">Native Deployment</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#running-kbws">Running KBWS</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#running-as-a-user-systemd-service">Running as a user systemd Service</a></li>
@@ -434,6 +435,17 @@
 <p>This guide covers deployment of KBWS as a native service and as an optional
 rootless Podman service. The container workflow is intended for a Linux host
 with Podman configured for the account that runs the service.</p>
+<section id="openapi-documentation-customization">
+<h2>OpenAPI documentation customization<a class="headerlink" href="#openapi-documentation-customization" title="Link to this heading">#</a></h2>
+<p>Deployments can replace the default Markdown introduction shown in the FastAPI
+OpenAPI/Swagger documentation by setting <code class="docutils literal notranslate"><span class="pre">openapi_docs_header</span></code> in the runtime
+<code class="docutils literal notranslate"><span class="pre">.env</span></code> file to a Markdown file path:</p>
+<div class="highlight-dotenv notranslate"><div class="highlight"><pre><span></span>openapi_docs_header=/path/to/deployment-openapi-header.md
+</pre></div>
+</div>
+<p>The file is read when KBWS starts, and changes require an application restart.
+If the setting is omitted, the built-in project description is used.</p>
+</section>
 <section id="native-deployment">
 <h2>Native Deployment<a class="headerlink" href="#native-deployment" title="Link to this heading">#</a></h2>
 <section id="running-kbws">
@@ -820,6 +832,7 @@ No database listener needs to be published by the container.</p>
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#openapi-documentation-customization">OpenAPI documentation customization</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#native-deployment">Native Deployment</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#running-kbws">Running KBWS</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#running-as-a-user-systemd-service">Running as a user systemd Service</a></li>
