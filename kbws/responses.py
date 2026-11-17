@@ -40,6 +40,9 @@ TEMP_UNAVAILABLE = ResponseCode(503, 'Service temporarily unavailable.')
 PISCES_GET_EVENTS_ERRORS = {
     BAD_REQUEST: (ValueError,),
 }
+PISCES_GET_AVAILABILITY_ERRORS = {
+    BAD_REQUEST: (ValueError,),
+}
 
 _TEMPLATE = dedent(
     """\

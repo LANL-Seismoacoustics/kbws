@@ -8,7 +8,7 @@ import os
 from typing import Iterable
 from zipfile import ZipFile
 
-from obspy import Stream, Catalog
+from obspy import Stream, Catalog, UTCDateTime
 from obspy.io.quakeml.core import Pickler # for QuakeML string
 from obspy.io.json.default import Default
 
@@ -25,6 +25,79 @@ def catalog_json(catalog: Catalog) -> str:
     default = Default(omit_nulls=False)
     return str(json.dumps(catalog, default=default, indent=2))
 
+
+
+def availability_text(rows, *, extent: bool, show: str | None = None) -> str:
+    if extent:
+        header = (
+            "#Network Station Location Channel Quality SampleRate Earliest "
+            "Latest Updated TimeSpans Restriction"
+        )
+        fields = (
+            "network", "station", "location", "channel", "quality", "samplerate",
+            "earliest", "latest", "updated", "timespans", "restriction",
+        )
+    else:
+        fields = [
+            "network", "station", "location", "channel", "quality", "samplerate",
+            "earliest", "latest",
+        ]
+        header = "#Network Station Location Channel Quality SampleRate Earliest Latest"
+        if show == "latestupdate":
+            fields.append("updated")
+            header += " Updated"
+
+    lines = [header]
+    for row in rows:
+        values = []
+        for field in fields:
+            value = getattr(row, field, "-")
+            if field in {"earliest", "latest", "updated"} and value not in (None, "-"):
+                value = str(UTCDateTime(value))
+            values.append(str(value if value is not None else "-"))
+        lines.append(" ".join(values))
+    return "\n".join(lines) + "\n"
+
+
+def availability_json(rows, *, extent: bool, show: str | None = None) -> str:
+    if extent:
+        fields = (
+            "network", "station", "location", "channel", "quality", "samplerate",
+            "earliest", "latest", "updated", "timespans", "restriction",
+        )
+    else:
+        fields = [
+            "network", "station", "location", "channel", "quality", "samplerate",
+            "earliest", "latest",
+        ]
+        if show == "latestupdate":
+            fields.append("updated")
+
+    output = []
+    for row in rows:
+        item = {}
+        for field in fields:
+            value = getattr(row, field, None)
+            if field in {"earliest", "latest", "updated"} and value is not None:
+                value = str(UTCDateTime(value))
+            item[field] = value
+        output.append(item)
+    return json.dumps(output, indent=2)
+
+
+def availability_request(rows) -> str:
+    lines = [
+        " ".join((
+            row.network,
+            row.station,
+            row.location,
+            row.channel,
+            str(UTCDateTime(row.earliest)),
+            str(UTCDateTime(row.latest)),
+        ))
+        for row in rows
+    ]
+    return "\n".join(lines) + "\n"
 
 
 def mseed_bytes(stream: Stream) -> bytes:
