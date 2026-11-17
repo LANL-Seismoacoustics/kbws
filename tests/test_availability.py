@@ -109,6 +109,29 @@ def test_json_response(monkeypatch):
     }]
 
 
+def test_request_response(monkeypatch):
+    """Return availability spans as FDSN request lines."""
+    row = SimpleNamespace(
+        network="IU", station="ANMO", location="--", channel="BHZ",
+        earliest=UTCDateTime("2010-01-01"), latest=UTCDateTime("2010-01-02"),
+    )
+
+    def get_availability(*args, **kwargs):
+        return [row]
+
+    monkeypatch.setattr(Client, "get_availability", get_availability, raising=False)
+    response = client.get(
+        f"{ENDPOINT}/query?starttime=2010-01-01&endtime=2010-01-03"
+        "&network=IU&station=ANMO&location=--&channel=BHZ&format=request"
+    )
+
+    assert response.status_code == 200
+    assert response.text == (
+        "IU ANMO -- BHZ 2010-01-01T00:00:00.000000Z "
+        "2010-01-02T00:00:00.000000Z\n"
+    )
+
+
 def test_query_updated(monkeypatch):
     """Include the update column when requested."""
     row = SimpleNamespace(
@@ -209,6 +232,30 @@ def test_query_post(monkeypatch):
 
     assert response.status_code == 200
     assert response.text.splitlines()[0].endswith("Updated")
+
+
+def test_request_post(monkeypatch):
+    """Return POST availability results as request lines."""
+    row = SimpleNamespace(
+        network="IU", station="ANMO", location="--", channel="BHZ",
+        earliest=UTCDateTime("2010-01-01"), latest=UTCDateTime("2010-01-02"),
+    )
+
+    def get_availability(*args, **kwargs):
+        return [row]
+
+    monkeypatch.setattr(Client, "get_availability", get_availability, raising=False)
+    body = (
+        "format=request\n"
+        "IU ANMO -- BHZ 2010-01-01 2010-01-03\n"
+    )
+    response = client.post(f"{ENDPOINT}/query", content=body)
+
+    assert response.status_code == 200
+    assert response.text == (
+        "IU ANMO -- BHZ 2010-01-01T00:00:00.000000Z "
+        "2010-01-02T00:00:00.000000Z\n"
+    )
 
 
 def test_post_bad_input():

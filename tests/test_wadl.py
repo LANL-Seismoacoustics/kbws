@@ -9,3 +9,4 @@ def test_wadl_obspy_client_discovery(fdsn_server):
 
     assert "event" in discovered.services
     assert "dataselect" in discovered.services
+    assert "station" in discovered.services

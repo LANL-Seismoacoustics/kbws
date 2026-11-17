@@ -1,67 +1,34 @@
-"""
-Functions that translate parsed HTTP station request arguements from FastAPI to
-database queries, and return Inventory objects.
-
-"""
-import io
-from typing import Annotated
-from functools import reduce
-
-from fastapi import APIRouter, Response, Depends, Request, Body
+"""FDSN station metadata routes."""
+from fastapi import APIRouter, Body, Depends, Query, Request, Response
+from importlib.resources import files
 from fastapi.responses import PlainTextResponse
-from sqlalchemy.orm import Session
 from obspy import Inventory, UTCDateTime
-from pisces import request
 from pydantic import ValidationError
+from sqlalchemy.orm import Session
+from typing import Annotated
+
+from pisces.fdsn import Client
+from pisces.util import _get_entities
 
 from .. import database as db
-from ..responses import fdsn_error_response, BAD_REQUEST
+from ..formats import post_parse, station_text, station_xml_bytes
 from ..models import StationQuery
-from ..formats import post_parse
-
-# HTTP 413 status shall be returned when either the request entity itself is too large or the resulting data set would be too large
-# TOO_LARGE_EXCEPTION = HTTPException(detail='Request or result is too large.', status_code=413)
+from ..models.station import StationLevel
+from ..responses import BAD_REQUEST, NO_DATA_ALT, fdsn_error_response
 
 VERSION = "1.1.0"
 MAJOR_VERSION = VERSION.split(".")[0]
-
-def _inventory_to_stationxml_string(inventory: Inventory) -> str:
-    with io.BytesIO() as fp:
-        inventory.write(fp, format="STATIONXML")
-        fp.seek(0)
-        out = fp.read()
-    return out
+router = APIRouter(prefix=f"/fdsnws/station/{MAJOR_VERSION}", tags=["station"])
 
 
+def get_wadl():
+    """Return the packaged station-service WADL document."""
+    return files("kbws.routes").joinpath("station.xml").read_text(encoding="utf-8")
 
 
-def query_database(session: Session, params: StationQuery, **tables):
-    """ Params follows the StationQuery model. """
-    t1 = int(UTCDateTime(params.starttime).strftime('%Y%j')) if params.starttime else None
-    t2 = int(UTCDateTime(params.endtime).strftime('%Y%j')) if params.endtime else None
-    out = request.get_stations(
-        session,
-        tables['site'],
-        tables.get('sitechan'),
-        tables.get('affiliation'),
-        stations=[params.station],
-        channels=[params.channel],
-        nets=[params.network],
-        region=(
-            params.minlongitude,
-            params.maxlongitude,
-            params.minlatitude,
-            params.maxlatitude,
-        ),
-        time_span=(t1, t2),
-        asquery=params.asquery,
-    )
-
-    return out
-
-
-# All subsequent routes originate at this path
-router = APIRouter(prefix=f"/fdsnws/station/{MAJOR_VERSION}", tags=['station'])
+@router.get("/application.wadl", summary="Download the service WADL file")
+def station_wadl(wadl: str = Depends(get_wadl)):
+    return Response(content=wadl, media_type="application/xml")
 
 
 @router.get("/version", response_class=PlainTextResponse)
@@ -71,142 +38,242 @@ def station_version():
 
 @router.get("/query")
 def station_query(
-    params: Annotated[StationQuery, Depends()],
-    session: Session = Depends(db.get_db)
+    request: Request,
+    params: Annotated[StationQuery, Query()],
+    session: Session = Depends(db.get_db),
 ):
-    """Station query URL builder.
+    """Query station metadata.
+
+    Returns StationXML by default, or FDSN station text for network, station,
+    and channel levels. The ``css`` format returns Site rows and ``sql``
+    returns the generated SQL query.
 
     ### Example
 
-    [/fdsnws/station/1/query?channel=BH?&endtime=2010-03-28&format=text&level=channel&location=--&network=TA&starttime=2010-03-25&station=A25A](/fdsnws/station/1/query?channel=BH?&endtime=2010-03-28&format=text&level=channel&location=--&network=TA&starttime=2010-03-25&station=A25A)
+    [/fdsnws/station/1/query?channel=BH?&endtime=2010-03-28&format=text&level=channel&network=TA&starttime=2010-03-25&station=A25A](/fdsnws/station/1/query?channel=BH?&endtime=2010-03-28&format=text&level=channel&network=TA&starttime=2010-03-25&station=A25A)
 
     """
-    out = query_database(session, params, site=db.Site, sitechan=db.Sitechan, affiliation=db.Affiliation)
-
-
-    if params.asquery:
-        sql = str(
-            out.statement.compile(session.bind, compile_kwargs={"literal_binds": True})
+    try:
+        out = Client(
+            session,
+            affiliation=db.Affiliation,
+            instrument=db.Instrument,
+            network=db.Network,
+            sensor=db.Sensor,
+            site=db.Site,
+            sitechan=db.Sitechan,
+        ).get_stations(
+            starttime=UTCDateTime(params.starttime) if params.starttime else None,
+            endtime=UTCDateTime(params.endtime) if params.endtime else None,
+            network=params.network,
+            station=params.station,
+            channel=params.channel,
+            # location is a core FDSN parameter, but Pisces currently ignores it.
+            minlatitude=params.minlatitude,
+            maxlatitude=params.maxlatitude,
+            minlongitude=params.minlongitude,
+            maxlongitude=params.maxlongitude,
+            level=params.level.value,
+            asquery=params.format in ("sql", "css") or params.asquery,
         )
-        r = Response(content=sql, media_type="text/plain")
+    except (ValueError, TypeError) as exc:
+        return fdsn_error_response(request, BAD_REQUEST, detail=str(exc), service_version=VERSION)
+
+    if out:
+        match params.format:
+            case "xml":
+                r = Response(
+                    content=station_xml_bytes(out),
+                    media_type="application/xml",
+                )
+            case "text":
+                if params.level == "response":
+                    r = fdsn_error_response(
+                        request,
+                        BAD_REQUEST,
+                        detail="format=text is not supported for level=response",
+                        service_version=VERSION,
+                    )
+                else:
+                    r = Response(
+                        content=station_text(out, params.level.value),
+                        media_type="text/plain",
+                    )
+            case "sql":
+                content = str(
+                    out.statement.compile(
+                        session.bind,
+                        compile_kwargs={"literal_binds": True},
+                    )
+                )
+                r = Response(content=content, media_type="text/plain")
+            case "css":
+                Site, = _get_entities(out, "Site")
+                sitename = Site.__name__
+                flatfile = "\n".join(str(getattr(row, sitename)) for row in out)
+                r = PlainTextResponse(content=flatfile)
     else:
-        flatfile = "\n".join([str(row) for row in out])
-        if flatfile:
-            r = Response(content=flatfile, media_type="plain/text")
-            # content = _catalog_to_quakeml_string(read_events())
-            # r = Response(content=content, media_type='application/xml')
+        if params.nodata == "204":
+            r = Response(status_code=204)
         else:
-            # no data
-            r = Response(status_code=int(params.nodata))
+            r = fdsn_error_response(
+                request,
+                NO_DATA_ALT,
+                detail="",
+                service_version=VERSION,
+            )
 
     return r
 
-    # return RedirectResponse(
-    #     url=
-    # )
 
-
-# The IRIS page on POST offers examples using wget or curl that imply that data
-# are sent as "form" data, which are of type application/x-www-form-urlencoded.
-# FastAPI is built for JSON, so we have to find the small corner of its documentation
-# that describe accepting and parsing/reading arbitrary form data to supply to the endpoint
-# function.
-
-# async def station_query_post(request: Request):
 @router.post("/query")
 def station_query_post(
     request: Request,
-    body: bytes = Body(..., media_type="text/plain"),
-    session: Session = Depends(db.get_db)
+    body: str = Body(..., media_type="text/plain"),
+    session: Session = Depends(db.get_db),
 ):
+    """Query station metadata using the FDSN station POST request format.
+
+    The body may contain global ``key=value`` parameters followed by repeated
+    ``NET STA LOC CHA STARTTIME ENDTIME`` selection rows.
     """
-    Parse the station POST format, query the database, and build an Inventory object from the results.
-
-    A POST request could look like this:
-    ```
-    level=channel
-    format=text
-    TA A25A -- BH? 2010-03-25T00:00:00 2010-04-01T00:00:00
-    IU ANMO * BH? 2010-03-25T00:00:00 2010-04-01T00:00:00
-    IU ANMO 10 HHZ 2010-03-25T00:00:00 2010-04-01T00:00:00
-    II KURK 00 BH? 2010-03-25T00:00:00 2010-04-01T00:00:00
-    ```
-
-    Each row is a seperate query, as a combination of the required paremeters from the row with
-    top-level global parameters.
-
-    Currently only returns the body of the POST.
-
-    """
-    # https://stackoverflow.com/a/70879659/745557
-    body = body.decode('utf-8')
     try:
-        params, bulk = post_parse(body.strip().split('\n'))
-    except ValueError as e:
-        return fdsn_error_response(
-            request,
-            BAD_REQUEST,
-            detail=f'Unable to parse POST body: {e}',
-            service_version=VERSION,
-        )
-    # print(f'body:\n{body}')
-    # print(f'headers:\n{request.headers}')
+        global_params, bulk = post_parse(body.splitlines())
+        queries = []
+        for network, station, _location, channel, starttime, endtime in bulk:
+            queries.append(StationQuery(
+                **dict(
+                    global_params,
+                    network=network,
+                    station=station,
+                    channel=channel,
+                    starttime=starttime,
+                    endtime=endtime,
+                )
+            ))
+        if not queries:
+            queries = [StationQuery(**global_params)]
+    except (ValueError, ValidationError) as exc:
+        return fdsn_error_response(request, BAD_REQUEST, detail=str(exc), service_version=VERSION)
 
-    # here, we need to handle input validation, as FastAPI can't do it for us.
-    # TODO: make sure params aren't repeated.
-    excluded = ('startbefore', 'endbefore', 'startafter', 'endafter')
-    if any(key in params for key in excluded):
-        return fdsn_error_response(
-            request,
-            BAD_REQUEST,
-            detail=f"POST parameters cannot contain any of the following: {excluded}",
-            service_version=VERSION,
+    try:
+        client = Client(
+            session,
+            affiliation=db.Affiliation,
+            instrument=db.Instrument,
+            network=db.Network,
+            sensor=db.Sensor,
+            site=db.Site,
+            sitechan=db.Sitechan,
         )
-
-    if bulk:
-        queries = [
-            {
-                'network': network,
-                'station': station,
-                'channel': channel,
-                'starttime': starttime,
-                'endtime': endtime,
-            }
-            for network, station, location, channel, starttime, endtime in bulk
-        ]
+        results = [client.get_stations(
+            starttime=UTCDateTime(query.starttime) if query.starttime else None,
+            endtime=UTCDateTime(query.endtime) if query.endtime else None,
+            network=query.network,
+            station=query.station,
+            channel=query.channel,
+            # location is a core FDSN parameter, but Pisces currently ignores it.
+            minlatitude=query.minlatitude,
+            maxlatitude=query.maxlatitude,
+            minlongitude=query.minlongitude,
+            maxlongitude=query.maxlongitude,
+            level=StationLevel(query.level).value,
+            asquery=query.format in ("sql", "css") or query.asquery,
+        ) for query in queries]
+    except (ValueError, TypeError) as exc:
+        return fdsn_error_response(request, BAD_REQUEST, detail=str(exc), service_version=VERSION)
+    format = queries[0].format
+    if not results:
+        if queries[0].nodata == "204":
+            r = Response(status_code=204)
+        else:
+            r = fdsn_error_response(
+                request,
+                NO_DATA_ALT,
+                detail="",
+                service_version=VERSION,
+            )
     else:
-        queries = [{}]
+        match format:
+            case "xml":
+                inventories = [result for result in results if isinstance(result, Inventory)]
+                if not any(inventories):
+                    if queries[0].nodata == "204":
+                        r = Response(status_code=204)
+                    else:
+                        r = fdsn_error_response(
+                            request,
+                            NO_DATA_ALT,
+                            detail="",
+                            service_version=VERSION,
+                        )
+                else:
+                    combined = Inventory(
+                        networks=[
+                            network
+                            for result in inventories
+                            for network in result.networks
+                        ]
+                    )
+                    r = Response(
+                        content=station_xml_bytes(combined),
+                        media_type="application/xml",
+                    )
+            case "text":
+                inventories = [result for result in results if isinstance(result, Inventory)]
+                if not any(inventories):
+                    if queries[0].nodata == "204":
+                        r = Response(status_code=204)
+                    else:
+                        r = fdsn_error_response(
+                            request,
+                            NO_DATA_ALT,
+                            detail="",
+                            service_version=VERSION,
+                        )
+                elif queries[0].level == "response":
+                    r = fdsn_error_response(
+                        request,
+                        BAD_REQUEST,
+                        detail="format=text is not supported for level=response",
+                        service_version=VERSION,
+                    )
+                else:
+                    r = Response(
+                        content="".join(
+                            station_text(
+                                inventory,
+                                StationLevel(queries[0].level).value,
+                            )
+                            for inventory in inventories
+                        ),
+                        media_type="text/plain",
+                    )
+            case "sql":
+                r = PlainTextResponse(content="\n".join(
+                    str(result.statement.compile(
+                        session.bind,
+                        compile_kwargs={"literal_binds": True},
+                    ))
+                    for result in results
+                ))
+            case "css":
+                rows = []
+                for result in results:
+                    Site, = _get_entities(result, "Site")
+                    sitename = Site.__name__
+                    rows.extend(str(getattr(row, sitename)) for row in result)
+                if not rows:
+                    if queries[0].nodata == "204":
+                        r = Response(status_code=204)
+                    else:
+                        r = fdsn_error_response(
+                            request,
+                            NO_DATA_ALT,
+                            detail="",
+                            service_version=VERSION,
+                        )
+                else:
+                    r = PlainTextResponse(content="\n".join(rows))
 
-    # update each query with global parameters, overwriting if necessary
-    # if no bulk lines were provided, only one query is present and will need to include required parameters
-    queries = [dict(query, **params) for query in queries]
-
-    # validate and cast types.
-    # Since we're not using FastAPI's builtin validation (we don't use JSON),
-    # we have to do it ourselves. Also, The FDSNWS spec is pretty specific about errors:
-    # http://www.fdsn.org/webservices/FDSN-WS-Specification-Commonalities-1.2.pdf
-    try:
-        station_queries = [StationQuery(**query) for query in queries]
-    except ValidationError as e:
-        return fdsn_error_response(
-            request,
-            BAD_REQUEST,
-            detail=str(e),
-            service_version=VERSION,
-        )
-
-    # list of lists (results), excluding empty
-    out = [
-            query_database(session, sq, site=db.Site, sitechan=db.Sitechan, affiliation=db.Affiliation)
-            for sq in station_queries
-           ]
-
-    # flatten and remove empty result lists
-    out = reduce(lambda a, b : a + b, out, [])
-
-    # how to remove duplicates?  sets don't work b/c SQLA results are unhashable
-    # out = _dedupe(out)
-
-    print(out)
-
-    return Response(content=body, media_type="plain/text")
+    return r

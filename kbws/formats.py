@@ -85,6 +85,63 @@ def availability_json(rows, *, extent: bool, show: str | None = None) -> str:
     return json.dumps(output, indent=2)
 
 
+def station_xml_bytes(inventory) -> bytes:
+    """Serialize an ObsPy Inventory to StationXML bytes."""
+    with io.BytesIO() as fp:
+        inventory.write(fp, format="STATIONXML")
+        return fp.getvalue()
+
+
+def station_text(inventory, level: str) -> str:
+    """Serialize an ObsPy Inventory using the FDSN station text format."""
+    if level == "network":
+        header = "#Network|Description|StartTime|EndTime|TotalStations"
+        rows = inventory.networks
+    elif level == "station":
+        header = "#Network|Station|Latitude|Longitude|Elevation|SiteName|StartTime|EndTime"
+        rows = ((network, station) for network in inventory.networks for station in network.stations)
+    else:
+        header = (
+            "#Network|Station|Location|Channel|Latitude|Longitude|Elevation|Depth|Azimuth|Dip|"
+            "SensorDescription|Scale|ScaleFrequency|ScaleUnits|SampleRate|StartTime|EndTime"
+        )
+        rows = (
+            (network, station, channel)
+            for network in inventory.networks
+            for station in network.stations
+            for channel in station.channels
+        )
+
+    lines = [header]
+    for row in rows:
+        if level == "network":
+            values = [row.code, row.description, "", "", len(row.stations)]
+        elif level == "station":
+            network, station = row
+            values = [
+                network.code, station.code, station.latitude, station.longitude,
+                station.elevation, station.site.name, station.start_date, station.end_date,
+            ]
+        else:
+            network, station, channel = row
+            sensitivity = getattr(
+                getattr(channel, "response", None),
+                "instrument_sensitivity",
+                None,
+            )
+            values = [
+                network.code, station.code, channel.location_code, channel.code,
+                channel.latitude, channel.longitude, channel.elevation, channel.depth,
+                channel.azimuth, channel.dip, getattr(channel.sensor, "type", None),
+                getattr(sensitivity, "value", None),
+                getattr(sensitivity, "frequency", None),
+                getattr(sensitivity, "output_units", None),
+                channel.sample_rate, channel.start_date, channel.end_date,
+            ]
+        lines.append("|".join(str(value if value is not None else "") for value in values))
+    return "\n".join(lines) + "\n"
+
+
 def availability_request(rows) -> str:
     lines = [
         " ".join((

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<application xmlns="http://wadl.dev.java.net/2009/02"
+             xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <doc title="FDSN station web service 1.1"/>
+  <doc>KBWS also supports the css and sql format extensions. The location parameter is accepted for FDSN compatibility but is currently ignored by Pisces.</doc>
+  <grammars/>
+  <resources base="/fdsnws/station/1/">
+    <resource path="query">
+      <method name="GET" id="query">
+        <request>
+          <param name="starttime" style="query" type="xs:dateTime"/>
+          <param name="endtime" style="query" type="xs:dateTime"/>
+          <param name="network" style="query" type="xs:string"/>
+          <param name="station" style="query" type="xs:string"/>
+          <param name="location" style="query" type="xs:string"/>
+          <param name="channel" style="query" type="xs:string"/>
+          <param name="minlatitude" style="query" type="xs:double"/>
+          <param name="maxlatitude" style="query" type="xs:double"/>
+          <param name="minlongitude" style="query" type="xs:double"/>
+          <param name="maxlongitude" style="query" type="xs:double"/>
+          <param name="level" style="query" type="xs:string" default="station">
+            <option value="network"/>
+            <option value="station"/>
+            <option value="channel"/>
+            <option value="response"/>
+          </param>
+          <param name="nodata" style="query" type="xs:integer" default="204">
+            <option value="204"/>
+            <option value="404"/>
+          </param>
+          <param name="format" style="query" type="xs:string" default="xml">
+            <option value="xml"/>
+            <option value="text"/>
+            <option value="css"/>
+            <option value="sql"/>
+          </param>
+          <param name="asquery" style="query" type="xs:boolean" default="false"/>
+        </request>
+        <response>
+          <representation mediaType="application/xml"/>
+          <representation mediaType="text/plain"/>
+        </response>
+      </method>
+      <method name="POST" id="postQuery">
+        <request>
+          <representation mediaType="text/plain"/>
+        </request>
+        <response>
+          <representation mediaType="application/xml"/>
+          <representation mediaType="text/plain"/>
+        </response>
+      </method>
+    </resource>
+    <resource path="version">
+      <method name="GET" id="version">
+        <response>
+          <representation mediaType="text/plain"/>
+        </response>
+      </method>
+    </resource>
+    <resource path="application.wadl">
+      <method name="GET" id="application.wadl">
+        <response>
+          <representation mediaType="application/xml"/>
+        </response>
+      </method>
+    </resource>
+  </resources>
+</application>
