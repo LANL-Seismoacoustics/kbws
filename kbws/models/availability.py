@@ -1,123 +1,112 @@
-from enum import Enum
-from textwrap import dedent
+"""Request models for the FDSN availability service."""
+from datetime import date, datetime
 from typing import Annotated, Literal
-from datetime import datetime, date
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from .common import NoData, Quality
+from .common import NoData
+
+
+AvailabilityFormat = Literal["text", "geocsv", "json", "request"]
+Merge = Literal["samplerate", "quality", "overlap"]
+OrderBy = Literal[
+    "nslc_time_quality_samplerate",
+    "latestupdate",
+    "latestupdate_desc",
+    "timespancount",
+    "timespancount_desc",
+]
 
 
 class AvailabilityExtent(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    """FDSN availability parameters shared by ``query`` and ``extent``."""
+
+    model_config = ConfigDict(extra="ignore")
 
     starttime: Annotated[
         datetime | date,
         Field(
-            description=(
-                "Limit results to time series samples on or after the specified start time, "
-                "using ISO8601 format YYYY-MM-DDThh:mm:ss[.ssssss]"
-            ),
+            description="Limit results to samples on or after this UTC time.",
             examples="2009-05-01T06:30:00.000",
         ),
     ]
     endtime: Annotated[
         datetime | date,
         Field(
-            description=(
-                "Limit results to time series samples on or before the specified end time, "
-                "using ISO8601 format YYYY-MM-DDThh:mm:ss[.ssssss]"
-            ),
+            description="Limit results to samples on or before this UTC time.",
             examples="2009-06-01T10:30:00.000",
         ),
     ]
     network: Annotated[
         str,
         Field(
-            description=(
-                "Select one or more network codes. Can be SEED network codes or data center "
-                "defined codes. Multiple codes are comma-separated"
-            ),
+            description="Network code or wildcard; comma-separated values are allowed.",
             examples="IU",
         ),
     ]
     station: Annotated[
         str,
         Field(
-            description="Select one or more SEED station codes. Multiple codes are comma-separated",
+            description="Station code or wildcard; comma-separated values are allowed.",
             examples="ANMO",
         ),
     ]
     location: Annotated[
         str,
         Field(
-            description="Select one or more SEED location identifiers. Multiple identifiers are comma-separated. As a special case ‘--’ (two dashes) will be translated to a string of two space characters to match blank location IDs.",
+            description="Location code or wildcard; comma-separated values are allowed.",
             examples="00",
         ),
-    ] = ...
+    ]
     channel: Annotated[
         str,
         Field(
-            description="Select one or more SEED channel codes. Multiple codes are comma-separated.",
-            examples="BH1",
+            description="Channel code or wildcard; comma-separated values are allowed.",
+            examples="BHZ",
         ),
-    ] = ...
-    # quality: Annotated[
-    #     Quality,
-    #     Field(
-    #         description="Select a specific SEED quality indicator, handling is data center dependent.",
-    #     ),
-    # ] = "B"
+    ]
+    quality: Annotated[
+        str | None,
+        Field(description="Quality code or wildcard; support is data-center dependent."),
+    ] = None
     merge: Annotated[
-        Literal["samplerate", "quality", "overlap"], # this is so much easier than Enum. downsides?
-        Field(
-            description=dedent(
-                """\
-                If set to one of the following values, time spans are merged as described.
-
-                `samplerate`: time spans from data with differing sample rates will be grouped together.
-                If specified this field will be omitted from the result.
-
-                `quality`: time spans from data with differing quality codes will be grouped together.
-                If specified this field will be omitted from the result.
-
-                `overlap`: time spans from data that overlap will be merged together.
-                This option does not apply to the extent method.
-                """
-            ),
-        ),
-    ] = "samplerate"
-    format: Annotated[
-        Literal["text", "request"],
+        str | None,
         Field(
             description=(
-                "Specify format of result. (not yet implemented) "
+                "Comma-separated merge flags: samplerate, quality, and/or overlap."
             ),
         ),
+    ] = None
+    orderby: Annotated[
+        OrderBy,
+        Field(description="Order in which availability rows are returned."),
+    ] = "nslc_time_quality_samplerate"
+    limit: Annotated[
+        int | None,
+        Field(ge=0, description="Maximum number of time spans to return."),
+    ] = None
+    includerestricted: Annotated[
+        bool,
+        Field(description="Include restricted data when true."),
+    ] = False
+    format: Annotated[
+        AvailabilityFormat,
+        Field(description="Response format."),
     ] = "text"
     nodata: Annotated[
         NoData,
-        Field(
-            description="Select status code for “no data”, either 204 (default) or 404"
-        ),
-    ] = '204'
+        Field(description="HTTP status for no matching data: 204 or 404."),
+    ] = "204"
 
 
-# all the same params as extent, plus two others
 class AvailabilityQuery(AvailabilityExtent):
+    """FDSN availability parameters for the ``query`` method."""
+
     mergegaps: Annotated[
         float,
-        Field(
-            description="If set, merge time spans that are separated by the specified tolerance in seconds.",
-        ),
+        Field(ge=0.0, description="Merge spans separated by no more than this many seconds."),
     ] = 0.0
-    # show: Annotated[
-    #     str,
-    #     Field(
-    #         description=(
-    #             "If set to latestupdate, the latest times at which data contributing to the returned "
-    #             "time spans were loaded into the repository are included in the result. "
-    #             "This option applies to all formats except request"
-    #         ),
-    #     ),
-    # ] = ...
+    show: Annotated[
+        Literal["latestupdate"] | None,
+        Field(description="Include the latest contributing update time."),
+    ] = None
