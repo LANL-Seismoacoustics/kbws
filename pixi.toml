@@ -24,7 +24,7 @@ libaio = "*"
 oracle-instant-client = "23.7.0.25.01"
 
 [pypi-dependencies]
-pisces = ">=0.4.5.3, <0.5"
+pisces = { git = "https://github.com/LANL-Seismoacoustics/pisces.git", branch = "main" }
 
 
 [environments.dev.dependencies]

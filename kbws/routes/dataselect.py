@@ -28,11 +28,12 @@ from pisces.util import _get_entities
 
 from ..logging import get_logger
 from .. import database as db
-from ..responses import fdsn_error_response, BAD_REQUEST, NO_DATA
+from ..responses import fdsn_error_response, BAD_REQUEST, NO_DATA, REQUEST_TOO_LARGE
 from ..models import DataselectQuery
 from ..formats import WAVEFORM_FORMATS, post_parse
 
 VERSION = "1.1.0"
+MAX_POST_LINES = 100
 MAJOR_VERSION = VERSION.split(".")[0]
 
 # file name template for file responses
@@ -175,8 +176,17 @@ def dataselect_query_post(
     """
     # body = await request.body()
     # body = body.decode('utf-8')
+    lines = body.splitlines()
+    if len(lines) > MAX_POST_LINES:
+        return fdsn_error_response(
+            request,
+            REQUEST_TOO_LARGE,
+            detail=f"POST body contains {len(lines)} lines; the limit is {MAX_POST_LINES}.",
+            service_version=VERSION,
+        )
+
     try:
-        params, bulk = post_parse(body.strip().split('\n'))
+        params, bulk = post_parse(lines)
     except ValueError as e:
         return fdsn_error_response(
             request,

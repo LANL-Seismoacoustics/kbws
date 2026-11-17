@@ -1,7 +1,6 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 import pisces.schema.kbcore as kb
-import oracledb
 
 from .config import Settings
 
@@ -9,6 +8,8 @@ from .config import Settings
 settings = Settings()
 
 if settings.oracle_client_lib_dir:
+    import oracledb
+
     oracledb.init_oracle_client(lib_dir=settings.oracle_client_lib_dir)
 
 engine = create_engine(settings.database_url)

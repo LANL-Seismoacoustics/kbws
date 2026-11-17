@@ -12,7 +12,7 @@ from .common import NoData
 class EventFormat(str, Enum):
     xml = "xml"
     css = "css"
-    text = "text"
+    # text = "text"  # Enable when text output is implemented.
     json = "json"
     sql = "sql"
 

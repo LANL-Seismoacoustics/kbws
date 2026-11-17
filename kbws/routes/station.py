@@ -140,7 +140,15 @@ def station_query_post(
     """
     # https://stackoverflow.com/a/70879659/745557
     body = body.decode('utf-8')
-    params, bulk = post_parse(body.strip().split('\n'))
+    try:
+        params, bulk = post_parse(body.strip().split('\n'))
+    except ValueError as e:
+        return fdsn_error_response(
+            request,
+            BAD_REQUEST,
+            detail=f'Unable to parse POST body: {e}',
+            service_version=VERSION,
+        )
     # print(f'body:\n{body}')
     # print(f'headers:\n{request.headers}')
 

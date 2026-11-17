@@ -124,6 +124,3 @@ def event_query(
         r = Response(status_code=int(params.nodata))
 
     return r
-
-
-# TODO: for queryauth, to this: https://stackoverflow.com/a/62280245/745557

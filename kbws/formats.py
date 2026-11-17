@@ -42,7 +42,6 @@ def mseed_bytes(stream: Stream) -> bytes:
     """
     with io.BytesIO() as fp:
         for tr in stream:
-            (type(tr))
             tr.write(fp, format="MSEED")
         fp.seek(0)
         byts = fp.read()
