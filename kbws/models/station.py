@@ -1,7 +1,7 @@
 """Models for the station API endpoint."""
 from datetime import date, datetime
 from enum import Enum
-from typing import Annotated, Optional
+from typing import Annotated
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -25,7 +25,7 @@ class StationLevel(str, Enum):
 # the Pydantic query parameter model for the FastAPI station endpoint
 class StationQuery(BaseModel):
     starttime: Annotated[
-        Optional[datetime | date],
+        datetime | date | None,
         Field(
             description=(
                 "Limit results to metadata operating on or after the specified start time, "
@@ -35,7 +35,7 @@ class StationQuery(BaseModel):
         ),
     ] = None
     endtime: Annotated[
-        Optional[datetime | date],
+        datetime | date | None,
         Field(
             description=(
                 "Limit results to metadata operating on or before the specified end time, "
@@ -50,21 +50,21 @@ class StationQuery(BaseModel):
     # endbefore: Annotated[Optional[datetime | date], Field(description="Limit to metadata epochs ending before this time.")] = None
     # endafter: Annotated[Optional[datetime | date], Field(description="Limit to metadata epochs ending after this time.")] = None
     network: Annotated[
-        Optional[str],
+        str | None,
         Field(
             description="Select one or more network codes. Multiple codes are comma-separated.",
             examples="IU",
         ),
     ] = None
     station: Annotated[
-        Optional[str],
+        str | None,
         Field(
             description="Select one or more station codes. Multiple codes are comma-separated.",
             examples="ANMO",
         ),
     ] = None
     location: Annotated[
-        Optional[str],
+        str | None,
         Field(
             description=(
                 "Select one or more location identifiers. Pisces currently accepts this "
@@ -74,14 +74,14 @@ class StationQuery(BaseModel):
         ),
     ] = None
     channel: Annotated[
-        Optional[str],
+        str | None,
         Field(
             description="Select one or more channel codes. Multiple codes are comma-separated.",
             examples="BH1",
         ),
     ] = None
     minlatitude: Annotated[
-        Optional[float],
+        float | None,
         Field(
             description="Limit to stations with latitude greater than or equal to this value.",
             ge=-90.0,
@@ -90,7 +90,7 @@ class StationQuery(BaseModel):
         ),
     ] = None
     maxlatitude: Annotated[
-        Optional[float],
+        float | None,
         Field(
             description="Limit to stations with latitude less than or equal to this value.",
             ge=-90.0,
@@ -99,7 +99,7 @@ class StationQuery(BaseModel):
         ),
     ] = None
     minlongitude: Annotated[
-        Optional[float],
+        float | None,
         Field(
             description="Limit to stations with longitude greater than or equal to this value.",
             ge=-180.0,
@@ -108,7 +108,7 @@ class StationQuery(BaseModel):
         ),
     ] = None
     maxlongitude: Annotated[
-        Optional[float],
+        float | None,
         Field(
             description="Limit to stations with longitude less than or equal to this value.",
             ge=-180.0,

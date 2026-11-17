@@ -42,22 +42,20 @@ The `_discover_services` keyword allows you to bypass the need for a properly-fo
 """
 import functools
 import io
-import logging
 from pathlib import Path
 from uuid import uuid4
 
-from fastapi import FastAPI, Response, Request
-from fastapi.routing import APIRoute
+import yaml
+from fastapi import FastAPI, Request, Response
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
-import yaml
+from fastapi.routing import APIRoute
 
 from . import __version__
-from .logging import get_logger
 from .config import settings
+from .logging import get_logger
+from .responses import BAD_REQUEST, INTERNAL_ERROR, fdsn_response
 from .routes import availability, dataselect, event, station
-from .responses import fdsn_error_response, BAD_REQUEST, INTERNAL_ERROR
-
 
 SERVICE_VERSIONS = {
         'availability': availability.VERSION,
@@ -146,7 +144,7 @@ async def add_request_metadata(request: Request, call_next):
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request: Request, exc):
     logger.info("In RequestValidationError handler")
-    return fdsn_error_response(
+    return fdsn_response(
         request,
         BAD_REQUEST,
         detail=str(exc),
@@ -158,7 +156,7 @@ async def validation_exception_handler(request: Request, exc):
 async def internal_error_handler(request: Request, exc):
     request_id = getattr(request.state, 'request_id', 'unavailable')
     logger.exception("Unhandled exception request_id=%s", request_id)
-    return fdsn_error_response(
+    return fdsn_response(
         request,
         INTERNAL_ERROR,
         detail=(
@@ -171,7 +169,7 @@ async def internal_error_handler(request: Request, exc):
 
 # yaml version of spec, in addition to openapi.json endpoint
 @app.get("/fdsnws/openapi.yaml", include_in_schema=False)
-@functools.lru_cache()
+@functools.lru_cache
 def read_openapi_yaml():
     openapi_json = app.openapi()
     yaml_s = io.StringIO()

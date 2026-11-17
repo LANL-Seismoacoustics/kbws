@@ -7,7 +7,6 @@ from pisces.fdsn import Client
 
 from kbws.main import app
 
-
 ENDPOINT = "/fdsnws/availability/1"
 client = TestClient(app)
 

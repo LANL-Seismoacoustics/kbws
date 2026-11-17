@@ -1,10 +1,15 @@
 """Tests for app-wide FDSN error response formatting (kbws.responses / kbws.main)."""
 from fastapi.testclient import TestClient
-
 from pisces.fdsn import Client
 
 from kbws.main import app
-from kbws.responses import fdsn_error_response, service_docs_uri, _TEMPLATE, BAD_REQUEST, NO_DATA_ALT
+from kbws.responses import (
+    _TEMPLATE,
+    BAD_REQUEST,
+    NO_DATA_ALT,
+    fdsn_response,
+    service_docs_uri,
+)
 
 ENDPOINT = "/fdsnws/event/1/query?"
 
@@ -32,10 +37,10 @@ def test_unhandled_exception_returns_fdsn_formatted_500(monkeypatch):
     monkeypatch.setattr(Client, "get_events", raise_error)
 
     response = client.get(
-        (
+        
             f"{ENDPOINT}"
             "maxdepth=100&maxlatitude=47&maxlongitude=5&mindepth=1.3&minlatitude=40&minlongitude=-10"
-        )
+        
     )
     assert response.status_code == 500
     request_id = response.headers["X-Request-ID"]
@@ -47,8 +52,8 @@ def test_unhandled_exception_returns_fdsn_formatted_500(monkeypatch):
     assert "boom" not in body
 
 
-def test_fdsn_error_response_format():
-    """fdsn_error_response renders the exact standard FDSN plain-text error template."""
+def test_fdsn_response_format():
+    """fdsn_response renders the exact standard FDSN plain-text error template."""
     from obspy import UTCDateTime
     from starlette.requests import Request
 
@@ -64,7 +69,7 @@ def test_fdsn_error_response_format():
     request = Request(scope)
 
     utc_now = UTCDateTime()
-    r = fdsn_error_response(request, BAD_REQUEST, detail="bad input", service_version="1.2.0")
+    r = fdsn_response(request, BAD_REQUEST, detail="bad input", service_version="1.2.0")
     expected = _TEMPLATE.format(
         code=BAD_REQUEST.code,
         simple_descr=BAD_REQUEST.message,
@@ -79,5 +84,10 @@ def test_fdsn_error_response_format():
     # everything but the timestamp line must match exactly
     assert body.split("Request Submitted:")[0] == expected.split("Request Submitted:")[0]
 
-    r2 = fdsn_error_response(request, NO_DATA_ALT, detail="", service_version="1.2.0")
+    r2 = fdsn_response(request, NO_DATA_ALT, detail="", service_version="1.2.0")
     assert r2.status_code == 404
+
+    from kbws.responses import NO_DATA
+    r3 = fdsn_response(request, NO_DATA, detail="", service_version="1.2.0")
+    assert r3.status_code == 204
+    assert r3.body == b""

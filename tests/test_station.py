@@ -1,13 +1,11 @@
 """Tests for the FDSN station service endpoints."""
-from types import SimpleNamespace
 
 from fastapi.testclient import TestClient
 from obspy.core.inventory import Inventory, Network, Site, Station
 from pisces.fdsn import Client
+
 from kbws import database as db
-
 from kbws.main import app
-
 
 client = TestClient(app)
 ENDPOINT = "/fdsnws/station/1"

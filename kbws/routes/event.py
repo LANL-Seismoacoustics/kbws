@@ -6,17 +6,23 @@ database queries, and return text or ObsPy Catalog objects.
 from importlib.resources import files
 from typing import Annotated
 
-from fastapi import APIRouter, Response, Depends, Query, Request
+from fastapi import APIRouter, Depends, Query, Request, Response
 from fastapi.responses import PlainTextResponse
-from sqlalchemy.orm import Session
 from obspy import UTCDateTime
 from pisces.fdsn import Client
 from pisces.util import _get_entities
+from sqlalchemy.orm import Session
 
 from .. import database as db
+from ..formats import catalog_json, catalog_xml, event_text
 from ..models import EventQuery
-from ..formats import catalog_xml, catalog_json
-from ..responses import fdsn_error_response, BAD_REQUEST, PISCES_GET_EVENTS_ERRORS
+from ..responses import (
+    BAD_REQUEST,
+    NO_DATA,
+    NO_DATA_ALT,
+    PISCES_GET_EVENTS_ERRORS,
+    fdsn_response,
+)
 
 VERSION = "1.2.0"
 MAJOR_VERSION = VERSION.split(".")[0]
@@ -78,16 +84,16 @@ def event_query(
             maxmagnitude=params.maxmagnitude,
             magnitudetype=params.magnitudetype,
             eventtype=params.eventtype,
-            includeallorigins=params.includeallorigins,
-            includeallmagnitudes=params.includeallmagnitudes,
+            includeallorigins=params.includeallorigins if params.format != "text" else False,
+            includeallmagnitudes=params.includeallmagnitudes if params.format != "text" else False,
             preferred_magnitude=tuple(params.preferredmagnitude.split(",")) if params.preferredmagnitude else ("mb", "mw", "ms"),
-            includearrivals=params.includearrivals,
+            includearrivals=params.includearrivals if params.format != "text" else False,
             eventid=params.eventid,
             contributor=params.contributor,
             asquery=params.format in ("sql", "css"),
         )
     except PISCES_GET_EVENTS_ERRORS[BAD_REQUEST] as exc:
-        return fdsn_error_response(
+        return fdsn_response(
             request,
             BAD_REQUEST,
             detail=str(exc),
@@ -102,6 +108,9 @@ def event_query(
             case "json":
                 content = catalog_json(out)
                 r = Response(content=content, media_type='application/json')
+            case "text":
+                content = event_text(out)
+                r = Response(content=content, media_type="text/plain")
             case "sql":
                 sqltxt = str(
                     out.statement.compile(session.bind, compile_kwargs={"literal_binds": True})
@@ -120,7 +129,11 @@ def event_query(
                 flatfile = "\n".join([str(getattr(row, originname)) for row in out])
                 r = PlainTextResponse(content=flatfile)
     else:
-        # TODO: use our custom formatted FDSN response stuff
-        r = Response(status_code=int(params.nodata))
+        r = fdsn_response(
+            request,
+            NO_DATA if params.nodata == "204" else NO_DATA_ALT,
+            detail="",
+            service_version=VERSION,
+        )
 
     return r

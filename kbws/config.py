@@ -1,5 +1,7 @@
 from typing import Annotated, Literal
+
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
 
 # Load database configuration from a ".env" file
 class Settings(BaseSettings):

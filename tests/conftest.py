@@ -1,14 +1,13 @@
-from sqlalchemy import create_engine
-from sqlalchemy.pool import StaticPool
-from sqlalchemy.orm import sessionmaker
 import socket
 import threading
 import time
 
 import pytest
 import uvicorn
-
 from pisces.tables.kbcore import Affiliation, Event, Origin, Wfdisc
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.pool import StaticPool
 
 from kbws.main import app
 

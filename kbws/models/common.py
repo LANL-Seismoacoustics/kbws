@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 class NoData(str, Enum):
     twozerofour = '204'
     fourzerofour = '404'

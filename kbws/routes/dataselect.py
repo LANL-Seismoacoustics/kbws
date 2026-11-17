@@ -12,25 +12,31 @@ appropriate descriptions.
 # https://fastapi.tiangolo.com/tutorial/query-params-str-validations/?h=query%28#make-it-required
 
 from datetime import datetime
-from functools import lru_cache, reduce
+from functools import reduce
 from importlib.resources import files
 from typing import Annotated
 
-from pydantic import ValidationError
-from fastapi import APIRouter, Response, Depends, Query, Request, Body
+from fastapi import APIRouter, Body, Depends, Query, Request, Response
 from fastapi.responses import PlainTextResponse
-from sqlalchemy.orm import Session
 from obspy import Stream, UTCDateTime
 
 # from pisces import request
 from pisces.fdsn import Client
 from pisces.util import _get_entities
+from pydantic import ValidationError
+from sqlalchemy.orm import Session
 
-from ..logging import get_logger
 from .. import database as db
-from ..responses import fdsn_error_response, BAD_REQUEST, NO_DATA, REQUEST_TOO_LARGE
-from ..models import DataselectQuery
 from ..formats import WAVEFORM_FORMATS, post_parse
+from ..logging import get_logger
+from ..models import DataselectQuery
+from ..responses import (
+    BAD_REQUEST,
+    NO_DATA,
+    NO_DATA_ALT,
+    REQUEST_TOO_LARGE,
+    fdsn_response,
+)
 
 VERSION = "1.1.0"
 MAX_POST_LINES = 100
@@ -67,6 +73,7 @@ def dataselect_version():
     include_in_schema=False,
 )
 def dataselect_query(
+    request: Request,
     params: Annotated[DataselectQuery, Query()],
     session: Session = Depends(db.get_db)
 ):
@@ -112,7 +119,12 @@ def dataselect_query(
                     headers=headers,
                 )
             else:
-                r = Response(status_code=int(params.nodata))
+                r = fdsn_response(
+                    request,
+                    NO_DATA if params.nodata == "204" else NO_DATA_ALT,
+                    detail="",
+                    service_version=VERSION,
+                )
 
         case "sql":
             # return a string version of the literal SQL query, for debugging
@@ -130,7 +142,12 @@ def dataselect_query(
             if flatfile:
                 r = PlainTextResponse(content=flatfile)
             else:
-                r = Response(status_code=int(params.nodata))
+                r = fdsn_response(
+                    request,
+                    NO_DATA if params.nodata == "204" else NO_DATA_ALT,
+                    detail="",
+                    service_version=VERSION,
+                )
 
     return r
 
@@ -178,7 +195,7 @@ def dataselect_query_post(
     # body = body.decode('utf-8')
     lines = body.splitlines()
     if len(lines) > MAX_POST_LINES:
-        return fdsn_error_response(
+        return fdsn_response(
             request,
             REQUEST_TOO_LARGE,
             detail=f"POST body contains {len(lines)} lines; the limit is {MAX_POST_LINES}.",
@@ -188,7 +205,7 @@ def dataselect_query_post(
     try:
         params, bulk = post_parse(lines)
     except ValueError as e:
-        return fdsn_error_response(
+        return fdsn_response(
             request,
             BAD_REQUEST,
             detail=f'Unable to parse POST body: {e}',
@@ -225,7 +242,7 @@ def dataselect_query_post(
     except ValidationError as e:
         # The FDSNWS spec is pretty specific about errors:
         # http://www.fdsn.org/webservices/FDSN-WS-Specification-Commonalities-1.2.pdf
-        return fdsn_error_response(
+        return fdsn_response(
             request,
             BAD_REQUEST,
             detail=str(e),
@@ -253,7 +270,7 @@ def dataselect_query_post(
     # flatten and remove empty Streams
     # out is a single (possibly empty) Stream
     out = reduce(lambda a, b : a + b, out, Stream())
-    logger.debug(f'{str(out)}')
+    logger.debug(f'{out!s}')
 
 
     if out:
@@ -271,6 +288,11 @@ def dataselect_query_post(
             headers=headers,
         )
     else:
-        r = Response(NO_DATA.message, status_code=int(params.get('nodata', NO_DATA.code)))
+        r = fdsn_response(
+            request,
+            NO_DATA if params.get("nodata", "204") == "204" else NO_DATA_ALT,
+            detail="",
+            service_version=VERSION,
+        )
 
     return r

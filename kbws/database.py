@@ -1,6 +1,6 @@
+import pisces.schema.kbcore as kb
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-import pisces.schema.kbcore as kb
 
 from .config import Settings
 

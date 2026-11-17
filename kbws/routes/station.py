@@ -1,20 +1,20 @@
 """FDSN station metadata routes."""
-from fastapi import APIRouter, Body, Depends, Query, Request, Response
 from importlib.resources import files
-from fastapi.responses import PlainTextResponse
-from obspy import Inventory, UTCDateTime
-from pydantic import ValidationError
-from sqlalchemy.orm import Session
 from typing import Annotated
 
+from fastapi import APIRouter, Body, Depends, Query, Request, Response
+from fastapi.responses import PlainTextResponse
+from obspy import Inventory, UTCDateTime
 from pisces.fdsn import Client
 from pisces.util import _get_entities
+from pydantic import ValidationError
+from sqlalchemy.orm import Session
 
 from .. import database as db
 from ..formats import post_parse, station_text, station_xml_bytes
 from ..models import StationQuery
 from ..models.station import StationLevel
-from ..responses import BAD_REQUEST, NO_DATA_ALT, fdsn_error_response
+from ..responses import BAD_REQUEST, NO_DATA, NO_DATA_ALT, fdsn_response
 
 VERSION = "1.1.0"
 MAJOR_VERSION = VERSION.split(".")[0]
@@ -77,7 +77,7 @@ def station_query(
             asquery=params.format in ("sql", "css") or params.asquery,
         )
     except (ValueError, TypeError) as exc:
-        return fdsn_error_response(request, BAD_REQUEST, detail=str(exc), service_version=VERSION)
+        return fdsn_response(request, BAD_REQUEST, detail=str(exc), service_version=VERSION)
 
     if out:
         match params.format:
@@ -88,7 +88,7 @@ def station_query(
                 )
             case "text":
                 if params.level == "response":
-                    r = fdsn_error_response(
+                    r = fdsn_response(
                         request,
                         BAD_REQUEST,
                         detail="format=text is not supported for level=response",
@@ -113,15 +113,12 @@ def station_query(
                 flatfile = "\n".join(str(getattr(row, sitename)) for row in out)
                 r = PlainTextResponse(content=flatfile)
     else:
-        if params.nodata == "204":
-            r = Response(status_code=204)
-        else:
-            r = fdsn_error_response(
-                request,
-                NO_DATA_ALT,
-                detail="",
-                service_version=VERSION,
-            )
+        r = fdsn_response(
+            request,
+            NO_DATA if params.nodata == "204" else NO_DATA_ALT,
+            detail="",
+            service_version=VERSION,
+        )
 
     return r
 
@@ -154,7 +151,7 @@ def station_query_post(
         if not queries:
             queries = [StationQuery(**global_params)]
     except (ValueError, ValidationError) as exc:
-        return fdsn_error_response(request, BAD_REQUEST, detail=str(exc), service_version=VERSION)
+        return fdsn_response(request, BAD_REQUEST, detail=str(exc), service_version=VERSION)
 
     try:
         client = Client(
@@ -181,32 +178,26 @@ def station_query_post(
             asquery=query.format in ("sql", "css") or query.asquery,
         ) for query in queries]
     except (ValueError, TypeError) as exc:
-        return fdsn_error_response(request, BAD_REQUEST, detail=str(exc), service_version=VERSION)
+        return fdsn_response(request, BAD_REQUEST, detail=str(exc), service_version=VERSION)
     format = queries[0].format
     if not results:
-        if queries[0].nodata == "204":
-            r = Response(status_code=204)
-        else:
-            r = fdsn_error_response(
-                request,
-                NO_DATA_ALT,
-                detail="",
-                service_version=VERSION,
-            )
+        r = fdsn_response(
+            request,
+            NO_DATA if queries[0].nodata == "204" else NO_DATA_ALT,
+            detail="",
+            service_version=VERSION,
+        )
     else:
         match format:
             case "xml":
                 inventories = [result for result in results if isinstance(result, Inventory)]
                 if not any(inventories):
-                    if queries[0].nodata == "204":
-                        r = Response(status_code=204)
-                    else:
-                        r = fdsn_error_response(
-                            request,
-                            NO_DATA_ALT,
-                            detail="",
-                            service_version=VERSION,
-                        )
+                    r = fdsn_response(
+                        request,
+                        NO_DATA if queries[0].nodata == "204" else NO_DATA_ALT,
+                        detail="",
+                        service_version=VERSION,
+                    )
                 else:
                     combined = Inventory(
                         networks=[
@@ -222,17 +213,14 @@ def station_query_post(
             case "text":
                 inventories = [result for result in results if isinstance(result, Inventory)]
                 if not any(inventories):
-                    if queries[0].nodata == "204":
-                        r = Response(status_code=204)
-                    else:
-                        r = fdsn_error_response(
-                            request,
-                            NO_DATA_ALT,
-                            detail="",
-                            service_version=VERSION,
-                        )
+                    r = fdsn_response(
+                        request,
+                        NO_DATA if queries[0].nodata == "204" else NO_DATA_ALT,
+                        detail="",
+                        service_version=VERSION,
+                    )
                 elif queries[0].level == "response":
-                    r = fdsn_error_response(
+                    r = fdsn_response(
                         request,
                         BAD_REQUEST,
                         detail="format=text is not supported for level=response",
@@ -264,15 +252,12 @@ def station_query_post(
                     sitename = Site.__name__
                     rows.extend(str(getattr(row, sitename)) for row in result)
                 if not rows:
-                    if queries[0].nodata == "204":
-                        r = Response(status_code=204)
-                    else:
-                        r = fdsn_error_response(
-                            request,
-                            NO_DATA_ALT,
-                            detail="",
-                            service_version=VERSION,
-                        )
+                    r = fdsn_response(
+                        request,
+                        NO_DATA if queries[0].nodata == "204" else NO_DATA_ALT,
+                        detail="",
+                        service_version=VERSION,
+                    )
                 else:
                     r = PlainTextResponse(content="\n".join(rows))
 

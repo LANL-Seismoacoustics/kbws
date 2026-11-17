@@ -6,7 +6,6 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from .common import NoData
 
-
 AvailabilityFormat = Literal["text", "json", "request"]
 OrderBy = Literal[
     "nslc_time_quality_samplerate",

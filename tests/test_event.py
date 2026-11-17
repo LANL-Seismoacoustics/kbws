@@ -1,13 +1,11 @@
 import io
-from fastapi.testclient import TestClient
-from obspy import read_events, UTCDateTime
-from obspy.clients.fdsn import Client as ObsPyClient
-
-from pisces.tables.kbcore import Event, Origin
-from pisces.fdsn import Client
-from pisces.util import literal_sql
 
 import pytest
+from fastapi.testclient import TestClient
+from obspy import UTCDateTime, read_events
+from pisces.fdsn import Client
+from pisces.tables.kbcore import Event, Origin
+from pisces.util import literal_sql
 
 from kbws.main import app
 from kbws.responses import _TEMPLATE
@@ -49,15 +47,30 @@ def test_event_format_xml(get_events_catalog):
         xml_cat = fh.read()
 
     response = client.get(
-        (
+        
             f"{ENDPOINT}"
             "maxdepth=100&maxlatitude=47&maxlongitude=5&mindepth=1.3&minlatitude=40&minlongitude=-10"
             "&format=xml"
-        )
+        
     )
     assert response.status_code == 200
     assert response.headers['Content-Type'] == 'application/xml'
     assert response.content == xml_cat
+
+
+def test_event_format_text(get_events_catalog):
+    """Test for proper FDSN event text response."""
+    response = client.get(f"{ENDPOINT}format=text")
+
+    assert response.status_code == 200
+    assert response.headers["Content-Type"] == "text/plain; charset=utf-8"
+    assert response.text.startswith(
+        "#EventID|Time|Latitude|Longitude|Depth/km|Author|Catalog|Contributor|"
+        "ContributorID|MagType|Magnitude|MagAuthor|EventLocationName|EventType\n"
+    )
+    assert len(response.text.splitlines()) == len(cat) + 1
+    assert response.text.splitlines()[1].count("|") == 13
+    assert "|KYRGYZSTAN|not reported" in response.text
 
 
 def test_event_format_json(get_events_catalog):
@@ -68,11 +81,11 @@ def test_event_format_json(get_events_catalog):
         json_cat = fh.read()
 
     response = client.get(
-        (
+        
             f"{ENDPOINT}"
             "maxdepth=100&maxlatitude=47&maxlongitude=5&mindepth=1.3&minlatitude=40&minlongitude=-10"
             "&format=json"
-        )
+        
     )
     assert response.status_code == 200
     assert response.headers['Content-Type'] == 'application/json'
@@ -85,11 +98,11 @@ def test_event_format_sql(get_events_query, db_session):
         db_session.query(Event, Origin).filter(Event.evid == Origin.evid)
     )
     response = client.get(
-        (
+        
             f"{ENDPOINT}"
             "maxdepth=100&maxlatitude=47&maxlongitude=5&mindepth=1.3&minlatitude=40&minlongitude=-10"
             "&format=sql"
-        )
+        
     )
     assert response.status_code == 200
     assert response.headers['Content-Type'] == 'text/plain; charset=utf-8'
@@ -104,11 +117,11 @@ def test_event_format_css(get_events_query, db_session):
     db_session.commit()
 
     response = client.get(
-        (
+        
             f"{ENDPOINT}"
             "maxdepth=100&maxlatitude=47&maxlongitude=5&mindepth=1.3&minlatitude=40&minlongitude=-10"
             "&format=css"
-        )
+        
     )
     assert response.status_code == 200
     assert response.headers['Content-Type'] == 'text/plain; charset=utf-8'
@@ -131,7 +144,7 @@ def capture_get_events_kwargs(monkeypatch):
 def test_event_query_param_conversion(capture_get_events_kwargs):
     """Verify route-level parameter conversions passed to Client.get_events."""
     response = client.get(
-        (
+        
             f"{ENDPOINT}"
             "starttime=2012-11-01T00:00:00&endtime=2012-11-03T01:00:00&updatedafter=2012-11-02"
             "&minlongitude=-10&maxlongitude=5&minlatitude=40&maxlatitude=47"
@@ -139,7 +152,7 @@ def test_event_query_param_conversion(capture_get_events_kwargs):
             "&eventtype=earthquake&includeallorigins=true&includeallmagnitudes=true"
             "&preferredmagnitude=mw,ms&includearrivals=true&eventid=1234&contributor=ISC"
             "&format=xml"
-        )
+        
     )
     assert response.status_code == 200
 
@@ -216,11 +229,11 @@ def test_event_format_bad():
     """ Test for unsupported formats . """
     # with pytest.raises(Exception):
     response = client.get(
-        (
+        
             f"{ENDPOINT}"
             "maxdepth=100&maxlatitude=47&maxlongitude=5&mindepth=1.3&minlatitude=40&minlongitude=-10"
             "&format=bad"
-        )
+        
     )
     # Badly formed request.
     assert response.status_code == 400

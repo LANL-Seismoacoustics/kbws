@@ -1,19 +1,15 @@
-import json
 import textwrap
 
+import pytest
 from fastapi.testclient import TestClient
-from obspy import read, Stream
-
+from obspy import Stream, read
 from pisces.fdsn import Client
 from pisces.tables.kbcore import Affiliation, Wfdisc
 from pisces.util import literal_sql
 
-import pytest
-
 from kbws.formats import (
-    saczip_bytes,
     mseed_bytes,
-
+    saczip_bytes,
 )
 from kbws.main import app
 
@@ -63,12 +59,12 @@ def test_dataselect_format_miniseed(get_waveforms_stream):
     """
     byts = mseed_bytes(st)
     response = client.get(
-        (
+        
             f"{ENDPOINT}"
             "starttime=2009-05-01T06:30:12.345&endtime=2009-05-02T06:30:12.345"
             "&network=IU&station=ANMO&location=--&channel=BHZ"
             "&format=miniseed"
-        )
+        
     )
     assert response.status_code == 200
     assert response.headers['Content-Type'] == 'application/vnd.fdsn.mseed'
@@ -80,12 +76,12 @@ def test_dataselect_format_saczip(get_waveforms_stream):
     byts = saczip_bytes(st)
 
     response = client.get(
-        (
+        
             f"{ENDPOINT}"
             "starttime=2009-05-01T06:30:12.345&endtime=2009-05-02T06:30:12.345"
             "&network=IU&station=ANMO&location=--&channel=BHZ"
             "&format=sac.zip"
-        )
+        
     )
     assert response.status_code == 200
     assert response.headers['Content-Type'] == 'application/zip'
@@ -98,12 +94,12 @@ def test_dataselect_format_sql(get_waveforms_query, db_session):
         db_session.query(Affiliation, Wfdisc).filter(Affiliation.sta == Wfdisc.sta)
     )
     response = client.get(
-        (
+        
             f"{ENDPOINT}"
             "starttime=2009-05-01T06:30:12.345&endtime=2009-05-02T06:30:12.345"
             "&network=IU&station=ANMO&location=--&channel=BHZ"
             "&format=sql"
-        )
+        
     )
     assert response.status_code == 200
     assert response.headers['Content-Type'] == 'text/plain; charset=utf-8'
@@ -118,12 +114,12 @@ def test_dataselect_format_css(get_waveforms_query, db_session):
     db_session.commit()
 
     response = client.get(
-        (
+        
             f"{ENDPOINT}"
             "starttime=2009-05-01T06:30:12.345&endtime=2009-05-02T06:30:12.345"
             "&network=IU&station=ANMO&location=--&channel=BHZ"
             "&format=css"
-        )
+        
     )
     assert response.status_code == 200
     assert response.headers['Content-Type'] == 'text/plain; charset=utf-8'
@@ -134,23 +130,23 @@ def test_dataselect_bad_inputs():
     """ Test for bad inputs. """
     # nonexistant format
     response = client.get(
-        (
+        
             f"{ENDPOINT}"
             "starttime=2009-05-01T06:30:12.345&endtime=2009-05-02T06:30:12.345"
             "&network=IU&station=ANMO&location=--&channel=BHZ"
             "&format=bad"
-        )
+        
     )
     assert response.status_code == 400
     assert "Input should be 'miniseed', 'sac.zip', 'sql' or 'css'" in response.content.decode("utf-8")
 
     # misspelled starttime
     response = client.get(
-        (
+        
             f"{ENDPOINT}"
             "startime=2009-05-01T06:30:12.345&endtime=2009-05-02T06:30:12.345"
             "&network=IU&station=ANMO&location=--&channel=BHZ"
-        )
+        
     )
     assert response.status_code == 400
 
@@ -159,22 +155,22 @@ def test_dataselect_nodata(get_waveforms_empty):
     """ Test for empty results. """
     # default nodata value
     response = client.get(
-        (
+        
             f"{ENDPOINT}"
             "starttime=2009-05-01T06:30:12.345&endtime=2009-05-02T06:30:12.345"
             "&network=IU&station=ANMO&location=--&channel=BHZ"
-        )
+        
     )
     assert response.status_code == 204
 
     # user-supplied nodata value
     response = client.get(
-        (
+        
             f"{ENDPOINT}"
             "starttime=2009-05-01T06:30:12.345&endtime=2009-05-02T06:30:12.345"
             "&network=IU&station=ANMO&location=--&channel=BHZ"
             "&nodata=404"
-        )
+        
     )
     assert response.status_code == 404
 

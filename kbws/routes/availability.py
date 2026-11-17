@@ -1,23 +1,29 @@
 from typing import Annotated
 
+from fastapi import APIRouter, Body, Depends, Query, Request, Response
+from fastapi.responses import PlainTextResponse
 from obspy import UTCDateTime
 from pisces.fdsn import Client
-from fastapi import APIRouter, Query, Depends, Request, Response, Body
-from fastapi.responses import PlainTextResponse
+from pydantic import ValidationError
 from sqlalchemy.orm import Session
 
-
-from ..logging import get_logger
 from .. import database as db
+from ..formats import (
+    availability_json,
+    availability_request,
+    availability_text,
+    post_parse,
+)
+from ..logging import get_logger
 from ..models import AvailabilityExtent, AvailabilityQuery
 from ..responses import (
     BAD_REQUEST,
+    NO_DATA,
+    NO_DATA_ALT,
     PISCES_GET_AVAILABILITY_ERRORS,
     REQUEST_TOO_LARGE,
-    fdsn_error_response,
+    fdsn_response,
 )
-from ..formats import availability_json, availability_request, availability_text, post_parse
-from pydantic import ValidationError
 
 VERSION = "1.0.0"
 MAJOR_VERSION = VERSION.split(".")[0]
@@ -77,12 +83,17 @@ def availability_extent(
             network=db.Network,
         ).get_extent(**_availability_kwargs(params)).all()
     except PISCES_GET_AVAILABILITY_ERRORS[BAD_REQUEST] as exc:
-        return fdsn_error_response(
+        return fdsn_response(
             request, BAD_REQUEST, detail=str(exc), service_version=VERSION
         )
 
     if not rows:
-        return Response(status_code=int(params.nodata))
+        return fdsn_response(
+            request,
+            NO_DATA if params.nodata == "204" else NO_DATA_ALT,
+            detail="",
+            service_version=VERSION,
+        )
 
     match params.format:
         case "json":
@@ -112,7 +123,7 @@ def availability_extent_post(
     """
     lines = body.splitlines()
     if len(lines) > 100:
-        return fdsn_error_response(
+        return fdsn_response(
             request,
             REQUEST_TOO_LARGE,
             detail="POST body exceeds the 100-line limit.",
@@ -138,12 +149,18 @@ def availability_extent_post(
             for network, station, location, channel, starttime, endtime in bulk
         ]
     except (ValueError, ValidationError) as exc:
-        return fdsn_error_response(
+        return fdsn_response(
             request, BAD_REQUEST, detail=str(exc), service_version=VERSION
         )
 
     if not params:
-        return Response(status_code=int(global_params.get("nodata", "204")))
+        nodata = global_params.get("nodata", "204")
+        return fdsn_response(
+            request,
+            NO_DATA if nodata == "204" else NO_DATA_ALT,
+            detail="",
+            service_version=VERSION,
+        )
 
     client = Client(
         session,
@@ -157,12 +174,17 @@ def availability_extent_post(
         for param in params:
             rows.extend(client.get_extent(**_availability_kwargs(param)).all())
     except PISCES_GET_AVAILABILITY_ERRORS[BAD_REQUEST] as exc:
-        return fdsn_error_response(
+        return fdsn_response(
             request, BAD_REQUEST, detail=str(exc), service_version=VERSION
         )
 
     if not rows:
-        return Response(status_code=int(params[0].nodata))
+        return fdsn_response(
+            request,
+            NO_DATA if params[0].nodata == "204" else NO_DATA_ALT,
+            detail="",
+            service_version=VERSION,
+        )
 
     match params[0].format:
         case "json":
@@ -192,7 +214,7 @@ def availability_query_post(
     """
     lines = body.splitlines()
     if len(lines) > 100:
-        return fdsn_error_response(
+        return fdsn_response(
             request,
             REQUEST_TOO_LARGE,
             detail="POST body exceeds the 100-line limit.",
@@ -218,12 +240,18 @@ def availability_query_post(
             for network, station, location, channel, starttime, endtime in bulk
         ]
     except (ValueError, ValidationError) as exc:
-        return fdsn_error_response(
+        return fdsn_response(
             request, BAD_REQUEST, detail=str(exc), service_version=VERSION
         )
 
     if not params:
-        return Response(status_code=int(global_params.get("nodata", "204")))
+        nodata = global_params.get("nodata", "204")
+        return fdsn_response(
+            request,
+            NO_DATA if nodata == "204" else NO_DATA_ALT,
+            detail="",
+            service_version=VERSION,
+        )
 
     client = Client(
         session,
@@ -241,12 +269,17 @@ def availability_query_post(
                 )
             )
     except PISCES_GET_AVAILABILITY_ERRORS[BAD_REQUEST] as exc:
-        return fdsn_error_response(
+        return fdsn_response(
             request, BAD_REQUEST, detail=str(exc), service_version=VERSION
         )
 
     if not rows:
-        return Response(status_code=int(params[0].nodata))
+        return fdsn_response(
+            request,
+            NO_DATA if params[0].nodata == "204" else NO_DATA_ALT,
+            detail="",
+            service_version=VERSION,
+        )
 
     match params[0].format:
         case "json":
@@ -283,12 +316,17 @@ def availability_query(
             network=db.Network,
         ).get_availability(**_availability_kwargs(params, query=True))
     except PISCES_GET_AVAILABILITY_ERRORS[BAD_REQUEST] as exc:
-        return fdsn_error_response(
+        return fdsn_response(
             request, BAD_REQUEST, detail=str(exc), service_version=VERSION
         )
 
     if not rows:
-        return Response(status_code=int(params.nodata))
+        return fdsn_response(
+            request,
+            NO_DATA if params.nodata == "204" else NO_DATA_ALT,
+            detail="",
+            service_version=VERSION,
+        )
 
     match params.format:
         case "json":

@@ -2,12 +2,12 @@
 
 All FDSN error responses share one plain-text template (see the FDSN
 Web Services Specification, "Error Handling"). Build one with
-`fdsn_error_response`, passing the request and a `ResponseCode`.
+`fdsn_response`, passing the request and a `ResponseCode`.
 
 Usage
 -----
->>> from kbws.responses import fdsn_error_response, BAD_REQUEST
->>> return fdsn_error_response(request, BAD_REQUEST, detail=str(exc), service_version=VERSION)
+>>> from kbws.responses import fdsn_response, BAD_REQUEST
+>>> return fdsn_response(request, BAD_REQUEST, detail=str(exc), service_version=VERSION)
 
 """
 from dataclasses import dataclass
@@ -80,7 +80,7 @@ def service_docs_uri(request: Request) -> str:
     return "/"
 
 
-def fdsn_error_response(
+def fdsn_response(
     request: Request,
     response_code: ResponseCode,
     detail: str,
@@ -113,7 +113,10 @@ def fdsn_error_response(
         utc_date_time=UTCDateTime(),
         service_version=service_version,
     )
-    response = PlainTextResponse(content=body, status_code=response_code.code)
+    response = PlainTextResponse(
+        content="" if response_code.code == 204 else body,
+        status_code=response_code.code,
+    )
     if request_id:
         response.headers["X-Request-ID"] = request_id
     return response

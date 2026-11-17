@@ -1,16 +1,17 @@
 """ Utilities in support of FDSN formats.
 
 """
-from collections import namedtuple
 import io
 import json
 import os
-from typing import Iterable
+from collections import namedtuple
+from collections.abc import Iterable
 from zipfile import ZipFile
 
-from obspy import Stream, Catalog, UTCDateTime
-from obspy.io.quakeml.core import Pickler # for QuakeML string
+from obspy import Catalog, Stream, UTCDateTime
 from obspy.io.json.default import Default
+from obspy.io.quakeml.core import Pickler  # for QuakeML string
+
 
 def catalog_xml(catalog: Catalog) -> str:
     # TODO: make a PR to ObsPy to allow cat.write(format='QUAKEML') return the string version of quakeml
@@ -25,6 +26,40 @@ def catalog_json(catalog: Catalog) -> str:
     default = Default(omit_nulls=False)
     return str(json.dumps(catalog, default=default, indent=2))
 
+
+def event_text(catalog: Catalog) -> str:
+    """Serialize an ObsPy Catalog using the FDSN event text format."""
+    header = (
+        "#EventID|Time|Latitude|Longitude|Depth/km|Author|Catalog|Contributor|"
+        "ContributorID|MagType|Magnitude|MagAuthor|EventLocationName|EventType"
+    )
+    lines = [header]
+    for event in catalog:
+        origin = event.preferred_origin() or (event.origins[0] if event.origins else None)
+        magnitude = event.preferred_magnitude() or (event.magnitudes[0] if event.magnitudes else None)
+        creation_info = getattr(origin, "creation_info", None)
+        event_creation_info = getattr(event, "creation_info", None)
+        magnitude_info = getattr(magnitude, "creation_info", None)
+        description = event.event_descriptions[0].text if event.event_descriptions else None
+        values = [
+            str(event.resource_id) if event.resource_id else None,
+            origin.time if origin else None,
+            origin.latitude if origin else None,
+            origin.longitude if origin else None,
+            origin.depth / 1000 if origin and origin.depth is not None else None,
+            getattr(creation_info, "author", None)
+            or getattr(event_creation_info, "author", None),
+            None,
+            None,
+            None,
+            magnitude.magnitude_type if magnitude else None,
+            magnitude.mag if magnitude else None,
+            getattr(magnitude_info, "author", None),
+            description,
+            event.event_type,
+        ]
+        lines.append("|".join(str(value) if value is not None else "" for value in values))
+    return "\n".join(lines) + "\n"
 
 
 def availability_text(rows, *, extent: bool, show: str | None = None) -> str:

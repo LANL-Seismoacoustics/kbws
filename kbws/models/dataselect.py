@@ -1,12 +1,12 @@
 """ Models for the dataselect API endpoint.
 """
+from datetime import date, datetime
 from enum import Enum
 from typing import Annotated
-from datetime import datetime, date
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from .common import NoData, Quality
+from .common import NoData
 
 
 class DataselectFormat(str, Enum):
