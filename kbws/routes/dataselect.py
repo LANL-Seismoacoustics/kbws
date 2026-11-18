@@ -1,10 +1,8 @@
-"""
-Functions that translate parsed HTTP event request arguements from FastAPI to
-database queries, and return Stream objects and HTTP responses.
+"""FastAPI routes for waveform download and query-compatible output.
 
-We also define the dataselect query paremeters via a Pydantic Model, with
-appropriate descriptions.
-
+The service accepts the FDSN query and request-file forms. ``queryauth`` is
+an intentional compatibility alias for deployments that provide access
+control outside KBWS; it does not add an authentication layer here.
 """
 # Declare models/fields used in this service
 # see https://www.fdsn.org/webservices/fdsnws-dataselect-1.1.pdf

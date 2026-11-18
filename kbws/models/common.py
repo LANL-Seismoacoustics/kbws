@@ -1,3 +1,5 @@
+"""Shared enums and field types for FDSN request models."""
+
 from enum import Enum
 
 

@@ -2,7 +2,7 @@
 <application xmlns="http://wadl.dev.java.net/2009/02"
              xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <doc title="FDSN station web service 1.1"/>
-  <doc>KBWS also supports the css and sql format extensions. The location parameter is accepted for FDSN compatibility but is currently ignored by Pisces.</doc>
+  <doc>KBWS also supports the css and sql format extensions. The location parameter is accepted for FDSN compatibility but is currently ignored.</doc>
   <grammars/>
   <resources base="/fdsnws/station/1/">
     <resource path="query">

@@ -1,3 +1,5 @@
+"""Load deployment settings and configurable KB Core table names."""
+
 from typing import Annotated, Literal
 
 from pydantic_settings import BaseSettings, SettingsConfigDict

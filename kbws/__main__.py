@@ -1,3 +1,5 @@
+"""Run the KBWS application with Uvicorn."""
+
 from kbws.main import app
 
 # For local dev, i.e.: python kbws

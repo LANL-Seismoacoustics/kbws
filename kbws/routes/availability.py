@@ -1,3 +1,9 @@
+"""FastAPI routes for querying waveform availability.
+
+The service handles the core availability filters; gap merging and quality
+handling are currently limited.
+"""
+
 from typing import Annotated
 
 from fastapi import APIRouter, Body, Depends, Query, Request, Response

@@ -1,14 +1,14 @@
-"""FDSN-WS standard error responses.
+"""Build FDSN-WS standard error responses.
 
-All FDSN error responses share one plain-text template (see the FDSN
-Web Services Specification, "Error Handling"). Build one with
-`fdsn_response`, passing the request and a `ResponseCode`.
+All FDSN error responses share one plain-text template (see the FDSN Web
+Services Specification). These helpers keep validation, service-availability,
+and backend failures in a consistent envelope instead of exposing framework
+error shapes.
 
-Usage
------
+Example
+-------
 >>> from kbws.responses import fdsn_response, BAD_REQUEST
 >>> return fdsn_response(request, BAD_REQUEST, detail=str(exc), service_version=VERSION)
-
 """
 from dataclasses import dataclass
 from textwrap import dedent

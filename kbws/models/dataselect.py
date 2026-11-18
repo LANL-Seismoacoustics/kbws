@@ -1,5 +1,4 @@
-""" Models for the dataselect API endpoint.
-"""
+"""Pydantic request models for the FDSN dataselect service."""
 from datetime import date, datetime
 from enum import Enum
 from typing import Annotated

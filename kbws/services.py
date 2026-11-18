@@ -1,4 +1,9 @@
-"""Service capability checks based on configured database tables."""
+"""Guard FDSN routes using the tables configured for each service.
+
+A service returns FDSN-formatted ``503`` responses when its required tables
+are not configured, allowing one deployment to expose only supported
+services or detail levels.
+"""
 from .config import settings
 
 SERVICE_TABLES = {

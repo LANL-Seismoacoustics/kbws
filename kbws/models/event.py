@@ -1,5 +1,4 @@
-""" Models for event API endpoints.
-"""
+"""Pydantic request models for the FDSN event service."""
 from datetime import date, datetime
 from enum import Enum
 from typing import Annotated
@@ -185,7 +184,7 @@ class EventQuery(BaseModel):
                 "network magnitude when includeallmagnitudes is false. Defaults to 'mb,mw,ms'. "
                 "CSS-like databases have no concept of a preferred magnitude (type) for when "
                 "`includeallmagnitudes=False` and a single 'preferred' magnitude is returned. "
-                "Default is the Pisces default."
+                "Default follows the service's standard default."
             ),
             examples="mb,mw,ms",
         ),

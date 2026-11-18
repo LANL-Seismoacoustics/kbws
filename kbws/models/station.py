@@ -1,4 +1,8 @@
-"""Models for the station API endpoint."""
+"""Pydantic request models for the FDSN station service.
+
+The service supports network, station, channel, and response detail levels;
+several FDSN metadata filters remain accepted but ignored.
+"""
 from datetime import date, datetime
 from enum import Enum
 from typing import Annotated
@@ -67,8 +71,8 @@ class StationQuery(BaseModel):
         str | None,
         Field(
             description=(
-                "Select one or more location identifiers. Pisces currently accepts this "
-                "FDSN parameter but does not apply it."
+                "Select one or more location identifiers. This FDSN parameter is accepted "
+                "for compatibility but is currently not applied."
             ),
             examples="00",
         ),

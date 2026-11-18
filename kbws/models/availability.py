@@ -1,4 +1,8 @@
-"""Request models for the FDSN availability service."""
+"""Pydantic request models for the FDSN availability service.
+
+Some availability options are accepted for FDSN compatibility but are
+currently ignored by KBWS.
+"""
 from datetime import date, datetime
 from typing import Annotated, Literal
 

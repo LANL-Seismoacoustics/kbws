@@ -1,3 +1,5 @@
+"""Create SQLAlchemy KB Core models and the configured database session."""
+
 import pisces.schema.kbcore as kb
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker

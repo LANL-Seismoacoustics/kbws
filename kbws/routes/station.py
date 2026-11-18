@@ -1,4 +1,4 @@
-"""FDSN station metadata routes."""
+"""FastAPI routes for querying FDSN station metadata."""
 from importlib.resources import files
 from typing import Annotated
 

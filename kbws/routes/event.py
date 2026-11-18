@@ -1,7 +1,7 @@
-"""
-Functions that translate parsed HTTP event request arguements from FastAPI to
-database queries, and return text or ObsPy Catalog objects.
+"""FastAPI routes for event search and QuakeML-compatible output.
 
+The text format intentionally returns the service's supported event fields;
+richer catalog fields are available through XML and JSON responses.
 """
 from importlib.resources import files
 from typing import Annotated
