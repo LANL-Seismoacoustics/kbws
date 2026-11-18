@@ -22,6 +22,21 @@ jobs:
   build:
     name: Build documentation
     runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: sqlite://
+      LOG_LEVEL: INFO
+      AFFILIATION: test.affiliation
+      ARRIVAL: test.arrival
+      ASSOC: test.assoc
+      EVENT: test.event
+      INSTRUMENT: test.instrument
+      NETMAG: test.netmag
+      NETWORK: test.network
+      ORIGIN: test.origin
+      SENSOR: test.sensor
+      SITE: test.site
+      SITECHAN: test.sitechan
+      WFDISC: test.wfdisc
     steps:
       - name: Check preview input
         if: github.event_name == 'workflow_dispatch' && inputs.preview && !inputs.pr_number
