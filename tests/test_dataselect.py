@@ -1,4 +1,6 @@
 import textwrap
+from io import BytesIO
+from zipfile import ZipFile
 
 import pytest
 from fastapi.testclient import TestClient
@@ -86,6 +88,16 @@ def test_dataselect_format_saczip(get_waveforms_stream):
     assert response.status_code == 200
     assert response.headers['Content-Type'] == 'application/zip'
     assert response.content == byts
+
+
+def test_saczip_missing_network_uses_placeholder():
+    """Use XX instead of a hidden filename for traces without a network."""
+    stream = st.copy()
+    for trace in stream:
+        trace.stats.network = ""
+
+    with ZipFile(BytesIO(saczip_bytes(stream))) as archive:
+        assert all(name.startswith("XX.") for name in archive.namelist())
 
 
 def test_dataselect_format_sql(get_waveforms_query, db_session):

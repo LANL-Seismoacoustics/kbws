@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "kbws"
-version = "0.1.0"
+version = "0.5.0"
 description = "FDSN Web Services for CSS-like SQL Database"
 readme = "README.md"
 authors = [
