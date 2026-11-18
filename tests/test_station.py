@@ -5,6 +5,7 @@ from obspy.core.inventory import Inventory, Network, Site, Station
 from pisces.fdsn import Client
 
 from kbws import database as db
+from kbws.config import settings
 from kbws.main import app
 
 client = TestClient(app)
@@ -22,6 +23,29 @@ def inventory():
             site=Site(name="Albuquerque"),
         )],
     )], source="test")
+
+
+def test_station_without_response_tables(monkeypatch):
+    """Basic station metadata works without response tables."""
+    monkeypatch.setattr(settings, "sensor", None)
+    monkeypatch.setattr(settings, "instrument", None)
+    monkeypatch.setattr(Client, "get_stations", lambda *args, **kwargs: inventory(), raising=False)
+
+    response = client.get(f"{ENDPOINT}/query?level=station")
+
+    assert response.status_code == 200
+
+
+def test_station_response_requires_tables(monkeypatch):
+    """Response-level station metadata reports missing response tables."""
+    monkeypatch.setattr(settings, "sensor", None)
+    monkeypatch.setattr(settings, "instrument", None)
+
+    response = client.get(f"{ENDPOINT}/query?level=response")
+
+    assert response.status_code == 503
+    assert "sensor" in response.text
+    assert "instrument" in response.text
 
 
 def test_station_xml_response(monkeypatch):

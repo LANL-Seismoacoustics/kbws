@@ -12,26 +12,26 @@ class Settings(BaseSettings):
     oracle_client_lib_dir: str | None = None
     # logging_config: str = "logging.server.ini"
 
-    affiliation: str
-    amplitude: str
-    arrival: str
-    assoc: str
-    event: str
-    gregion: str
-    instrument: str
-    lastid: str
-    netmag: str
-    network: str
-    origerr: str
-    origin: str
-    remark: str
-    sensor: str
-    site: str
-    sitechan: str
-    sregion: str
-    stamag: str
-    wfdisc: str
-    wftag: str
+    # amplitude: str | None = None  # unused by current KBWS services
+    # gregion: str | None = None  # unused by current KBWS services
+    # origerr: str | None = None  # unused by current KBWS services
+    # remark: str | None = None  # unused by current KBWS services
+    # sregion: str | None = None  # unused by current KBWS services
+    # stamag: str | None = None  # unused by current KBWS services
+    # wftag: str | None = None  # unused by current KBWS services
+
+    affiliation: str | None = None
+    arrival: str | None = None
+    assoc: str | None = None
+    event: str | None = None
+    instrument: str | None = None
+    netmag: str | None = None
+    network: str | None = None
+    origin: str | None = None
+    sensor: str | None = None
+    site: str | None = None
+    sitechan: str | None = None
+    wfdisc: str | None = None
 
     model_config = SettingsConfigDict(
         env_file = ".env", # looks for a file named ".env" in the current working directory

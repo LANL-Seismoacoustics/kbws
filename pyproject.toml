@@ -48,8 +48,8 @@ oracle = [
 Homepage = "https://github.com/LANL-Seismoacoustics/kbws"
 Repository = "https://github.com/LANL-Seismoacoustics/kbws"
 
-[tool.setuptools]
-packages = ["kbws", "kbws.routes"]
+[tool.setuptools.packages.find]
+include = ["kbws*"]
 
 [tool.setuptools.package-data]
 kbws = ["py.typed"]

@@ -15,7 +15,7 @@ from ..formats import (
     post_parse,
 )
 from ..logging import get_logger
-from ..models import AvailabilityExtent, AvailabilityQuery
+from ..models.availability import AvailabilityExtent, AvailabilityQuery
 from ..responses import (
     BAD_REQUEST,
     NO_DATA,
@@ -24,6 +24,7 @@ from ..responses import (
     REQUEST_TOO_LARGE,
     fdsn_response,
 )
+from ..services import require_service
 
 VERSION = "1.0.0"
 MAJOR_VERSION = VERSION.split(".")[0]
@@ -31,7 +32,11 @@ MAJOR_VERSION = VERSION.split(".")[0]
 logger = get_logger(__name__)
 
 # All subsequent routes originate at this path
-router = APIRouter(prefix=f"/fdsnws/availability/{MAJOR_VERSION}", tags=['availability'])
+router = APIRouter(
+    prefix=f"/fdsnws/availability/{MAJOR_VERSION}",
+    tags=['availability'],
+    dependencies=[Depends(require_service("availability"))],
+)
 
 
 def _availability_kwargs(params, *, query: bool = False) -> dict:

@@ -54,7 +54,13 @@ from fastapi.routing import APIRoute
 from . import __version__
 from .config import settings
 from .logging import get_logger
-from .responses import BAD_REQUEST, INTERNAL_ERROR, fdsn_response
+from .responses import (
+    BAD_REQUEST,
+    INTERNAL_ERROR,
+    TEMP_UNAVAILABLE,
+    fdsn_response,
+)
+from .services import ServiceUnavailable
 from .routes import availability, dataselect, event, station
 
 SERVICE_VERSIONS = {
@@ -115,6 +121,8 @@ async def add_request_metadata(request: Request, call_next):
         service = 'station'
     elif 'dataselect' in request.url.path:
         service = 'dataselect'
+    elif 'availability' in request.url.path:
+        service = 'availability'
     elif 'event' in request.url.path:
         service = 'event'
     else:
@@ -149,6 +157,19 @@ async def validation_exception_handler(request: Request, exc):
         BAD_REQUEST,
         detail=str(exc),
         service_version=getattr(request.state, 'service_version', app.version),
+    )
+
+
+@app.exception_handler(ServiceUnavailable)
+async def unavailable_service_handler(request: Request, exc: ServiceUnavailable):
+    return fdsn_response(
+        request,
+        TEMP_UNAVAILABLE,
+        detail=(
+            f"The {exc.service} service is unavailable in this deployment. "
+            f"Missing configured tables: {', '.join(exc.missing_tables)}"
+        ),
+        service_version=SERVICE_VERSIONS[exc.service],
     )
 
 

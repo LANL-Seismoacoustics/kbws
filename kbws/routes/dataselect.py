@@ -29,7 +29,7 @@ from sqlalchemy.orm import Session
 from .. import database as db
 from ..formats import WAVEFORM_FORMATS, post_parse
 from ..logging import get_logger
-from ..models import DataselectQuery
+from ..models.dataselect import DataselectQuery
 from ..responses import (
     BAD_REQUEST,
     NO_DATA,
@@ -37,6 +37,7 @@ from ..responses import (
     REQUEST_TOO_LARGE,
     fdsn_response,
 )
+from ..services import require_service
 
 VERSION = "1.1.0"
 MAX_POST_LINES = 100
@@ -54,7 +55,11 @@ def get_wadl():
 
 
 # All subsequent routes originate at this path
-router = APIRouter(prefix=f"/fdsnws/dataselect/{MAJOR_VERSION}", tags=['dataselect'])
+router = APIRouter(
+    prefix=f"/fdsnws/dataselect/{MAJOR_VERSION}",
+    tags=['dataselect'],
+    dependencies=[Depends(require_service("dataselect"))],
+)
 
 
 @router.get("/application.wadl", summary="Download the service WADL file")

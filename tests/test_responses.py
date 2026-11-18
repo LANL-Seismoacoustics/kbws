@@ -2,6 +2,7 @@
 from fastapi.testclient import TestClient
 from pisces.fdsn import Client
 
+from kbws.config import settings
 from kbws.main import app
 from kbws.responses import (
     _TEMPLATE,
@@ -12,10 +13,22 @@ from kbws.responses import (
 )
 
 ENDPOINT = "/fdsnws/event/1/query?"
+DATASELECT_ENDPOINT = "/fdsnws/dataselect/1/query?network=IU&station=ANMO&channel=BHZ&starttime=2010-01-01&endtime=2010-01-02"
 
 # raise_server_exceptions=False so the TestClient returns the handled response instead
 # of re-raising the exception the handler is supposed to catch.
 client = TestClient(app, raise_server_exceptions=False)
+
+
+def test_missing_service_table_returns_503(monkeypatch):
+    """A service with a missing configured table returns an FDSN 503 response."""
+    monkeypatch.setattr(settings, "wfdisc", None)
+
+    response = client.get(DATASELECT_ENDPOINT)
+
+    assert response.status_code == 503
+    assert "dataselect" in response.text
+    assert "wfdisc" in response.text
 
 
 def test_validation_error_response_is_fdsn_formatted():

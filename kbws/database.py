@@ -26,81 +26,20 @@ def get_db():
         session.close()
 
 
-class Affiliation(kb.Affiliation):
-    __tablename__ = settings.affiliation
+def _model(base, table_name):
+    """Create a mapped model only when its table is configured."""
+    return type(base.__name__, (base,), {"__tablename__": table_name}) if table_name else None
 
 
-class Amplitude(kb.Amplitude):
-    __tablename__ = settings.amplitude
-
-
-class Arrival(kb.Arrival):
-    __tablename__ = settings.arrival
-
-
-class Assoc(kb.Assoc):
-    __tablename__ = settings.assoc
-
-
-class Event(kb.Event):
-    __tablename__ = settings.event
-
-
-class Gregion(kb.Gregion):
-    __tablename__ = settings.gregion
-
-
-class Instrument(kb.Instrument):
-    __tablename__ = settings.instrument
-
-
-class Lastid(kb.Lastid):
-    __tablename__ = settings.lastid
-
-
-class Netmag(kb.Netmag):
-    __tablename__ = settings.netmag
-
-
-class Network(kb.Network):
-    __tablename__ = settings.network
-
-
-class Origerr(kb.Origerr):
-    __tablename__ = settings.origerr
-
-
-class Origin(kb.Origin):
-    __tablename__ = settings.origin
-
-
-class Remark(kb.Remark):
-    __tablename__ = settings.remark
-
-
-class Sensor(kb.Sensor):
-    __tablename__ = settings.sensor
-
-
-class Site(kb.Site):
-    __tablename__ = settings.site
-
-
-class Sitechan(kb.Sitechan):
-    __tablename__ = settings.sitechan
-
-
-class Sregion(kb.Sregion):
-    __tablename__ = settings.sregion
-
-
-class Stamag(kb.Stamag):
-    __tablename__ = settings.stamag
-
-
-class Wfdisc(kb.Wfdisc):
-    __tablename__ = settings.wfdisc
-
-
-class Wftag(kb.Wftag):
-    __tablename__ = settings.wftag
+Affiliation = _model(kb.Affiliation, settings.affiliation)
+Arrival = _model(kb.Arrival, settings.arrival)
+Assoc = _model(kb.Assoc, settings.assoc)
+Event = _model(kb.Event, settings.event)
+Instrument = _model(kb.Instrument, settings.instrument)
+Netmag = _model(kb.Netmag, settings.netmag)
+Network = _model(kb.Network, settings.network)
+Origin = _model(kb.Origin, settings.origin)
+Sensor = _model(kb.Sensor, settings.sensor)
+Site = _model(kb.Site, settings.site)
+Sitechan = _model(kb.Sitechan, settings.sitechan)
+Wfdisc = _model(kb.Wfdisc, settings.wfdisc)

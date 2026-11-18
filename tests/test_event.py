@@ -8,6 +8,7 @@ from pisces.tables.kbcore import Event, Origin
 from pisces.util import literal_sql
 
 from kbws.main import app
+from kbws.config import settings
 from kbws.responses import _TEMPLATE
 
 ENDPOINT = "/fdsnws/event/1/query?"
@@ -37,6 +38,28 @@ def get_events_query(monkeypatch, db_session):
 
     # replace Client.get_events with the mock
     monkeypatch.setattr(Client, 'get_events', mock_get_events)
+
+
+def test_event_without_arrivals(get_events_catalog, monkeypatch):
+    """Basic event queries work without optional arrival tables."""
+    monkeypatch.setattr(settings, "arrival", None)
+    monkeypatch.setattr(settings, "assoc", None)
+
+    response = client.get(f"{ENDPOINT}format=xml")
+
+    assert response.status_code == 200
+
+
+def test_event_arrivals_require_tables(get_events_catalog, monkeypatch):
+    """Arrival requests return 503 when arrival tables are unavailable."""
+    monkeypatch.setattr(settings, "arrival", None)
+    monkeypatch.setattr(settings, "assoc", None)
+
+    response = client.get(f"{ENDPOINT}includearrivals=true")
+
+    assert response.status_code == 503
+    assert "arrival" in response.text
+    assert "assoc" in response.text
 
 
 def test_event_format_xml(get_events_catalog):

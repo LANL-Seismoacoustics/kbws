@@ -12,13 +12,22 @@ from sqlalchemy.orm import Session
 
 from .. import database as db
 from ..formats import post_parse, station_text, station_xml_bytes
-from ..models import StationQuery
-from ..models.station import StationLevel
-from ..responses import BAD_REQUEST, NO_DATA, NO_DATA_ALT, fdsn_response
+from ..models.station import StationLevel, StationQuery
+from ..responses import (
+    BAD_REQUEST,
+    NO_DATA,
+    NO_DATA_ALT,
+    fdsn_response,
+)
+from ..services import require_service, require_tables
 
 VERSION = "1.1.0"
 MAJOR_VERSION = VERSION.split(".")[0]
-router = APIRouter(prefix=f"/fdsnws/station/{MAJOR_VERSION}", tags=["station"])
+router = APIRouter(
+    prefix=f"/fdsnws/station/{MAJOR_VERSION}",
+    tags=["station"],
+    dependencies=[Depends(require_service("station"))],
+)
 
 
 def get_wadl():
@@ -54,6 +63,11 @@ def station_query(
 
     """
     try:
+        level_tables = {
+            "channel": {"sitechan"},
+            "response": {"sitechan", "sensor", "instrument"},
+        }
+        require_tables("station", level_tables.get(params.level.value, set()))
         out = Client(
             session,
             affiliation=db.Affiliation,
@@ -154,6 +168,14 @@ def station_query_post(
         return fdsn_response(request, BAD_REQUEST, detail=str(exc), service_version=VERSION)
 
     try:
+        required = set()
+        for query in queries:
+            required.update({
+                "sitechan" if query.level in ("channel", "response") else None,
+                "sensor" if query.level == "response" else None,
+                "instrument" if query.level == "response" else None,
+            } - {None})
+        require_tables("station", required)
         client = Client(
             session,
             affiliation=db.Affiliation,

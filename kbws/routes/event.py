@@ -15,7 +15,7 @@ from sqlalchemy.orm import Session
 
 from .. import database as db
 from ..formats import catalog_json, catalog_xml, event_text
-from ..models import EventQuery
+from ..models.event import EventQuery
 from ..responses import (
     BAD_REQUEST,
     NO_DATA,
@@ -23,6 +23,7 @@ from ..responses import (
     PISCES_GET_EVENTS_ERRORS,
     fdsn_response,
 )
+from ..services import require_service, require_tables
 
 VERSION = "1.2.0"
 MAJOR_VERSION = VERSION.split(".")[0]
@@ -33,7 +34,11 @@ def get_wadl():
 
 
 # All subsequent routes originate at this path
-router = APIRouter(prefix=f"/fdsnws/event/{MAJOR_VERSION}", tags=['event'])
+router = APIRouter(
+    prefix=f"/fdsnws/event/{MAJOR_VERSION}",
+    tags=['event'],
+    dependencies=[Depends(require_service("event"))],
+)
 
 
 @router.get("/application.wadl", summary="Download the service WADL file")
@@ -59,11 +64,15 @@ def event_query(
     [/fdsnws/event/1/query?endtime=2012-11-03T01:00:00.00&maxdepth=100&maxlatitude=47&maxlongitude=5&mindepth=1.3&minlatitude=40&minlongitude=-10&starttime=2012-11-01](/fdsnws/event/1/query?endtime=2012-11-03T01:00:00.00&maxdepth=100&maxlatitude=47&maxlongitude=5&mindepth=1.3&minlatitude=40&minlongitude=-10&starttime=2012-11-01)
 
     """
+    require_tables(
+        "event",
+        {"arrival", "assoc"} if params.includearrivals else set(),
+    )
+
     client = Client(session,
         event=db.Event,
         origin=db.Origin,
         netmag=db.Netmag,
-        stamag=db.Stamag,
         arrival=db.Arrival,
         assoc=db.Assoc,
     )
