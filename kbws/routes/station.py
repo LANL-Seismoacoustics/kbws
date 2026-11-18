@@ -147,6 +147,14 @@ def station_query_post(
 
     The body may contain global ``key=value`` parameters followed by repeated
     ``NET STA LOC CHA STARTTIME ENDTIME`` selection rows.
+
+    ### Example
+
+    ```text
+    format=text
+    level=channel
+    TA A25A -- BH? 2010-03-25T00:00:00 2010-03-28T00:00:00
+    ```
     """
     try:
         global_params, bulk = post_parse(body.splitlines())

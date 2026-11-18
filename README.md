@@ -5,11 +5,9 @@ This package uses [FastAPI](https://fastapi.tiangolo.com/) and [Pisces](https://
 
 ## Service support
 
-KBWS currently provides usable FDSN-style **Event** and **Dataselect** services.
-
-Station and Availability route/model declarations are present for API development,
-but their query implementations are deferred pending Pisces support. They are not
-yet operational FDSN services.
+KBWS provides FDSN-style Event, Dataselect, Station, and Availability services
+when the tables required by each service are configured. Requests for unavailable
+services or unsupported detail levels return `503` with the missing table names.
 
 KBWS uses deployment-scoped access control: it does not implement in-app user
 authentication or FDSN `queryauth` semantics. For general client compatibility,
@@ -29,7 +27,7 @@ Clients like the [ObsPy FDSN Client](https://docs.obspy.org/packages/obspy.clien
 
 ## Installation
 
-### Natively (without containers), using Conda
+### Natively (without containers), using Pixi
 
 Requirements:
 
@@ -38,14 +36,13 @@ Requirements:
 * SQLAlchemy
 * Pisces
 * python-dotenv
-* A database driver, like `cx_Oracle` or `oracledb` for Oracle databases
+* The `oracledb` driver for Oracle databases
 * Uvicorn (async web server used by FastAPI)
 
 ...directly from the repository
 ```bash
-conda env create -f environment.yml
-conda activate kbws
-pip install git+https://github.com/LANL-Seismoacoustics.git
+pixi install
+pixi shell
 ```
 
 
@@ -64,25 +61,24 @@ Write a file named `.env` like the following:
 # .env
 database_url=oracle://username:password@mydbserver.com:1523/dbname
 affiliation=myowner.affiliation
-amplitude=myowner.amplitude
 arrival=myowner.arrival
 assoc=myowner.assoc
+# amplitude=myowner.amplitude  # unused by current KBWS services
+# gregion=myowner.gregion  # unused by current KBWS services
+# origerr=myowner.origerr  # unused by current KBWS services
+# remark=myowner.remark  # unused by current KBWS services
+# sregion=myowner.sregion  # unused by current KBWS services
+# stamag=myowner.stamag  # unused by current KBWS services
+# wftag=myowner.wftag  # unused by current KBWS services
 event=myowner.event
-gregion=myowner.gregion
 instrument=myowner.instrument
-lastid=myowner.lastid
 netmag=myowner.netmag
 network=myowner.network
-origerr=myowner.origerr
 origin=myowner.origin
-remark=myowner.remark
 sensor=myowner.sensor
 site=myowner.site
 sitechan=myowner.sitechan
-sregion=myowner.sregion
-stamag=myowner.stamag
 wfdisc=myowner.wfdisc
-wftag=myowner.wftag
 ```
 
 
@@ -107,12 +103,13 @@ Remember, the server running KBWS must have the data directories used in the dat
 
 ## Development
 
-Using conda:
+Using Pixi:
 
 ```bash
 git clone https://github.com/LANL-Seismoacoustics/kbws.git
 cd kbws
-pip install -e .
+pixi install
+pixi shell
 ```
 
 Using containers: see the [Deployment guide](docs/source/deployment.md) for development with hot reload.
@@ -149,8 +146,8 @@ restish kbws event-query --starttime 2012-11-01 --endtime 2012-11-03T01:00:00.00
     - Follow the FastAPI containerization [docs](https://fastapi.tiangolo.com/deployment/docker/).
 - [x] Parameterize the container to allow different core table names
 - [ ] Move all injected dependencies (e.g. `get_db`) to a `dependencies.py`, so FastAPI can properly cache them.
-- [ ] Implement HTTPS that can use containers and .env files, point to .pem/.key/.crt files on host machine.
-- [ ] Move `Enum` parameters to `Literal[...]` where they enums aren't reused.
+- [-] Implement HTTPS that can use containers and .env files, point to .pem/.key/.crt files on host machine.
+- [x] Move `Enum` parameters to `Literal[...]` where they enums aren't reused.
 - [ ] Move SwaggerUI to `/docs`
 - [ ] Serve a static protomaps/pmtiles map page at `/`
 - [ ] Plan ahead for versioning by moving endpoints to `api/v1/endpoints`?

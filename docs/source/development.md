@@ -65,6 +65,30 @@ pytest -v
 pytest --cov=kbws --cov-report=html
 ```
 
+### Building Documentation
+
+Use the Pixi development environment for documentation dependencies:
+
+```bash
+pixi run -e dev build-docs       # Build HTML documentation
+pixi run -e dev serve-docs       # Live-reloading preview
+```
+
+The equivalent Make targets can be run from `docs/` after activating the
+environment:
+
+```bash
+pixi shell -e dev
+cd docs
+make html
+make livehtml
+make apidocs                  # Regenerate API reference, when needed
+```
+
+Narrative documentation lives under `docs/source/`; add new pages to the
+appropriate Sphinx toctree. Use Markdown for narrative pages and reStructuredText
+only when Sphinx directives require it. Static assets belong in
+`docs/source/_static/` and should use filenames without spaces.
 
 ## Architecture Overview
 
@@ -101,8 +125,6 @@ kbws/
 │       ├── conf.py
 │       ├── index.md
 │       └── ...
-├── environment.yml          # Production conda env
-├── environment-dev.yml      # Development conda env
 ├── pixi.toml               # Modern package management
 ├── docker-compose.yml       # Container dev setup
 └── .env.example            # Example configuration

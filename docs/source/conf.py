@@ -48,8 +48,8 @@ html_theme_options = {
     "show_navbar_depth": 2,
     "use_fullscreen_button": False,
     "logo": {
-        "image_light": "_static/LANL Logo Ultramarine.png",
-        "image_dark": "_static/LANL Logo White.png",
+        "image_light": "_static/lanl-logo-ultramarine.png",
+        "image_dark": "_static/lanl-logo-white.png",
     }
 }
-html_favicon = "_static/LANL Logo Ultramarine globe.png"
+html_favicon = "_static/lanl-logo-ultramarine-globe.png"

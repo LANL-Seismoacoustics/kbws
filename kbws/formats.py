@@ -218,18 +218,19 @@ def saczip_bytes(stream: Stream) -> bytes:
     """Produce an in-memory zip archive of sac files from _a Stream object.
 
     Names the files inside the archive following the IRIS FDSN-WS convention,
-    with SAC traces named according to trace ID, request quality, and first sample time, like:
-    <archive_name>
-        NETWORK.STATION.LOCATION.CHANNEL.QUALITY.YYYY.JJJ.HHMMSS.SAC
+    with SAC traces named according to trace ID and first sample time, like:
+
+        <archive_name>
+            NETWORK.STATION.LOCATION.CHANNEL.QUALITY.YYYY.JJJ.HHMMSS.SAC
+
+    Example:
+
+        fdsnws-dataselect_2023-04-24t19 01 31z.sac.zip (request time)
+            IU.TUC.00.BHZ.M.2010.058.063000.SAC (first sample time)
 
     Returns
     -------
     bytes
-
-    Example
-    -------
-    fdsnws-dataselect_2023-04-24t19 01 31z.sac.zip (request time)
-        IU.TUC.00.BHZ.M.2010.058.063000.SAC (first sample time)
 
     Notes
     -----
@@ -295,23 +296,20 @@ def post_parse(body: Iterable[str]):
     -----
     POST looks like this:
 
-    level=channel
-    format=text
-    TA A25A -- BH? 2010-03-25T00:00:00 2010-04-01T00:00:00
-    IU ANMO * BH? 2010-03-25T00:00:00 2010-04-01T00:00:00
-    IU ANMO 10 HHZ 2010-03-25T00:00:00 2010-04-01T00:00:00
-    II KURK 00 BH? 2010-03-25T00:00:00 2010-04-01T00:00:00
+        level=channel
+        format=text
+        TA A25A -- BH? 2010-03-25T00:00:00 2010-04-01T00:00:00
+        IU ANMO * BH? 2010-03-25T00:00:00 2010-04-01T00:00:00
+        IU ANMO 10 HHZ 2010-03-25T00:00:00 2010-04-01T00:00:00
+        II KURK 00 BH? 2010-03-25T00:00:00 2010-04-01T00:00:00
 
-    Output looks like this:
-    (
-        {'level': 'channel', 'format': 'text'},
-        [
-            ['TA', 'A25A', '--', 'BH?', '2010-03-25T00:00:00', '2010-04-01T00:00:00'],
-            ['IU', 'ANMO', '*', 'BH?', '2010-03-25T00:00:00', '2010-04-01T00:00:00'],
-            ['IU', 'ANMO', '10', 'HHZ', '2010-03-25T00:00:00', '2010-04-01T00:00:00'],
-            ['II', 'KURK', '00', 'BH?', '2010-03-25T00:00:00', '2010-04-01T00:00:00']
-        ]
-    )
+    Output looks like:
+
+        ({'level': 'channel', 'format': 'text'},
+         [['TA', 'A25A', '--', 'BH?', '2010-03-25T00:00:00', '2010-04-01T00:00:00'],
+          ['IU', 'ANMO', '*', 'BH?', '2010-03-25T00:00:00', '2010-04-01T00:00:00'],
+          ['IU', 'ANMO', '10', 'HHZ', '2010-03-25T00:00:00', '2010-04-01T00:00:00'],
+          ['II', 'KURK', '00', 'BH?', '2010-03-25T00:00:00', '2010-04-01T00:00:00']])
 
     """
     params = {}

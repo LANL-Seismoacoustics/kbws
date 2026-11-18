@@ -119,11 +119,14 @@ def availability_extent_post(
     body: str = Body(..., media_type="text/plain"),
     session: Session = Depends(db.get_db)
 ):
-    """Query URL builder
+    """Query availability extents using a POST request file.
 
     ### Example
 
-    Add POST file example here.
+    ```text
+    format=text
+    TA A25A -- BH? 2010-03-25T00:00:00 2010-03-28T00:00:00
+    ```
 
     """
     lines = body.splitlines()
@@ -210,11 +213,15 @@ def availability_query_post(
     body: str = Body(..., media_type="text/plain"),
     session: Session = Depends(db.get_db)
 ):
-    """Query URL builder
+    """Query availability using a POST request file.
 
     ### Example
 
-    Add POST file example here.
+    ```text
+    format=text
+    show=latestupdate
+    TA A25A -- BH? 2010-03-25T00:00:00 2010-03-28T00:00:00
+    ```
 
     """
     lines = body.splitlines()

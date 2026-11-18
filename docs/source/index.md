@@ -14,7 +14,7 @@ Clients like the [ObsPy FDSN Client](https://docs.obspy.org/packages/obspy.clien
 KBWS uses [FastAPI](https://fastapi.tiangolo.com/), [Pisces](https://github.com/LANL-Seismoacoustics/pisces), [SQLAlchemy](http://www.sqlalchemy.org), and [ObsPy](http://www.obspy.org) to provide a fast, standards-compliant web service layer over your existing database infrastructure.
 
 **Flexible deployment options**  
-Run KBWS natively with Conda/pip, or deploy it in containers using Docker or Podman. Configure multiple database schemas, waveform directories, and table mappings through simple environment files.
+Run KBWS natively with Pixi/pip, or deploy it in containers using Docker or Podman. Configure database schemas, waveform directories, and only the table mappings needed by each service through a simple environment file.
 
 
 ## Service support
@@ -24,14 +24,14 @@ KBWS currently provides usable FDSN-style services for:
 * **fdsnws-event**: query and retrieve event catalogs in QuakeML, JSON, SQL debug output, or CSS origin rows.
 * **fdsnws-dataselect**: retrieve waveform data in MiniSEED or SAC ZIP, plus SQL debug output or CSS Wfdisc rows.
 
-**Station** and **Availability** parameter models and routes are present for API development, but their query implementations are deferred pending Pisces support. They are not yet operational FDSN services.
+**Station** and **Availability** services are also available when their configured database tables are present. Requests return a useful `503` response listing missing tables when a deployment cannot support a service or requested detail level.
 
 See [Access Control](authentication.md) for the deployment-scoped security model.
 
 ## Features
 
 * Direct integration with [ObsPy](http://www.obspy.org) FDSN client
-* Support for Oracle databases via cx_Oracle or oracledb drivers
+* Support for Oracle databases via the `oracledb` driver
 * Flexible schema mapping - configure any table names via environment variables
 * Geographic and temporal filtering using native SQL queries
 * Container-ready with rootless Podman support

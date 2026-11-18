@@ -177,23 +177,19 @@ def dataselect_query_post(
 
     A POST request could look like this:
 
-    ```
-    quality=M
-    minimumlength=0.0
-    longestonly=FALSE
-    TA A25A -- BH? 2010-03-25T00:00:00 2010-03-28T00:00:00
-    IU ANMO * BH? 2010-03-25T00:00:00 2010-03-28T00:00:00
-    IU ANMO 10 HHZ 2010-03-25T00:00:00 2010-03-28T00:00:00
-    II KURK 00 BH? 2010-03-25T00:00:00 2010-03-28T00:00:00
-    ```
+        quality=M
+        minimumlength=0.0
+        longestonly=FALSE
+        TA A25A -- BH? 2010-03-25T00:00:00 2010-03-28T00:00:00
+        IU ANMO * BH? 2010-03-25T00:00:00 2010-03-28T00:00:00
+        IU ANMO 10 HHZ 2010-03-25T00:00:00 2010-03-28T00:00:00
+        II KURK 00 BH? 2010-03-25T00:00:00 2010-03-28T00:00:00
 
-    Make the request using `wget` or `curl` like this:
+    Make the request using wget or curl like this:
 
-    ```
-    wget --post-file=request.txt -O out.mseed http://base_url/fdsnws/dataselect/1/query
+        wget --post-file=request.txt -O out.mseed http://base_url/fdsnws/dataselect/1/query
 
-    curl -L --data-binary @request.txt -o out.mseed http://base_url/fdsnws/dataselect/1/query
-    ```
+        curl -L --data-binary @request.txt -o out.mseed http://base_url/fdsnws/dataselect/1/query
 
     """
     # body = await request.body()

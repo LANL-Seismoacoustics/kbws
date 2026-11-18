@@ -10,7 +10,7 @@ Deployments can replace the default Markdown introduction shown in the FastAPI
 OpenAPI/Swagger documentation by setting `openapi_docs_header` in the runtime
 `.env` file to a Markdown file path:
 
-```dotenv
+```text
 openapi_docs_header=/path/to/deployment-openapi-header.md
 ```
 
@@ -112,7 +112,7 @@ host's rootless Podman configuration.
 For a single data tree, create a local, untracked Compose project `.env`
 next to `podman-compose.yml`:
 
-```dotenv
+```text
 KBWS_UID=1000
 KBWS_GID=1000
 KBWS_ENV_FILE=/path/to/kbws.env

@@ -1,6 +1,6 @@
 # Installation
 
-KBWS can be installed natively using Conda/pip. Podman deployment is documented separately in the [Deployment guide](deployment.md).
+KBWS can be installed natively using Pixi or pip. Podman deployment is documented separately in the [Deployment guide](deployment.md).
 
 ## Prerequisites
 
@@ -25,14 +25,75 @@ This will create the base environment with all runtime dependencies. For develop
 pixi shell -e dev
 ```
 
+### Offline installation with pixi-pack
+
+See the [`pixi-pack` documentation](https://prefix-dev.github.io/pixi-pack/) for
+additional packaging options. Use `pixi-pack` to prepare a complete,
+self-extracting environment on a machine
+with network access, then move the resulting shell script to the offline host.
+Build it for the target operating system and architecture; for example, build a
+Linux environment from a Linux machine (or a matching Pixi host):
+
+```bash
+pixi-pack \
+  --environment default \
+  --platform linux-64 \
+  --create-executable \
+  --output-file kbws-environment.sh
+```
+
+Copy `kbws-environment.sh` and the KBWS source/configuration to the offline
+host. Make the environment script executable and run it from a directory where
+it is allowed to create temporary files:
+
+```bash
+chmod +x kbws-environment.sh
+./kbws-environment.sh
+```
+
+The executable extracts the packed environment and prints the activation
+instructions. If execution from `/tmp` is restricted, choose a writable
+temporary directory before running it:
+
+```bash
+mkdir -p "$HOME/.tmp"
+export TMPDIR="$HOME/.tmp"
+./kbws-environment.sh
+```
+
+Activate the extracted environment with `conda` on the offline host. Use the
+extraction path printed by `pixi-pack`:
+
+```bash
+conda activate /path/to/extracted/environment
+```
+
+If the host has no `conda` shell function yet, initialize it once for the
+current shell before activating:
+
+```bash
+source "$(conda info --base)/etc/profile.d/conda.sh"
+conda activate /path/to/extracted/environment
+```
+
+Then run KBWS normally from the source directory:
+
+```bash
+python -m kbws
+```
+
+The packed environment is platform-specific and includes package artifacts;
+rebuild it when `pixi.lock` or the target platform changes. Keep the runtime
+`.env` file separate and copy it to the working directory on the offline host.
+
 ### Using pip
 
 If you prefer to use pip directly:
 
 ```bash
 pip install fastapi uvicorn obspy sqlalchemy pydantic-settings python-dotenv
-pip install oracledb  # or cx_oracle for Linux
-pip install git+https://github.com/LANL-Seismoacoustics/pisces.git
+pip install oracledb
+pip install git+https://github.com/LANL-Seismoacoustics/pisces.git@main
 pip install -e .
 ```
 
@@ -53,25 +114,24 @@ log_level=INFO
 
 # Table mappings (adjust schema.table names for your database)
 affiliation=schema.affiliation
-amplitude=schema.amplitude
 arrival=schema.arrival
 assoc=schema.assoc
+# amplitude=schema.amplitude  # unused by current KBWS services
+# gregion=schema.gregion  # unused by current KBWS services
+# origerr=schema.origerr  # unused by current KBWS services
+# remark=schema.remark  # unused by current KBWS services
+# sregion=schema.sregion  # unused by current KBWS services
+# stamag=schema.stamag  # unused by current KBWS services
+# wftag=schema.wftag  # unused by current KBWS services
 event=schema.event
-gregion=schema.gregion
 instrument=schema.instrument
-lastid=schema.lastid
 netmag=schema.netmag
 network=schema.network
-origerr=schema.origerr
 origin=schema.origin
-remark=schema.remark
 sensor=schema.sensor
 site=schema.site
 sitechan=schema.sitechan
-sregion=schema.sregion
-stamag=schema.stamag
 wfdisc=schema.wfdisc_raw
-wftag=schema.wftag
 ```
 
 ### Oracle Client Configuration
@@ -125,7 +185,7 @@ If these commands return valid responses, your installation is working correctly
 
 **Problem:** `ModuleNotFoundError: No module named 'pisces'`
 
-**Solution:** Pisces is not available on PyPI. Install it directly from GitHub:
+**Solution:** Install Pisces from the GitHub `main` branch:
 ```bash
-pip install git+https://github.com/LANL-Seismoacoustics/pisces.git
+pip install git+https://github.com/LANL-Seismoacoustics/pisces.git@main
 ```
