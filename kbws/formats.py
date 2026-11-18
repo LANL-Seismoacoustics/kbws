@@ -242,7 +242,8 @@ def saczip_bytes(stream: Stream) -> bytes:
         with ZipFile(fp, "w") as zipfp:
             for tr in stream:
                 first_sample_time = tr.stats.starttime.strftime("%Y.%j.%H%M%S")
-                sacname = f"{tr.id}.{first_sample_time}.SAC"
+                trace_id = tr.id if tr.stats.network else f"XX{tr.id}"
+                sacname = f"{trace_id}.{first_sample_time}.SAC"
                 with zipfp.open(sacname, "w") as sacfp:
                     tr.write(sacfp, format="SAC")
         fp.seek(0)
