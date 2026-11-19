@@ -111,24 +111,10 @@ wfdisc=myowner.wfdisc
 ```
 
 
-## Access via port forwarding
+## Usage
 
-If you server isn't configured as a web server, you may need to forward the port KBWS is running on to your local machine using an SSH tunnel.
-This will allow you to use a server that isn't discoverable as a web server on your network.
-
-For example, if the app is running on port `8000` on `myserver.mydomain.something`, type `ssh -L 8000:localhost:8001 myserver.mydomain.something`.
-From your local machine, you can use any FDSN-WS compliant client with a "local" URL, like:
-
-```python
-from obspy.clients.fdsn import Client
-
-client = Client('http://localhost:8001', _discover_services=False)
-```
-
-The `_discover_services=False` keyword may be necessary if `kbws` doesn't yet serve a proper `application.wadl` file that describes the FDSN endpoints and the services and keywords they offer, which ObsPy expects when initializing its FDSN client.
-
-Remember, the server running KBWS must have the data directories used in the database mounted, with the same directory structure, or else it won't be able to return waveforms.
-
+See the [Usage guide](docs/source/usage.md) for command-line access with
+`curl` and Restish, ObsPy examples, and SSH port forwarding.
 
 ## Development
 
@@ -142,31 +128,6 @@ pixi shell
 ```
 
 Using containers: see the [Deployment guide](docs/source/deployment.md) for development with hot reload.
-
-## Command Line Access
-
-The framework that runs KBWS (FastAPI) follows the [OpenAPI specification](https://www.openapis.org/), which means that tools that consume compliant APIs can expect a standardized machine-readable description of the interface.
-This means that _any_ tool that can work with OpenAPI compliant interfaces will also work with KBWS.
-[Restish](https://rest.sh) is a nice one that can be configured to provide command line flags specific to FDSN Web Services served by KBWS.
-After installing, configure your end point (name "kbws" here):
-
-```bash
-restish api configure kbws http://some.url.gov:8000
-```
-...and follow the prompts to answer questions about the API you're configuring.
-Then, sync `restish` with the API description, which customizes the command line flags you can use to interact with the endpoint.
-
-```bash
-restish api sync kbws
-```
-
-Now, you can use `restish` like a custom FDSN-WS CLI.  For example:
-
-```bash
-restish kbws event-query --starttime 2012-11-01 --endtime 2012-11-03T01:00:00.00 --minlatitude 40 --maxlatitude 47 --minlongitude -10 --maxlongitude 5 --mindepth 1.3 --maxdepth 100 > quakes.xml
-```
-...returns your event query as a QuakeML xml file.
-
 
 ## Roadmap
 

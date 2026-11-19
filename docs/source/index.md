@@ -70,21 +70,13 @@ stream = client.get_waveforms(
 )
 ```
 
-### Using curl
-
-```bash
-# Get events as QuakeML
-curl "http://localhost:8000/fdsnws/event/1/query?starttime=2012-11-01&endtime=2012-11-03&minlatitude=40&maxlatitude=47"
-
-# Get waveforms as MiniSEED
-curl "http://localhost:8000/fdsnws/dataselect/1/query?net=IU&sta=ANMO&loc=00&cha=BHZ&start=2012-11-01T00:00:00&end=2012-11-01T01:00:00" -o data.mseed
-```
-
+See the [Usage guide](usage.md) for `curl`, Restish, and SSH port-forwarding examples.
 
 ```{toctree}
 :hidden: true
 
 installation.md
+usage.md
 deployment.md
 authentication.md
 development.md

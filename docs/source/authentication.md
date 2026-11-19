@@ -14,24 +14,6 @@ behind an institutional network boundary, VPN, firewall rule, or reverse proxy.
 User identity and authentication, when required, are the responsibility of that
 deployment infrastructure.
 
-## ObsPy and local certificate stores
-
-When a deployment certificate is trusted by the operating system but not by
-Python's default CA bundle, ObsPy clients may need the `truststore` package.
-This can occur with macOS system keychains. Inject the system trust store before
-importing or using ObsPy:
-
-```python
-import truststore
-truststore.inject_into_ssl()
-
-from obspy.clients.fdsn import Client
-```
-
-Install `truststore` in the same environment as ObsPy. This is preferable to
-disabling TLS certificate verification. A deployment may instead provide its CA
-bundle through the normal Python/OpenSSL configuration.
-
 ## Oracle service identity
 
 Each KBWS deployment should use one least-privileged, read-only Oracle service
