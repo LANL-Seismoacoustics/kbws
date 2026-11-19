@@ -46,6 +46,35 @@ pixi shell
 ```
 
 
+### Natively using pip and venv
+
+Requirements:
+
+* Python 3.10 or later
+* Access to an Oracle database with a CSS-like schema (CSS 3.0 or KB Core)
+* Oracle Instant Client for Oracle database connections
+
+For a runtime installation, create and activate a virtual environment, then
+install KBWS and its dependencies directly from GitHub:
+
+```bash
+python -m venv .venv
+source .venv/bin/activate  # Windows: .venv\Scripts\activate
+python -m pip install --upgrade pip
+python -m pip install "kbws @ git+https://github.com/LANL-Seismoacoustics/kbws.git"
+python -m pip install oracledb
+```
+
+Pisces is currently installed from its GitHub `main` branch:
+
+```bash
+python -m pip install git+https://github.com/LANL-Seismoacoustics/pisces.git@main
+```
+
+If `oracledb` cannot auto-detect Oracle Instant Client, set
+`oracle_client_lib_dir` in `.env`. See the [configuration](#configuration)
+section for the required database and table settings.
+
 ### Using Containers/Images
 
 KBWS can also be run from a pre-built container image. See the [Deployment guide](docs/source/deployment.md) for container usage with Docker and Podman.
